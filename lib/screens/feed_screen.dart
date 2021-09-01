@@ -40,14 +40,12 @@ class _FeedScreenState extends State<FeedScreen> {
         .get()
         .then((val) {
       if (val.data()!.containsKey('friendRequest')) {
-        
         List<dynamic> myMap = val['friendRequest'];
         myMap.forEach((element) {
           if (element['sent'] != '') {
-            
             if (!Constants.userProfileUrls.contains(element['image'])) {
               Constants.userProfileUrls.add(element['image']);
-              Constants.userProfileEmails.add(element['email']);
+              Constants.userProfileIds.add(element['id']);
             }
 
            
@@ -79,16 +77,11 @@ class _FeedScreenState extends State<FeedScreen> {
             child: CircularProgressIndicator(),
           )
         : StreamBuilder(
-            stream: Constants.gender == "Female"
-                ? FirebaseFirestore.instance
+            stream: FirebaseFirestore.instance
                     .collection("users")
                     .orderBy("createdAt", descending: true)
-                    .where("gender", isEqualTo: "Male")
-                    .snapshots()
-                : FirebaseFirestore.instance
-                    .collection("users")
-                    .orderBy("createdAt", descending: true)
-                    .where("gender", isEqualTo: "Female")
+                    .where("gender", isNotEqualTo: Constants.gender)
+                    .where("friendRequest", whereNotIn: [])
                     .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
@@ -114,7 +107,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 int flag = 0;
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
-                if (!Constants.userProfileEmails.contains(data['email'])) {
+                if (!Constants.userProfileIds.contains(data['uid'])) {
                   if (Constants.dataAdd == 0) {
                     userData.add(data);
                   } else {
@@ -124,7 +117,6 @@ class _FeedScreenState extends State<FeedScreen> {
                       }
                     }
                     if (flag == 0) {
-                      
                       userData.add(data);
                     } else {
                       

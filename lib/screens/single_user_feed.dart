@@ -33,33 +33,20 @@ class _SingleUserFeedState extends State<SingleUserFeed>
   int fetch = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  calculateAge(String email) async {
-    String? month;
-    String? day;
-    String? year;
-
+  calculateAge(String month, String day, String year) async {
     setState(() {
       isLoading = true;
     });
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .where("email", isEqualTo: email)
-        .get()
-        .then((val) {
-      month = val.docs[0]['mm'];
-      day = val.docs[0]['dd'];
-      year = val.docs[0]['yyyy'];
-    });
     DateTime currentDate = DateTime.now();
-    age = currentDate.year - int.parse(year!);
+    age = currentDate.year - int.parse(year);
     int month1 = currentDate.month;
-    int month2 = int.parse(month!);
+    int month2 = int.parse(month);
     if (month2 > month1) {
       age = age - 1;
     } else if (month1 == month2) {
       int day1 = currentDate.day;
-      int day2 = int.parse(day!);
+      int day2 = int.parse(day);
       if (day2 > day1) {
         age = age - 1;
       }
@@ -85,14 +72,14 @@ class _SingleUserFeedState extends State<SingleUserFeed>
           content: widget.userData[i],
           likeAction: () {
             _scaffoldKey.currentState!.setState(() {
-              Constants.userProfileEmails
-                  .add(widget.userData[currentIndex]['email']);
+              Constants.userProfileIds
+                  .add(widget.userData[currentIndex]['uid']);
               DataBaseMethods().addRequestMethod(
                   Constants.myName,
                   widget.userData[currentIndex]['username'],
                   fetch,
                   widget.userData[currentIndex]['imgUrls'][0],
-                  widget.userData[currentIndex]['email']);
+                  widget.userData[currentIndex]['uid']);
               fetch = 1;
               //index = index + 1;
               count = count + 1;
@@ -108,8 +95,8 @@ class _SingleUserFeedState extends State<SingleUserFeed>
               count = count + 1;
               temp = 1;
               DataBaseMethods().addDeclineMethod(
-                  widget.userData[currentIndex]['username'],
-                  widget.userData[currentIndex]['email']);
+                  widget.userData[currentIndex]['uid'],
+                  widget.userData[currentIndex]['username']);
 
               currentIndex = currentIndex + 1;
 
@@ -128,7 +115,7 @@ class _SingleUserFeedState extends State<SingleUserFeed>
 
     print(_swipeItems.length);
 
-    calculateAge(widget.userData[currentIndex]['email']);
+    calculateAge(widget.userData[currentIndex]['mm'], widget.userData[currentIndex]['dd'], widget.userData[currentIndex]['yyyy']);
 
     print('Here init state is completed!!!!!!!!!!!!!!!!!');
 

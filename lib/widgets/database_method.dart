@@ -33,7 +33,7 @@ class DataBaseMethods {
     }
   }
 
-  addDeclineMethod(String username, String email) async {
+  addDeclineMethod(String userID, String userName) async {
     // print('This is add decline method');
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -52,12 +52,12 @@ class DataBaseMethods {
     });
 
     declineUsers.forEach((element) {
-      if (element['email'] == email) flag = 1;
+      if (element['uid'] == userID) flag = 1;
     });
 
     if (flag == 0) {
       List<Map<String, dynamic>> myMap = [
-        {'name': username, 'email': email}
+        {'name': userName, 'id': userID}
       ];
       // print('Here I update data in firebase through add decline method');
       await FirebaseFirestore.instance
@@ -70,7 +70,7 @@ class DataBaseMethods {
   }
 
   addRequestMethod(String myUsername, String otherUsername, int temp,
-      String otherUserImageUrl, String otherEmail) async {
+      String otherUserImageUrl, String otherUserId) async {
     //print('This is add request method');
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -88,7 +88,7 @@ class DataBaseMethods {
       if (val.data()!.containsKey('declineUsers')) {
         List<dynamic> declineUsers = val['declineUsers'];
         for (int i = 0; i < declineUsers.length; i++) {
-          if (declineUsers[i]['email'] == otherEmail) {
+          if (declineUsers[i]['id'] == otherUserId) {
             List<Map<String, dynamic>> deleteDecline = [declineUsers[i]];
             FirebaseFirestore.instance.collection("users").doc(user.uid).update(
                 {'declineUsers': FieldValue.arrayRemove(deleteDecline)});
@@ -103,22 +103,21 @@ class DataBaseMethods {
         .get()
         .then((val) {
       myName = val['username'];
-      myEmail = val['email'];
     });
     // print('This is my username : $myName');
     // print('This is other username : $otherUsername');
 
     String? myUid = user.uid;
-    String? otherUid;
+    //String? otherUid = otherUserId;
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .where("email", isEqualTo: otherEmail)
-        .get()
-        .then((val) {
-      otherUid = val.docs[0]['uid'];
-      //print('This is other user id : $otherUid');
-    });
+    // await FirebaseFirestore.instance
+    //     .collection("users")
+    //     .where("uid", isEqualTo: otherUserId)
+    //     .get()
+    //     .then((val) {
+    //   otherUid = val.docs[0]['uid'];
+    //   //print('This is other user id : $otherUid');
+    // });
 
     List<Map<String, dynamic>> myMap = [
       {
@@ -127,7 +126,7 @@ class DataBaseMethods {
         'sent': otherUsername,
         'bookay': 0,
         'image': otherUserImageUrl,
-        'email': otherEmail
+        'id': otherUserId
       }
     ];
 
@@ -138,7 +137,7 @@ class DataBaseMethods {
         'sent': '',
         'bookay': 0,
         'image': Constants.userImage,
-        'email': myEmail,
+        'id': myUid,
       }
     ];
 
@@ -152,7 +151,7 @@ class DataBaseMethods {
 
     await FirebaseFirestore.instance
         .collection("users")
-        .doc(otherUid)
+        .doc(otherUserId)
         .update({'friendRequest': FieldValue.arrayUnion(otherMap)});
   }
 

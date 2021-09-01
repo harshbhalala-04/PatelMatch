@@ -24,6 +24,6 @@ class Constants {
   static String hometown = '';
   static String currentLocation = '';
   static List<String> userProfileUrls = [];
-  static List<String> userProfileEmails = [];
+  static List<String> userProfileIds = [];
   static int dataAdd = 0;
 }
