@@ -34,7 +34,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -99,24 +98,34 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
         await ref.putFile(file).whenComplete(() => print('Image Upload'));
 
-        final url = await ref.getDownloadURL();
-        if (count == 0) {
-          FirebaseFirestore.instance
-              .collection("imageURLs")
-              .doc(user.uid)
-              .set({count.toString(): url});
-        } else {
-          FirebaseFirestore.instance
-              .collection("imageURLs")
-              .doc(user.uid)
-              .update({count.toString(): url});
-        }
+        String url = await ref.getDownloadURL();
+        // List<String>? listUrl;
+        // listUrl!.add(url);
+        // if (count == 0) {
+        //   FirebaseFirestore.instance
+        //       .collection("users")
+        //       .doc(user.uid)
+        //       .update({count.toString(): url});
+        // } else {
+        //   FirebaseFirestore.instance
+        //       .collection("users")
+        //       .doc(user.uid)
+        //       .update({count.toString(): url});
+        // }
 
-        count = count + 1;
-        FirebaseFirestore.instance
-            .collection("imageCount")
-            .doc(user.uid)
-            .set({'cnt': count});
+        // if (count == 0) {
+        //   DataBaseMethods().addUserImage(url);
+        // }
+        // FirebaseFirestore.instance
+        //     .collection("users")
+        //     .doc(user.uid)
+        //     .update({'imgUrls': FieldValue.arrayUnion(listUrl)});
+
+        // count = count + 1;
+        // FirebaseFirestore.instance
+        //     .collection("users")
+        //     .doc(user.uid)
+        //     .update({'imgCount': count});
 
         setState(() {
           _pickedImageVar = file;
@@ -134,11 +143,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-        onPressed: () => Navigator.of(context).pop(),
-      ),),
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -238,6 +248,21 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
                   Constants.userImage = imgUrl!;
                   DataBaseMethods().addUserImage(imgUrl!);
+                  final FirebaseAuth auth = FirebaseAuth.instance;
+                  final User? user = auth.currentUser;
+                  for (int i = 0; i < tempImage.length; i++) {
+                    List<String>? temp = [];
+                    temp.add(tempImage[i]);
+                    FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(user!.uid)
+                        .update(
+                            {'imgUrls': FieldValue.arrayUnion(temp)});
+                  }
+                  FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(user!.uid)
+                      .update({'imgCount': tempImage.length});
                   Navigator.push(
                       context,
                       MaterialPageRoute(

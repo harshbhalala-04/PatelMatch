@@ -98,20 +98,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('This is user image');
         print(Constants.userImage);
       }
-
-      FirebaseFirestore.instance
-          .collection("imageURLs")
+      List<String> listUrl = [];
+      listUrl.add(url);
+      int flag = 0;
+      await FirebaseFirestore.instance
+          .collection("users")
           .doc(user.uid)
-          .update({index.toString(): url});
+          .get()
+          .then((value) {
+        int prevImgCount = value['imgCount'];
+        for (int i = 0; i < prevImgCount; i++) {
+          if (index == i) {
+            print('This is url before');
+            print(value['imgUrls'][index]);
+            value['imgUrls'][index] = url;
+            print('This is the url after');
+            print(url);
+            print(value['imgUrls'][index]);
+            flag = 1;
+          }
+        }
+      });
+
+      if (flag == 0) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .update({'imgUrls': FieldValue.arrayUnion(listUrl)});
+      }
 
       if (cntInfo == "IncCount") {
         imgCount = (imgCount!) + 1;
       }
 
       FirebaseFirestore.instance
-          .collection("imageCount")
+          .collection("users")
           .doc(user.uid)
-          .set({'cnt': imgCount});
+          .update({'imgCount': imgCount});
 
       setState(() {
         _pickedImageVar = file;
@@ -129,18 +152,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final User? user = auth.currentUser;
 
     await FirebaseFirestore.instance
-        .collection("imageCount")
+        .collection("users")
         .doc(user!.uid)
         .get()
         .then((val) {
       print('This is the data I got');
-      print(val['cnt']);
-      imgCount = val['cnt'];
+      print(val['imgCount']);
+      imgCount = val['imgCount'];
       print(imgCount);
     });
 
     await FirebaseFirestore.instance
-        .collection("imageURLs")
+        .collection("users")
         .doc(user.uid)
         .get()
         .then((val) {
@@ -149,11 +172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('This is total image');
         print(imgCount);
         for (i = 0; i < imgCount!; i++) {
-          imgUrls[i] = val[i.toString()];
-        }
-        for (i = 0; i < imgUrls.length; i++) {
-          print('This is' + i.toString() + 'url');
-          print(imgUrls[i]);
+          imgUrls[i] = val['imgUrls'][i];
         }
       });
     });

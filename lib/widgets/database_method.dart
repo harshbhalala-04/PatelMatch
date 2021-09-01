@@ -52,11 +52,8 @@ class DataBaseMethods {
     });
 
     declineUsers.forEach((element) {
-      if(element['email'] == email)
-      flag = 1;
+      if (element['email'] == email) flag = 1;
     });
-
-    
 
     if (flag == 0) {
       List<Map<String, dynamic>> myMap = [
@@ -365,11 +362,11 @@ class DataBaseMethods {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     FirebaseFirestore.instance
-        .collection("imageCount")
+        .collection("users")
         .doc(user!.uid)
         .get()
         .then((val) {
-      imgCount = val['cnt'];
+      imgCount = val['imgCount'];
       print(imgCount);
     });
   }
@@ -378,13 +375,14 @@ class DataBaseMethods {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     FirebaseFirestore.instance
-        .collection("imageURLs")
+        .collection("users")
         .doc(user!.uid)
         .get()
         .then((val) {
+      List<dynamic> imgUrls = val['imgUrls'];
       for (int i = 0; i < imgCount; i++) {
         print('This is' + i.toString() + 'time loop running!');
-        Constants.userAllImage.add(val[i.toString()]);
+        Constants.userAllImage.add(imgUrls[i]);
         print(val[i].toString());
       }
     });

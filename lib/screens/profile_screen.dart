@@ -20,12 +20,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final User? user = auth.currentUser;
     print('Init State');
     FirebaseFirestore.instance
-        .collection("imageURLs")
+        .collection("users")
         .doc(user!.uid)
         .get()
         .then((val) {
       setState(() {
-        Constants.userImage = val["0"];
+        Constants.userImage = val['imgUrls'][0];
         print(Constants.userImage);
         print('User Image');
       });

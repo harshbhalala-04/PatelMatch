@@ -114,15 +114,11 @@ class _FeedScreenState extends State<FeedScreen> {
                 int flag = 0;
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
-                
-                
                 if (!Constants.userProfileEmails.contains(data['email'])) {
-                  
                   if (Constants.dataAdd == 0) {
                     userData.add(data);
                   } else {
                     for (int i = 0; i < userData.length; i++) {
-                      
                       if (userData[i]['uid'] == data['uid']) {
                         flag = 1;
                       }
