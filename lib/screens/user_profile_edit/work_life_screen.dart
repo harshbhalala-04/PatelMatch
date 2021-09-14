@@ -1,24 +1,24 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Workout { Regularly, Sometimes, Never }
+enum Worklife { Employed, SelfEmployed, ActivelyLooking, Others }
 
-class WorkoutScreen extends StatefulWidget {
-  const WorkoutScreen({Key? key}) : super(key: key);
+class WorkLifeScreen extends StatefulWidget {
+  const WorkLifeScreen({Key? key}) : super(key: key);
 
   @override
-  _WorkoutScreenState createState() => _WorkoutScreenState();
+  _WorkLifeScreenState createState() => _WorkLifeScreenState();
 }
 
-
-class _WorkoutScreenState extends State<WorkoutScreen> {
-  Workout? _reply;
+class _WorkLifeScreenState extends State<WorkLifeScreen> {
+  Worklife? _reply;
 
   @override
   void initState() {
+    
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
@@ -27,23 +27,27 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('workout')) {
-        if (val['workout'] == "Regularly") {
+      if (val.data()!.containsKey('worklife')) {
+        if (val['worklife'] == "Employed") {
           setState(() {
-            _reply = Workout.Regularly;
+            _reply = Worklife.Employed;
           });
-        } else if (val['workout'] == "Sometimes") {
+        } else if (val['worklife'] == "Self-Employed") {
           setState(() {
-            _reply = Workout.Sometimes;
+            _reply = Worklife.SelfEmployed;
           });
-        } else if (val['workout'] == "Never") {
+        } else if (val['worklife'] == "Actively Looking") {
           setState(() {
-            _reply = Workout.Never;
+            _reply = Worklife.ActivelyLooking;
+          });
+        } else if (val['worklife'] == "Others") {
+          setState(() {
+            _reply = Worklife.Others;
           });
         }
       } else {
         setState(() {
-            _reply = Workout.Regularly;
+            _reply = Worklife.Employed;
           });
       }
     });
@@ -54,13 +58,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xE5E5E5),
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        elevation: 0,
-        shadowColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -71,7 +73,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
               height: 20,
             ),
             Text(
-              'Do You Workout?',
+              'Work Life',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -83,63 +85,84 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Workout.Regularly;
+                  _reply = Worklife.Employed;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Workout.Regularly,
+                    value: Worklife.Employed,
                     groupValue: _reply,
-                    onChanged: (Workout? value) {
+                    onChanged: (Worklife? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Regularly'),
+                  Text('Employed'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Workout.Sometimes;
+                  _reply = Worklife.SelfEmployed;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Workout.Sometimes,
+                    value: Worklife.SelfEmployed,
                     groupValue: _reply,
-                    onChanged: (Workout? value) {
+                    onChanged: (Worklife? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Sometimes'),
+                  Text('Self-Employed'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Workout.Never;
+                  _reply = Worklife.ActivelyLooking;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Workout.Never,
+                    value: Worklife.ActivelyLooking,
                     groupValue: _reply,
-                    onChanged: (Workout? value) {
+                    onChanged: (Worklife? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Never'),
+                  Text('Actively Looking'),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _reply = Worklife.Others;
+                });
+              },
+              child: Row(
+                children: [
+                  Radio(
+                    value: Worklife.Others,
+                    groupValue: _reply,
+                    onChanged: (Worklife? value) {
+                      setState(() {
+                        _reply = value!;
+                      });
+                    },
+                  ),
+                  Text('Others'),
                 ],
               ),
             ),
@@ -152,12 +175,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Workout.Regularly) {
-                  DataBaseMethods().addUserWorkout("Regularly");
-                } else if (_reply == Workout.Sometimes) {
-                  DataBaseMethods().addUserWorkout("Sometimes");
-                } else if (_reply == Workout.Never) {
-                  DataBaseMethods().addUserWorkout("Never");
+                if (_reply == Worklife.Employed) {
+                  DataBaseMethods().addUserWorklife("Employed");
+                } else if (_reply == Worklife.SelfEmployed) {
+                  DataBaseMethods().addUserWorklife("Self-Employed");
+                } else if (_reply == Worklife.ActivelyLooking) {
+                  DataBaseMethods().addUserWorklife("Actively Looking");
+                } else if (_reply == Worklife.Others) {
+                  DataBaseMethods().addUserWorklife("Others");
                 }
 
                 Navigator.pop(context);

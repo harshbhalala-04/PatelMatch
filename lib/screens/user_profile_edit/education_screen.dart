@@ -1,26 +1,24 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Salary {
-  ZeroTwoLpa,
-  TwoToFiveLpa,
-  FiveToSevenLpa,
-  SevenToTenLpa,
-  AboveTenLpa
+enum Education {
+  PursuingBachelors,
+  CompletedBachelors,
+  PursuingMasters,
+  CompletedMasters,
+  Other,
 }
 
-class SalaryScreen extends StatefulWidget {
-  const SalaryScreen({Key? key}) : super(key: key);
-
+class EducationScreen extends StatefulWidget {
   @override
-  _SalaryScreenState createState() => _SalaryScreenState();
+  _EducationScreenState createState() => _EducationScreenState();
 }
 
-class _SalaryScreenState extends State<SalaryScreen> {
-  Salary? _reply;
+class _EducationScreenState extends State<EducationScreen> {
+  Education? _reply;
 
   @override
   void initState() {
@@ -32,31 +30,31 @@ class _SalaryScreenState extends State<SalaryScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('salary')) {
-        if (val['salary'] == "0-2.5 Lpa") {
+      if (val.data()!.containsKey('education')) {
+        if (val['education'] == 'Completed Bachelors') {
           setState(() {
-            _reply = Salary.ZeroTwoLpa;
+            _reply = Education.CompletedBachelors;
           });
-        } else if (val['salary'] == "2.5-5 Lpa") {
+        } else if (val['education'] == 'Pursuing Bachelors') {
           setState(() {
-            _reply = Salary.TwoToFiveLpa;
+            _reply = Education.PursuingBachelors;
           });
-        } else if (val['salary'] == "5-7.5 Lpa") {
+        } else if (val['education'] == 'Pursuing Masters') {
           setState(() {
-            _reply = Salary.FiveToSevenLpa;
+            _reply = Education.PursuingMasters;
           });
-        } else if (val['salary'] == "7.5-10 Lpa") {
+        } else if (val['education'] == 'Completed Masters') {
           setState(() {
-            _reply = Salary.SevenToTenLpa;
+            _reply = Education.CompletedMasters;
           });
-        } else if (val['salary'] == "Above 10 Lpa") {
+        } else if (val['education'] == "Other") {
           setState(() {
-            _reply = Salary.AboveTenLpa;
+            _reply = Education.Other;
           });
         }
       } else {
         setState(() {
-            _reply = Salary.ZeroTwoLpa;
+            _reply = Education.CompletedBachelors;
           });
       }
     });
@@ -82,7 +80,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
               height: 20,
             ),
             Text(
-              'Whats Your Salary?',
+              'Whats Your Education?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -94,105 +92,105 @@ class _SalaryScreenState extends State<SalaryScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Salary.ZeroTwoLpa;
+                  _reply = Education.PursuingBachelors;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Salary.ZeroTwoLpa,
+                    value: Education.PursuingBachelors,
                     groupValue: _reply,
-                    onChanged: (Salary? value) {
+                    onChanged: (Education? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('0-2.5 Lpa'),
+                  Text('Pursuing Bachelors'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Salary.TwoToFiveLpa;
+                  _reply = Education.CompletedBachelors;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Salary.TwoToFiveLpa,
+                    value: Education.CompletedBachelors,
                     groupValue: _reply,
-                    onChanged: (Salary? value) {
+                    onChanged: (Education? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('2.5-5 Lpa'),
+                  Text('Completed Bachelors'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Salary.FiveToSevenLpa;
+                  _reply = Education.PursuingMasters;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Salary.FiveToSevenLpa,
+                    value: Education.PursuingMasters,
                     groupValue: _reply,
-                    onChanged: (Salary? value) {
+                    onChanged: (Education? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('5-7.5 Lpa'),
+                  Text('Pursuing Masters'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Salary.SevenToTenLpa;
+                  _reply = Education.CompletedMasters;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Salary.SevenToTenLpa,
+                    value: Education.CompletedMasters,
                     groupValue: _reply,
-                    onChanged: (Salary? value) {
+                    onChanged: (Education? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('7.5-10 Lpa'),
+                  Text('Completed Masters'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Salary.AboveTenLpa;
+                  _reply = Education.Other;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Salary.AboveTenLpa,
+                    value: Education.Other,
                     groupValue: _reply,
-                    onChanged: (Salary? value) {
+                    onChanged: (Education? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Above 10 Lpa'),
+                  Text('Other'),
                 ],
               ),
             ),
@@ -205,16 +203,16 @@ class _SalaryScreenState extends State<SalaryScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Salary.ZeroTwoLpa) {
-                  DataBaseMethods().addUserSalary("0-2.5 Lpa");
-                } else if (_reply == Salary.TwoToFiveLpa) {
-                  DataBaseMethods().addUserSalary("2.5-5 Lpa");
-                } else if (_reply == Salary.FiveToSevenLpa) {
-                  DataBaseMethods().addUserSalary("5-7.5 Lpa");
-                } else if (_reply == Salary.SevenToTenLpa) {
-                  DataBaseMethods().addUserSalary("7.5-10 Lpa");
-                } else if (_reply == Salary.AboveTenLpa) {
-                  DataBaseMethods().addUserSalary("Above 10 Lpa");
+                if (_reply == Education.CompletedBachelors) {
+                  DataBaseMethods().addUserEducation("Completed Bachelors");
+                } else if (_reply == Education.PursuingBachelors) {
+                  DataBaseMethods().addUserEducation("Pursuing Bachelors");
+                } else if (_reply == Education.PursuingMasters) {
+                  DataBaseMethods().addUserEducation("Pursuing Masters");
+                } else if (_reply == Education.CompletedMasters) {
+                  DataBaseMethods().addUserEducation("Completed Masters");
+                } else if (_reply == Education.Other) {
+                  DataBaseMethods().addUserEducation("Other");
                 }
 
                 Navigator.pop(context);

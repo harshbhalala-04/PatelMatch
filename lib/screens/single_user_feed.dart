@@ -1,5 +1,5 @@
 import 'package:chat/helper/constants.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:chat/widgets/dialog_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,9 +21,9 @@ class SingleUserFeed extends StatefulWidget {
 
 class _SingleUserFeedState extends State<SingleUserFeed>
     with TickerProviderStateMixin {
-  MatchEngine? _matchEngine;
+  
   int currentIndex = 0;
-  List<SwipeItem> _swipeItems = [];
+
   bool isLoading = false;
   var age;
   String? userAge = '';
@@ -31,7 +31,7 @@ class _SingleUserFeedState extends State<SingleUserFeed>
   int count = 0;
   int temp = 0;
   int fetch = 0;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
 
   calculateAge(String month, String day, String year) async {
     setState(() {
@@ -58,69 +58,6 @@ class _SingleUserFeedState extends State<SingleUserFeed>
     });
   }
 
-  removeUser() {
-    currentIndex = currentIndex + 1;
-  }
-
-  @override
-  void initState() {
-    setState(() {
-      isLoading = true;
-    });
-    for (int i = 0; i < widget.userData.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: widget.userData[i],
-          likeAction: () {
-            _scaffoldKey.currentState!.setState(() {
-              Constants.userProfileIds
-                  .add(widget.userData[currentIndex]['uid']);
-              DataBaseMethods().addRequestMethod(
-                  Constants.myName,
-                  widget.userData[currentIndex]['username'],
-                  fetch,
-                  widget.userData[currentIndex]['imgUrls'][0],
-                  widget.userData[currentIndex]['uid']);
-              fetch = 1;
-              //index = index + 1;
-              count = count + 1;
-              temp = 1;
-              currentIndex = currentIndex + 1;
-              //removeUser();
-            });
-          },
-          superlikeAction: () {},
-          nopeAction: () {
-            _scaffoldKey.currentState!.setState(() {
-              //index = index + 1;
-              count = count + 1;
-              temp = 1;
-              DataBaseMethods().addDeclineMethod(
-                  widget.userData[currentIndex]['uid'],
-                  widget.userData[currentIndex]['username']);
-
-              currentIndex = currentIndex + 1;
-
-              // fetchUserImageOne(2);
-
-              //removeUser();
-            });
-          }));
-    }
-    _matchEngine = MatchEngine(swipeItems: _swipeItems);
-
-    // fetchUserImage(
-    //   index,
-    //   "notFromDecline",
-    // );
-
-    print(_swipeItems.length);
-
-    calculateAge(widget.userData[currentIndex]['mm'], widget.userData[currentIndex]['dd'], widget.userData[currentIndex]['yyyy']);
-
-    print('Here init state is completed!!!!!!!!!!!!!!!!!');
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,23 +79,16 @@ class _SingleUserFeedState extends State<SingleUserFeed>
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : /*widget.userData.length == 0*/ endOfUsers == 1
+            : endOfUsers == 1
                 ? Center(
                     child: Text('No user Found!'),
                   )
-                : SwipeCards(
-                    matchEngine: _matchEngine!,
-                    onStackFinished: () {
-                      print('Stack Finished');
-                      endOfUsers = 1;
-                    },
-                    itemBuilder: (context, indexOfCard) {
-                      print('This is index of card : $indexOfCard');
-                      return Container(
+                : Container(
                         height: screenSize.height,
                         width: screenSize.width,
                         child: Card(
                           child: SingleChildScrollView(
+                            
                             child: Column(
                               children: [
                                 CachedNetworkImage(
@@ -928,17 +858,15 @@ class _SingleUserFeedState extends State<SingleUserFeed>
                             ),
                           ),
                         ),
-                      );
-                    }),
+                      ),
+                    
         floatingActionButton: widget.userData.length == 0
             ? Container()
             : Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   InkWell(
-                    onTap: () {
-                      _matchEngine!.currentItem!.superlikeAction!();
-                    },
+                    onTap: (){},
                     child: Align(
                       alignment: Alignment.topRight,
                       child: Container(
@@ -977,7 +905,7 @@ class _SingleUserFeedState extends State<SingleUserFeed>
                         height: 45,
                         child: FloatingActionButton(
                           onPressed: () {
-                            _matchEngine!.currentItem!.nopeAction!();
+                            
                           },
                           child: Text(
                             'Decline',
@@ -999,7 +927,7 @@ class _SingleUserFeedState extends State<SingleUserFeed>
                         height: 45,
                         child: FloatingActionButton(
                           onPressed: () {
-                            _matchEngine!.currentItem!.likeAction!();
+                           
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50)),

@@ -1,6 +1,6 @@
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:flutter/material.dart';
-import './home_screen.dart';
+import '../chat_section/home_screen.dart';
 
 
 class BioScreen extends StatefulWidget {

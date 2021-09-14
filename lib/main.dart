@@ -8,7 +8,7 @@ import './screens/auth_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import './screens/user_name_screen.dart';
+import 'screens/onboarding_screens/user_name_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {

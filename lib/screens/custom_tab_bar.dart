@@ -1,7 +1,7 @@
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/feed_screen.dart';
 import 'package:chat/screens/filter_screen.dart';
-import 'package:chat/screens/message_screen.dart';
+import 'package:chat/screens/chat_section/message_screen.dart';
 import 'package:chat/screens/nested_tab/tab_one.dart';
 import 'package:chat/screens/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -105,20 +105,17 @@ class _CustomTabsState extends State<CustomTabs> {
 
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
+    final firestore = FirebaseFirestore.instance;
     print('Init State');
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
+    firestore.collection("users").doc(user!.uid).get().then((val) {
       setState(() {
         Constants.userImage = val['imgUrls'][0];
-
         print(Constants.userImage);
         print('User Image');
       });
     });
 
+    
     fetchUserGender();
 
     // print('This is init State');

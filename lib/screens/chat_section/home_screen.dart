@@ -1,11 +1,11 @@
-import '../helper/constants.dart';
-import '../screens/conversation_screen.dart';
-import '../screens/people_screen.dart';
+import '../../helper/constants.dart';
+import 'conversation_screen.dart';
+import 'people_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './auth_screen.dart';
-import './profile_screen.dart';
+import '../auth_screen.dart';
+import '../profile_screen.dart';
 //import '../helper/helper_function.dart';
 
 class HomeScreen extends StatefulWidget {

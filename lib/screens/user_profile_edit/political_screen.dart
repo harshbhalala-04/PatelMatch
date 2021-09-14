@@ -1,20 +1,20 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Drink { Never, Socially, Regularly, Planningtoquit }
+enum Political { Conservative, Liberal, Moderate, Apolitical }
 
-class DrinkScreen extends StatefulWidget {
-  const DrinkScreen({Key? key}) : super(key: key);
+class PoliticalScreen extends StatefulWidget {
+  const PoliticalScreen({Key? key}) : super(key: key);
 
   @override
-  _DrinkScreenState createState() => _DrinkScreenState();
+  _PoliticalScreenState createState() => _PoliticalScreenState();
 }
 
-class _DrinkScreenState extends State<DrinkScreen> {
-  Drink? _reply;
+class _PoliticalScreenState extends State<PoliticalScreen> {
+  Political? _reply;
 
   @override
   void initState() {
@@ -26,28 +26,28 @@ class _DrinkScreenState extends State<DrinkScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('drink')) {
-        if (val['drink'] == 'Never') {
+      if (val.data()!.containsKey('politics')) {
+        if (val['politics'] == "Conservative") {
           setState(() {
-            _reply = Drink.Never;
+            _reply = Political.Conservative;
           });
-        } else if (val['drink'] == 'Socially') {
+        } else if (val['politics'] == "Liberal") {
           setState(() {
-            _reply = Drink.Socially;
+            _reply = Political.Liberal;
           });
-        } else if (val['drink'] == 'Regularly') {
+        } else if (val['politics'] == "Moderate") {
           setState(() {
-            _reply = Drink.Regularly;
+            _reply = Political.Moderate;
           });
-        } else if (val['drink'] == 'Planning to quit') {
+        } else if (val['politics'] == "Apolitical") {
           setState(() {
-            _reply = Drink.Planningtoquit;
+            _reply = Political.Apolitical;
           });
         }
       } else {
         setState(() {
-          _reply = Drink.Never;
-        });
+             _reply = Political.Conservative;
+          });
       }
     });
     super.initState();
@@ -72,7 +72,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
               height: 20,
             ),
             Text(
-              'Do You Drink?',
+              'What are your Political Inclinations?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -84,84 +84,84 @@ class _DrinkScreenState extends State<DrinkScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Drink.Never;
+                  _reply = Political.Conservative;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Drink.Never,
+                    value: Political.Conservative,
                     groupValue: _reply,
-                    onChanged: (Drink? value) {
+                    onChanged: (Political? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Never'),
+                  Text('Conservative'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Drink.Socially;
+                  _reply = Political.Liberal;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Drink.Socially,
+                    value: Political.Liberal,
                     groupValue: _reply,
-                    onChanged: (Drink? value) {
+                    onChanged: (Political? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Socially'),
+                  Text('Liberal'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Drink.Regularly;
+                  _reply = Political.Moderate;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Drink.Regularly,
+                    value: Political.Moderate,
                     groupValue: _reply,
-                    onChanged: (Drink? value) {
+                    onChanged: (Political? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Regularly'),
+                  Text('Moderate'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Drink.Planningtoquit;
+                  _reply = Political.Apolitical;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Drink.Planningtoquit,
+                    value: Political.Apolitical,
                     groupValue: _reply,
-                    onChanged: (Drink? value) {
+                    onChanged: (Political? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Planning to quit'),
+                  Text('Apolitical'),
                 ],
               ),
             ),
@@ -174,14 +174,14 @@ class _DrinkScreenState extends State<DrinkScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Drink.Never) {
-                  DataBaseMethods().addUserDrink("Never");
-                } else if (_reply == Drink.Socially) {
-                  DataBaseMethods().addUserDrink("Socially");
-                } else if (_reply == Drink.Regularly) {
-                  DataBaseMethods().addUserDrink("Regularly");
-                } else if (_reply == Drink.Planningtoquit) {
-                  DataBaseMethods().addUserDrink("Planning to quit");
+                if (_reply == Political.Conservative) {
+                  DataBaseMethods().addUserPolitics("Conservative");
+                } else if (_reply == Political.Liberal) {
+                  DataBaseMethods().addUserPolitics("Liberal");
+                } else if (_reply == Political.Moderate) {
+                  DataBaseMethods().addUserPolitics("Moderate");
+                } else if (_reply == Political.Apolitical) {
+                  DataBaseMethods().addUserPolitics("Apolitical");
                 }
 
                 Navigator.pop(context);

@@ -1,25 +1,20 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Education {
-  PursuingBachelors,
-  CompletedBachelors,
-  PursuingMasters,
-  CompletedMasters,
-  Other,
-}
+enum Movie { GujaratiCinema, HindiCinema, EnglishCinema, Others }
 
-class EducationScreen extends StatefulWidget {
+class MovieScreen extends StatefulWidget {
+  const MovieScreen({Key? key}) : super(key: key);
+
   @override
-  _EducationScreenState createState() => _EducationScreenState();
+  _MovieScreenState createState() => _MovieScreenState();
 }
 
-class _EducationScreenState extends State<EducationScreen> {
-  Education? _reply;
-
+class _MovieScreenState extends State<MovieScreen> {
+  Movie? _reply;
   @override
   void initState() {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -30,31 +25,31 @@ class _EducationScreenState extends State<EducationScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('education')) {
-        if (val['education'] == 'Completed Bachelors') {
+      if (val.data()!.containsKey('movie')) {
+        if (val['movie'] == "Gujarati Cinema") {
+          print('This is gujarati');
           setState(() {
-            _reply = Education.CompletedBachelors;
+            _reply = Movie.GujaratiCinema;
           });
-        } else if (val['education'] == 'Pursuing Bachelors') {
+        } else if (val['movie'] == "Hindi Cinema") {
+          print('This is hindi');
           setState(() {
-            _reply = Education.PursuingBachelors;
+            _reply = Movie.HindiCinema;
           });
-        } else if (val['education'] == 'Pursuing Masters') {
+        } else if (val['movie'] == "English Cinema") {
+          print('THis is english');
           setState(() {
-            _reply = Education.PursuingMasters;
+            _reply = Movie.EnglishCinema;
           });
-        } else if (val['education'] == 'Completed Masters') {
+        } else if (val['movie'] == "Others") {
+          print('This is others');
           setState(() {
-            _reply = Education.CompletedMasters;
-          });
-        } else if (val['education'] == "Other") {
-          setState(() {
-            _reply = Education.Other;
+            _reply = Movie.Others;
           });
         }
       } else {
-        setState(() {
-            _reply = Education.CompletedBachelors;
+         setState(() {
+            _reply = Movie.GujaratiCinema;
           });
       }
     });
@@ -80,7 +75,7 @@ class _EducationScreenState extends State<EducationScreen> {
               height: 20,
             ),
             Text(
-              'Whats Your Education?',
+              'What kind of movies do you prefer?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -92,105 +87,84 @@ class _EducationScreenState extends State<EducationScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Education.PursuingBachelors;
+                  _reply = Movie.GujaratiCinema;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Education.PursuingBachelors,
+                    value: Movie.GujaratiCinema,
                     groupValue: _reply,
-                    onChanged: (Education? value) {
+                    onChanged: (Movie? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Pursuing Bachelors'),
+                  Text('Gujarati Cinema'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Education.CompletedBachelors;
+                  _reply = Movie.HindiCinema;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Education.CompletedBachelors,
+                    value: Movie.HindiCinema,
                     groupValue: _reply,
-                    onChanged: (Education? value) {
+                    onChanged: (Movie? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Completed Bachelors'),
+                  Text('Hindi Cinema'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Education.PursuingMasters;
+                  _reply = Movie.EnglishCinema;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Education.PursuingMasters,
+                    value: Movie.EnglishCinema,
                     groupValue: _reply,
-                    onChanged: (Education? value) {
+                    onChanged: (Movie? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Pursuing Masters'),
+                  Text('English Cinema'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Education.CompletedMasters;
+                  _reply = Movie.Others;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Education.CompletedMasters,
+                    value: Movie.Others,
                     groupValue: _reply,
-                    onChanged: (Education? value) {
+                    onChanged: (Movie? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Completed Masters'),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _reply = Education.Other;
-                });
-              },
-              child: Row(
-                children: [
-                  Radio(
-                    value: Education.Other,
-                    groupValue: _reply,
-                    onChanged: (Education? value) {
-                      setState(() {
-                        _reply = value!;
-                      });
-                    },
-                  ),
-                  Text('Other'),
+                  Text('Others'),
                 ],
               ),
             ),
@@ -203,19 +177,17 @@ class _EducationScreenState extends State<EducationScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Education.CompletedBachelors) {
-                  DataBaseMethods().addUserEducation("Completed Bachelors");
-                } else if (_reply == Education.PursuingBachelors) {
-                  DataBaseMethods().addUserEducation("Pursuing Bachelors");
-                } else if (_reply == Education.PursuingMasters) {
-                  DataBaseMethods().addUserEducation("Pursuing Masters");
-                } else if (_reply == Education.CompletedMasters) {
-                  DataBaseMethods().addUserEducation("Completed Masters");
-                } else if (_reply == Education.Other) {
-                  DataBaseMethods().addUserEducation("Other");
+                if (_reply == Movie.GujaratiCinema) {
+                  DataBaseMethods().addUserMovie("Gujarati Cinema");
+                } else if (_reply == Movie.HindiCinema) {
+                  DataBaseMethods().addUserMovie("Hindi Cinema");
+                } else if (_reply == Movie.EnglishCinema) {
+                  DataBaseMethods().addUserMovie("English Cinema");
+                } else if (_reply == Movie.Others) {
+                  DataBaseMethods().addUserMovie("Others");
                 }
 
-                Navigator.pop(context);
+               Navigator.pop(context);
                       Navigator.popAndPushNamed(
                           context, EditProfileScreen.routeName);
               },

@@ -1,8 +1,8 @@
-import '../helper/constants.dart';
+import '../../helper/constants.dart';
 import 'package:flutter/material.dart';
-import '../widgets/new_message.dart';
+import '../../widgets/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../widgets/database_method.dart';
+import '../../database/database.dart';
 import 'package:intl/intl.dart';
 
 

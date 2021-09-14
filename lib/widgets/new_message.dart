@@ -1,4 +1,4 @@
-import './database_method.dart';
+import '../database/database.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'dart:math';

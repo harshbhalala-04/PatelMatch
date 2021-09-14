@@ -3,9 +3,9 @@ import 'package:chat/screens/custom_tab_bar.dart';
 import '../helper/constants.dart';
 
 
-import '../widgets/database_method.dart';
+import '../database/database.dart';
 import 'package:flutter/material.dart';
-import './user_name_screen.dart';
+import 'onboarding_screens/user_name_screen.dart';
 import '../widgets/auth_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,6 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
         /*'imageUrl': url,*/
         'createdAt': Timestamp.now(),
         'uid': userCredential.user!.uid,
+        'decline': false,
       });
 
       

@@ -1,8 +1,8 @@
-import './database_method.dart';
+import '../database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../helper/constants.dart';
-import '../screens/chat_screen.dart';
+import '../screens/chat_section/chat_screen.dart';
 import 'package:intl/intl.dart';
 
 class ChatRoomListTile extends StatefulWidget {

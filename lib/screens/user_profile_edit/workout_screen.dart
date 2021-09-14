@@ -1,20 +1,22 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Movie { GujaratiCinema, HindiCinema, EnglishCinema, Others }
+enum Workout { Regularly, Sometimes, Never }
 
-class MovieScreen extends StatefulWidget {
-  const MovieScreen({Key? key}) : super(key: key);
+class WorkoutScreen extends StatefulWidget {
+  const WorkoutScreen({Key? key}) : super(key: key);
 
   @override
-  _MovieScreenState createState() => _MovieScreenState();
+  _WorkoutScreenState createState() => _WorkoutScreenState();
 }
 
-class _MovieScreenState extends State<MovieScreen> {
-  Movie? _reply;
+
+class _WorkoutScreenState extends State<WorkoutScreen> {
+  Workout? _reply;
+
   @override
   void initState() {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,31 +27,23 @@ class _MovieScreenState extends State<MovieScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('movie')) {
-        if (val['movie'] == "Gujarati Cinema") {
-          print('This is gujarati');
+      if (val.data()!.containsKey('workout')) {
+        if (val['workout'] == "Regularly") {
           setState(() {
-            _reply = Movie.GujaratiCinema;
+            _reply = Workout.Regularly;
           });
-        } else if (val['movie'] == "Hindi Cinema") {
-          print('This is hindi');
+        } else if (val['workout'] == "Sometimes") {
           setState(() {
-            _reply = Movie.HindiCinema;
+            _reply = Workout.Sometimes;
           });
-        } else if (val['movie'] == "English Cinema") {
-          print('THis is english');
+        } else if (val['workout'] == "Never") {
           setState(() {
-            _reply = Movie.EnglishCinema;
-          });
-        } else if (val['movie'] == "Others") {
-          print('This is others');
-          setState(() {
-            _reply = Movie.Others;
+            _reply = Workout.Never;
           });
         }
       } else {
-         setState(() {
-            _reply = Movie.GujaratiCinema;
+        setState(() {
+            _reply = Workout.Regularly;
           });
       }
     });
@@ -60,11 +54,13 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xE5E5E5),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        elevation: 0,
+        shadowColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -75,7 +71,7 @@ class _MovieScreenState extends State<MovieScreen> {
               height: 20,
             ),
             Text(
-              'What kind of movies do you prefer?',
+              'Do You Workout?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -87,84 +83,63 @@ class _MovieScreenState extends State<MovieScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Movie.GujaratiCinema;
+                  _reply = Workout.Regularly;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Movie.GujaratiCinema,
+                    value: Workout.Regularly,
                     groupValue: _reply,
-                    onChanged: (Movie? value) {
+                    onChanged: (Workout? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Gujarati Cinema'),
+                  Text('Regularly'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Movie.HindiCinema;
+                  _reply = Workout.Sometimes;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Movie.HindiCinema,
+                    value: Workout.Sometimes,
                     groupValue: _reply,
-                    onChanged: (Movie? value) {
+                    onChanged: (Workout? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Hindi Cinema'),
+                  Text('Sometimes'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Movie.EnglishCinema;
+                  _reply = Workout.Never;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Movie.EnglishCinema,
+                    value: Workout.Never,
                     groupValue: _reply,
-                    onChanged: (Movie? value) {
+                    onChanged: (Workout? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('English Cinema'),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _reply = Movie.Others;
-                });
-              },
-              child: Row(
-                children: [
-                  Radio(
-                    value: Movie.Others,
-                    groupValue: _reply,
-                    onChanged: (Movie? value) {
-                      setState(() {
-                        _reply = value!;
-                      });
-                    },
-                  ),
-                  Text('Others'),
+                  Text('Never'),
                 ],
               ),
             ),
@@ -177,17 +152,15 @@ class _MovieScreenState extends State<MovieScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Movie.GujaratiCinema) {
-                  DataBaseMethods().addUserMovie("Gujarati Cinema");
-                } else if (_reply == Movie.HindiCinema) {
-                  DataBaseMethods().addUserMovie("Hindi Cinema");
-                } else if (_reply == Movie.EnglishCinema) {
-                  DataBaseMethods().addUserMovie("English Cinema");
-                } else if (_reply == Movie.Others) {
-                  DataBaseMethods().addUserMovie("Others");
+                if (_reply == Workout.Regularly) {
+                  DataBaseMethods().addUserWorkout("Regularly");
+                } else if (_reply == Workout.Sometimes) {
+                  DataBaseMethods().addUserWorkout("Sometimes");
+                } else if (_reply == Workout.Never) {
+                  DataBaseMethods().addUserWorkout("Never");
                 }
 
-               Navigator.pop(context);
+                Navigator.pop(context);
                       Navigator.popAndPushNamed(
                           context, EditProfileScreen.routeName);
               },

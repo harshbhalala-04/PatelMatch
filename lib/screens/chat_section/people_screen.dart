@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../widgets/single_item_people.dart';
+import '../../widgets/single_item_people.dart';
 
 class PeopleScreen extends StatefulWidget {
   @override

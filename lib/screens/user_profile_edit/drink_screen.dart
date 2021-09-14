@@ -1,24 +1,23 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Worklife { Employed, SelfEmployed, ActivelyLooking, Others }
+enum Drink { Never, Socially, Regularly, Planningtoquit }
 
-class WorkLifeScreen extends StatefulWidget {
-  const WorkLifeScreen({Key? key}) : super(key: key);
+class DrinkScreen extends StatefulWidget {
+  const DrinkScreen({Key? key}) : super(key: key);
 
   @override
-  _WorkLifeScreenState createState() => _WorkLifeScreenState();
+  _DrinkScreenState createState() => _DrinkScreenState();
 }
 
-class _WorkLifeScreenState extends State<WorkLifeScreen> {
-  Worklife? _reply;
+class _DrinkScreenState extends State<DrinkScreen> {
+  Drink? _reply;
 
   @override
   void initState() {
-    
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
@@ -27,28 +26,28 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('worklife')) {
-        if (val['worklife'] == "Employed") {
+      if (val.data()!.containsKey('drink')) {
+        if (val['drink'] == 'Never') {
           setState(() {
-            _reply = Worklife.Employed;
+            _reply = Drink.Never;
           });
-        } else if (val['worklife'] == "Self-Employed") {
+        } else if (val['drink'] == 'Socially') {
           setState(() {
-            _reply = Worklife.SelfEmployed;
+            _reply = Drink.Socially;
           });
-        } else if (val['worklife'] == "Actively Looking") {
+        } else if (val['drink'] == 'Regularly') {
           setState(() {
-            _reply = Worklife.ActivelyLooking;
+            _reply = Drink.Regularly;
           });
-        } else if (val['worklife'] == "Others") {
+        } else if (val['drink'] == 'Planning to quit') {
           setState(() {
-            _reply = Worklife.Others;
+            _reply = Drink.Planningtoquit;
           });
         }
       } else {
         setState(() {
-            _reply = Worklife.Employed;
-          });
+          _reply = Drink.Never;
+        });
       }
     });
     super.initState();
@@ -73,7 +72,7 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
               height: 20,
             ),
             Text(
-              'Work Life',
+              'Do You Drink?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -85,84 +84,84 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Worklife.Employed;
+                  _reply = Drink.Never;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Worklife.Employed,
+                    value: Drink.Never,
                     groupValue: _reply,
-                    onChanged: (Worklife? value) {
+                    onChanged: (Drink? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Employed'),
+                  Text('Never'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Worklife.SelfEmployed;
+                  _reply = Drink.Socially;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Worklife.SelfEmployed,
+                    value: Drink.Socially,
                     groupValue: _reply,
-                    onChanged: (Worklife? value) {
+                    onChanged: (Drink? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Self-Employed'),
+                  Text('Socially'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Worklife.ActivelyLooking;
+                  _reply = Drink.Regularly;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Worklife.ActivelyLooking,
+                    value: Drink.Regularly,
                     groupValue: _reply,
-                    onChanged: (Worklife? value) {
+                    onChanged: (Drink? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Actively Looking'),
+                  Text('Regularly'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Worklife.Others;
+                  _reply = Drink.Planningtoquit;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Worklife.Others,
+                    value: Drink.Planningtoquit,
                     groupValue: _reply,
-                    onChanged: (Worklife? value) {
+                    onChanged: (Drink? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Others'),
+                  Text('Planning to quit'),
                 ],
               ),
             ),
@@ -175,14 +174,14 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Worklife.Employed) {
-                  DataBaseMethods().addUserWorklife("Employed");
-                } else if (_reply == Worklife.SelfEmployed) {
-                  DataBaseMethods().addUserWorklife("Self-Employed");
-                } else if (_reply == Worklife.ActivelyLooking) {
-                  DataBaseMethods().addUserWorklife("Actively Looking");
-                } else if (_reply == Worklife.Others) {
-                  DataBaseMethods().addUserWorklife("Others");
+                if (_reply == Drink.Never) {
+                  DataBaseMethods().addUserDrink("Never");
+                } else if (_reply == Drink.Socially) {
+                  DataBaseMethods().addUserDrink("Socially");
+                } else if (_reply == Drink.Regularly) {
+                  DataBaseMethods().addUserDrink("Regularly");
+                } else if (_reply == Drink.Planningtoquit) {
+                  DataBaseMethods().addUserDrink("Planning to quit");
                 }
 
                 Navigator.pop(context);

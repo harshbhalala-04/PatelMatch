@@ -1,7 +1,7 @@
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/screens/home_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/screens/chat_section/home_screen.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

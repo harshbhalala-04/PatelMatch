@@ -1,6 +1,6 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/screens/gender_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/screens/onboarding_screens/gender_screen.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

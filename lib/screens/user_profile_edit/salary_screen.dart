@@ -1,20 +1,26 @@
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/database_method.dart';
+import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Political { Conservative, Liberal, Moderate, Apolitical }
-
-class PoliticalScreen extends StatefulWidget {
-  const PoliticalScreen({Key? key}) : super(key: key);
-
-  @override
-  _PoliticalScreenState createState() => _PoliticalScreenState();
+enum Salary {
+  ZeroTwoLpa,
+  TwoToFiveLpa,
+  FiveToSevenLpa,
+  SevenToTenLpa,
+  AboveTenLpa
 }
 
-class _PoliticalScreenState extends State<PoliticalScreen> {
-  Political? _reply;
+class SalaryScreen extends StatefulWidget {
+  const SalaryScreen({Key? key}) : super(key: key);
+
+  @override
+  _SalaryScreenState createState() => _SalaryScreenState();
+}
+
+class _SalaryScreenState extends State<SalaryScreen> {
+  Salary? _reply;
 
   @override
   void initState() {
@@ -26,27 +32,31 @@ class _PoliticalScreenState extends State<PoliticalScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      if (val.data()!.containsKey('politics')) {
-        if (val['politics'] == "Conservative") {
+      if (val.data()!.containsKey('salary')) {
+        if (val['salary'] == "0-2.5 Lpa") {
           setState(() {
-            _reply = Political.Conservative;
+            _reply = Salary.ZeroTwoLpa;
           });
-        } else if (val['politics'] == "Liberal") {
+        } else if (val['salary'] == "2.5-5 Lpa") {
           setState(() {
-            _reply = Political.Liberal;
+            _reply = Salary.TwoToFiveLpa;
           });
-        } else if (val['politics'] == "Moderate") {
+        } else if (val['salary'] == "5-7.5 Lpa") {
           setState(() {
-            _reply = Political.Moderate;
+            _reply = Salary.FiveToSevenLpa;
           });
-        } else if (val['politics'] == "Apolitical") {
+        } else if (val['salary'] == "7.5-10 Lpa") {
           setState(() {
-            _reply = Political.Apolitical;
+            _reply = Salary.SevenToTenLpa;
+          });
+        } else if (val['salary'] == "Above 10 Lpa") {
+          setState(() {
+            _reply = Salary.AboveTenLpa;
           });
         }
       } else {
         setState(() {
-             _reply = Political.Conservative;
+            _reply = Salary.ZeroTwoLpa;
           });
       }
     });
@@ -72,7 +82,7 @@ class _PoliticalScreenState extends State<PoliticalScreen> {
               height: 20,
             ),
             Text(
-              'What are your Political Inclinations?',
+              'Whats Your Salary?',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -84,84 +94,105 @@ class _PoliticalScreenState extends State<PoliticalScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Political.Conservative;
+                  _reply = Salary.ZeroTwoLpa;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Political.Conservative,
+                    value: Salary.ZeroTwoLpa,
                     groupValue: _reply,
-                    onChanged: (Political? value) {
+                    onChanged: (Salary? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Conservative'),
+                  Text('0-2.5 Lpa'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Political.Liberal;
+                  _reply = Salary.TwoToFiveLpa;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Political.Liberal,
+                    value: Salary.TwoToFiveLpa,
                     groupValue: _reply,
-                    onChanged: (Political? value) {
+                    onChanged: (Salary? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Liberal'),
+                  Text('2.5-5 Lpa'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Political.Moderate;
+                  _reply = Salary.FiveToSevenLpa;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Political.Moderate,
+                    value: Salary.FiveToSevenLpa,
                     groupValue: _reply,
-                    onChanged: (Political? value) {
+                    onChanged: (Salary? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Moderate'),
+                  Text('5-7.5 Lpa'),
                 ],
               ),
             ),
             InkWell(
               onTap: () {
                 setState(() {
-                  _reply = Political.Apolitical;
+                  _reply = Salary.SevenToTenLpa;
                 });
               },
               child: Row(
                 children: [
                   Radio(
-                    value: Political.Apolitical,
+                    value: Salary.SevenToTenLpa,
                     groupValue: _reply,
-                    onChanged: (Political? value) {
+                    onChanged: (Salary? value) {
                       setState(() {
                         _reply = value!;
                       });
                     },
                   ),
-                  Text('Apolitical'),
+                  Text('7.5-10 Lpa'),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _reply = Salary.AboveTenLpa;
+                });
+              },
+              child: Row(
+                children: [
+                  Radio(
+                    value: Salary.AboveTenLpa,
+                    groupValue: _reply,
+                    onChanged: (Salary? value) {
+                      setState(() {
+                        _reply = value!;
+                      });
+                    },
+                  ),
+                  Text('Above 10 Lpa'),
                 ],
               ),
             ),
@@ -174,14 +205,16 @@ class _PoliticalScreenState extends State<PoliticalScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (_reply == Political.Conservative) {
-                  DataBaseMethods().addUserPolitics("Conservative");
-                } else if (_reply == Political.Liberal) {
-                  DataBaseMethods().addUserPolitics("Liberal");
-                } else if (_reply == Political.Moderate) {
-                  DataBaseMethods().addUserPolitics("Moderate");
-                } else if (_reply == Political.Apolitical) {
-                  DataBaseMethods().addUserPolitics("Apolitical");
+                if (_reply == Salary.ZeroTwoLpa) {
+                  DataBaseMethods().addUserSalary("0-2.5 Lpa");
+                } else if (_reply == Salary.TwoToFiveLpa) {
+                  DataBaseMethods().addUserSalary("2.5-5 Lpa");
+                } else if (_reply == Salary.FiveToSevenLpa) {
+                  DataBaseMethods().addUserSalary("5-7.5 Lpa");
+                } else if (_reply == Salary.SevenToTenLpa) {
+                  DataBaseMethods().addUserSalary("7.5-10 Lpa");
+                } else if (_reply == Salary.AboveTenLpa) {
+                  DataBaseMethods().addUserSalary("Above 10 Lpa");
                 }
 
                 Navigator.pop(context);

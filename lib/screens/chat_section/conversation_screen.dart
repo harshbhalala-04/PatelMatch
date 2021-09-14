@@ -1,9 +1,9 @@
 
-import '../widgets/database_method.dart';
+import '../../database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/chat_room_list_tile.dart';
+import '../../widgets/chat_room_list_tile.dart';
 
 class ConversationScreen extends StatefulWidget {
   late final email;

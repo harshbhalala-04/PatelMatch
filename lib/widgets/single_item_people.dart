@@ -1,6 +1,6 @@
-import '../widgets/database_method.dart';
+import '../database/database.dart';
 import 'package:flutter/material.dart';
-import '../screens/chat_screen.dart';
+import '../screens/chat_section/chat_screen.dart';
 import '../helper/constants.dart';
 //import '../helper/helper_function.dart';
 

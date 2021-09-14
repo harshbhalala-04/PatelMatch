@@ -6,7 +6,6 @@ class Constants {
   static String bio = '';
   static bool signUpState = false;
   static List<String> userAllImage = [];
-
   static String formUsername = '';
   static String birthdate = '';
   static String gender = '';
@@ -26,4 +25,5 @@ class Constants {
   static List<String> userProfileUrls = [];
   static List<String> userProfileIds = [];
   static int dataAdd = 0;
+
 }
