@@ -1,64 +1,49 @@
+import 'package:chat/controllers/authController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class AuthForm extends StatefulWidget {
+class AuthForm extends GetWidget<AuthController> {
   AuthForm(this.submitFn, this.isLoading, this.logInFn);
 
   final bool isLoading;
-  final Future<void> Function(String email, String password, /*String username*/
-      /*File image,*/ bool isLogin, BuildContext ctx) submitFn;
+  final Future<void> Function(
+      String email,
+      String password,
+      bool isLogin,
+      BuildContext ctx) submitFn;
   final Future<void> Function(String email, String password) logInFn;
-  @override
-  _AuthFormState createState() => _AuthFormState();
-}
 
-class _AuthFormState extends State<AuthForm> {
+
   final _formKey = GlobalKey<FormState>();
   var _isLogin = true;
   dynamic _userEmail = '';
-  //dynamic _userName = '';
+
   dynamic _userPassword;
-  //File? _userImageFile;
 
-  // void _pickedImage(File? image) {
-  //   _userImageFile = image;
-  // }
-
-  //Form validation and save
-  _trySubmit() {
+  ///Form validation and save
+  _trySubmit(BuildContext context) {
     final isValid = _formKey.currentState?.validate();
     FocusScope.of(context).unfocus();
 
-    // if (_userImageFile == null && !_isLogin) {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text('Please Select an Image'),
-    //     backgroundColor: Theme.of(context).errorColor,
-    //   ));
-
-    //   return;
-    // }
     if (isValid!) {
       _formKey.currentState?.save();
-      widget.submitFn(
+      submitFn(
         _userEmail?.trim(),
         _userPassword?.trim(),
-        /*_userName?.trim(),*/
-        /*_userImageFile!,*/
         _isLogin,
         context,
       );
     }
   }
 
-  logInFunction() {
+  logInFunction(BuildContext context) {
+   
     final isValid = _formKey.currentState?.validate();
     FocusScope.of(context).unfocus();
 
     if (isValid!) {
       _formKey.currentState?.save();
-      widget.logInFn(
-        _userEmail?.trim(),
-        _userPassword?.trim()
-      );
+      logInFn(_userEmail?.trim(), _userPassword?.trim());
     }
   }
 
@@ -78,7 +63,6 @@ class _AuthFormState extends State<AuthForm> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      //if (!_isLogin) UserImagePicker(_pickedImage),
                       TextFormField(
                         key: ValueKey('email'),
                         autocorrect: false,
@@ -98,24 +82,6 @@ class _AuthFormState extends State<AuthForm> {
                           _userEmail = value;
                         },
                       ),
-                      // if (!_isLogin)
-                      //   TextFormField(
-                      //       key: ValueKey('username'),
-                      //       autocorrect: true,
-                      //       textCapitalization: TextCapitalization.words,
-                      //       enableSuggestions: false,
-                      //       validator: (value) {
-                      //         if (value!.isEmpty) {
-                      //           return 'Please Enter Username.';
-                      //         }
-                      //         return null;
-                      //       },
-                      //       decoration: InputDecoration(
-                      //         labelText: 'Username',
-                      //       ),
-                      //       onSaved: (value) {
-                      //         _userName = value;
-                      //       }),
                       TextFormField(
                           key: ValueKey('password'),
                           validator: (value) {
@@ -134,25 +100,24 @@ class _AuthFormState extends State<AuthForm> {
                       SizedBox(
                         height: 12,
                       ),
-                      if (widget.isLoading) CircularProgressIndicator(),
-                      if (!widget.isLoading)
+                      if (isLoading) CircularProgressIndicator(),
+                      if (!isLoading)
                         _isLogin
                             ? ElevatedButton(
-                                onPressed: logInFunction, child: Text('Login'))
+                                onPressed: () => {logInFunction(context)}, child: Text('Login'))
                             : ElevatedButton(
                                 child: Text('Sign Up'),
-                                onPressed: _trySubmit,
+                                onPressed: () => {_trySubmit(context)},
                               ),
-                      if (!widget.isLoading)
+                      if (!isLoading)
                         TextButton(
                           child: Text(_isLogin
                               ? 'Create a new account'
                               : 'I already have an account'),
                           style: TextButton.styleFrom(primary: Colors.pink),
                           onPressed: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
+                            _isLogin = !_isLogin;
+                            
                           },
                         ),
                     ],

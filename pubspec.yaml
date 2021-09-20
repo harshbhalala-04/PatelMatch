@@ -43,6 +43,7 @@ dependencies:
   page_transition: "^2.0.2"
   cached_network_image: ^3.0.0
   swipe_cards: ^0.1.0
+  get:
   
   
 

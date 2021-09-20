@@ -3,6 +3,7 @@ import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'community_screen.dart';
 
 enum Gender { Male, Female }
@@ -41,8 +42,8 @@ class _GenderScreenState extends State<GenderScreen> {
         }
       } else {
         setState(() {
-            _reply = Gender.Male;
-          });
+          _reply = Gender.Male;
+        });
       }
     });
     super.initState();
@@ -55,7 +56,7 @@ class _GenderScreenState extends State<GenderScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
         ),
         actions: [
           widget.fromProfile
@@ -65,16 +66,14 @@ class _GenderScreenState extends State<GenderScreen> {
               : TextButton(
                   child: Text(
                     'Skip',
-                    style: TextStyle(color: Colors.pink, fontSize: 18,),
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 18,
+                    ),
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserGender('Male');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => CommunityScreen(
-                                  fromProfile: false,
-                                )));
+                    Get.to(CommunityScreen(fromProfile: false));
                   },
                 )
         ],
@@ -156,15 +155,10 @@ class _GenderScreenState extends State<GenderScreen> {
 
                 if (widget.fromProfile) {
                   Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                  Navigator.popAndPushNamed(
+                      context, EditProfileScreen.routeName);
                 } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CommunityScreen(
-                                fromProfile: false,
-                              )));
+                  Get.to(CommunityScreen(fromProfile: false));
                 }
               },
               child: widget.fromProfile

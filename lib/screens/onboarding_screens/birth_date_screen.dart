@@ -1,51 +1,16 @@
+import 'package:chat/controllers/birth_date_controller.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/gender_screen.dart';
 import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class BirthDateScreen extends StatefulWidget {
+class BirthDateScreen extends StatelessWidget {
   late final fromProfile;
-
   BirthDateScreen({required this.fromProfile});
-  @override
-  _BirthDateScreenState createState() => _BirthDateScreenState();
-}
-
-class _BirthDateScreenState extends State<BirthDateScreen> {
-  String dayValue = '1';
-  String monthValue = '1';
-  String yearValue = '2002';
-  String dd = 'DD';
-  String mm = 'MM';
-  String yyyy = 'YYYY';
-  final _dateController = TextEditingController();
-
-  @override
-  void initState() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('dd')) {
-        setState(() {
-          dd = val['dd'];
-        mm = val['mm'];
-        yyyy = val['yyyy'];
-
-        });
-        
-      }
-      
-    });
-
-    super.initState();
-  }
+  final birthDateController = Get.put(BirthDateController());  
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +19,10 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
         ),
         actions: [
-          widget.fromProfile
+          fromProfile
               ? Container(
                   height: 0,
                 )
@@ -68,12 +33,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserBirthDate('', '', '');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => GenderScreen(
-                                  fromProfile: false,
-                                )));
+                    Get.to(GenderScreen(fromProfile: false));
                   },
                 ),
         ],
@@ -105,37 +65,22 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 Flexible(
                   child: Container(
                     width: 50,
-                    child: TextField(
-                      onTap: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: DateTime(DateTime.now().year - 18),
-                                firstDate: DateTime(1940),
-                                lastDate: DateTime(DateTime.now().year - 18))
-                            .then((pickedDate) {
-                          if (pickedDate == null) {
-                            return;
-                          } else {
-                            setState(() {
-                              dd = pickedDate.day.toString();
-                              mm = pickedDate.month.toString();
-                              yyyy = pickedDate.year.toString();
-                            });
-                          }
-                        });
-                      },
-                      readOnly: true,
-                      
-                      decoration: InputDecoration(
-                        hintText: dd == '' ? "DD" : dd,
-                        
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(width: 2),
-                        ),
-                      ),
-                    ),
+                    child: Obx(() => (TextField(
+                          onTap: () {
+                            birthDateController.showDatePickerDailog(context);
+                          },
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            hintText: birthDateController.dd.value == ''
+                                ? "DD"
+                                : birthDateController.dd.value,
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(width: 2),
+                            ),
+                          ),
+                        ))),
                   ),
                 ),
                 SizedBox(
@@ -144,35 +89,22 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 Flexible(
                     child: Container(
                   width: 60,
-                  child: TextField(
-                    onTap: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year - 18),
-                              firstDate: DateTime(1940),
-                              lastDate: DateTime(DateTime.now().year - 18))
-                          .then((pickedDate) {
-                        if (pickedDate == null) {
-                          return;
-                        } else {
-                          setState(() {
-                            dd = pickedDate.day.toString();
-                            mm = pickedDate.month.toString();
-                            yyyy = pickedDate.year.toString();
-                          });
-                        }
-                      });
-                    },
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: mm == '' ? "MM" : mm,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(width: 2),
-                      ),
-                    ),
-                  ),
+                  child: Obx(() => (TextField(
+                        onTap: () {
+                          birthDateController.showDatePickerDailog(context);
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: birthDateController.mm.value == ''
+                              ? "MM"
+                              : birthDateController.mm.value,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(width: 2),
+                          ),
+                        ),
+                      ))),
                 )),
                 SizedBox(
                   width: 16,
@@ -180,35 +112,22 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 Flexible(
                     child: Container(
                   width: 80,
-                  child: TextField(
-                    onTap: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year - 18),
-                              firstDate: DateTime(1940),
-                              lastDate: DateTime(DateTime.now().year - 18))
-                          .then((pickedDate) {
-                        if (pickedDate == null) {
-                          return;
-                        } else {
-                          setState(() {
-                            dd = pickedDate.day.toString();
-                            mm = pickedDate.month.toString();
-                            yyyy = pickedDate.year.toString();
-                          });
-                        }
-                      });
-                    },
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: yyyy == '' ? "YYYY" : yyyy,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(width: 2),
-                      ),
-                    ),
-                  ),
+                  child: Obx(() => (TextField(
+                        onTap: () {
+                          birthDateController.showDatePickerDailog(context);
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          hintText: birthDateController.yyyy.value == ''
+                              ? "YYYY"
+                              : birthDateController.yyyy.value,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(width: 2),
+                          ),
+                        ),
+                      ))),
                 )),
                 SizedBox(
                   width: 20,
@@ -216,22 +135,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 IconButton(
                   icon: Icon(Icons.calendar_today_rounded),
                   onPressed: () {
-                    showDatePicker(
-                            context: context,
-                            initialDate: DateTime(DateTime.now().year - 18),
-                            firstDate: DateTime(1940),
-                            lastDate: DateTime(DateTime.now().year - 18))
-                        .then((pickedDate) {
-                      if (pickedDate == null) {
-                        return;
-                      } else {
-                        setState(() {
-                          dd = pickedDate.day.toString();
-                          mm = pickedDate.month.toString();
-                          yyyy = pickedDate.year.toString();
-                        });
-                      }
-                    });
+                    birthDateController.showDatePickerDailog(context);
                   },
                   color: Colors.pink,
                   iconSize: 30,
@@ -247,67 +151,31 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (widget.fromProfile) {
-                  if (dd == 'DD') {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Please Select Birth Date'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Close',
-                                    style: TextStyle(color: Colors.pink),
-                                  ))
-                            ],
-                          );
-                        });
+                if (fromProfile) {
+                  if (birthDateController.dd.value == 'DD') {
+                    birthDateController.showDialog();
                   } else {
-                    String date = dd;
-                    String month = mm;
-                    String year = yyyy;
-
+                    String date = birthDateController.dd.value;
+                    String month = birthDateController.mm.value;
+                    String year = birthDateController.yyyy.value;
                     DataBaseMethods().addUserBirthDate(date, month, year);
                     Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                    Navigator.popAndPushNamed(
+                        context, EditProfileScreen.routeName);
                   }
                 } else {
-                  if (dd == 'DD') {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Please Select Your Birth Date.'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Close')),
-                            ],
-                          );
-                        });
+                  if (birthDateController.dd.value == 'DD') {
+                    birthDateController.showDialog();
                   } else {
-                    String date = dd;
-                    String month = mm;
-                    String year = yyyy;
-
+                    String date = birthDateController.dd.value;
+                    String month = birthDateController.mm.value;
+                    String year = birthDateController.yyyy.value;
                     DataBaseMethods().addUserBirthDate(date, month, year);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => GenderScreen(
-                                  fromProfile: false,
-                                )));
+                    Get.to(GenderScreen(fromProfile: false));
                   }
                 }
               },
-              child: widget.fromProfile
+              child: fromProfile
                   ? Text(
                       'Submit',
                       style: TextStyle(fontSize: 17),

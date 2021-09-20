@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import '../helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,22 @@ class DataBaseMethods {
     } catch (e) {
       print(e);
     }
+  }
+
+  fetchUserName() {
+    String? username;
+    try {
+      firestore.collection("users").doc(user!.uid).get().then((val) {
+        if (val.data()!.containsKey('username')) {
+          username = val['username'];
+        }
+      });
+    } catch (e) {
+      Get.snackbar("Error Fetching username ", "",
+          snackPosition: SnackPosition.BOTTOM);
+    }
+
+    return username;
   }
 
   ///Create Chat room if not exists.
@@ -45,7 +62,7 @@ class DataBaseMethods {
   }
 
   ///Add User to friend request List.
-  addFriendRequest(String uid) async{
+  addFriendRequest(String uid) async {
     List<String> uidList = [];
     uidList.add(uid);
     await firestore
@@ -428,9 +445,6 @@ class DataBaseMethods {
   getUserByEmailId(String email) async {
     try {
       firestore.collection("users").doc(user!.uid).get().then((val) {
-        print('This is the value got from email id');
-        print(val.data());
-        print(val['username']);
         Constants.myName = val['username'];
         Constants.userImage = val['imgUrl'];
       });
@@ -440,7 +454,6 @@ class DataBaseMethods {
   }
 
   getUserInfo(String username) async {
-    print('THis is get user info function');
     try {
       return firestore
           .collection("users")

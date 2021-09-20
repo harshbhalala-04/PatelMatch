@@ -1,6 +1,7 @@
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 
 import './screens/auth_screen.dart';
@@ -8,11 +9,13 @@ import './screens/auth_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'controllers/bindings/authBinding.dart';
 import 'screens/onboarding_screens/user_name_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -26,7 +29,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      initialBinding: AuthBinding(),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Chat',
       theme: ThemeData(
@@ -50,7 +54,7 @@ class _MyAppState extends State<MyApp> {
               return UserNameScreen(fromProfile: false);
             } else {
               //return HomeScreen();
-              return CustomTabs();
+              return CustomTabBar();
             }
           } else {
             return AuthScreen();

@@ -1,3 +1,4 @@
+import 'package:chat/controllers/community_controller.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/chat_section/home_screen.dart';
@@ -5,6 +6,7 @@ import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
+  final communityController = Get.put(CommunityController());
   List<DropdownMenuItem<String>> communities = [
     DropdownMenuItem(
       value: "Community 1",
@@ -39,31 +42,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
       child: Text('Community 5'),
     ),
   ];
-  String? reply = '';
-
-  fetchUserCommunity() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('community')) {
-        print("init state");
-        setState(() {
-          reply = val['community'];
-        });
-
-        print(reply!);
-      }
-    });
-  }
 
   @override
   void initState() {
-    fetchUserCommunity();
+    communityController.fetchUserCommunity();
     super.initState();
   }
 
@@ -91,8 +73,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserCommunity('');
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (ctx) => CustomTabs()));
+                    Get.offAll(CustomTabBar());
                   },
                 ),
         ],
@@ -124,24 +105,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
               child: SearchableDropdown.single(
                 displayClearIcon: false,
                 isExpanded: true,
-                hint: reply == ''
+                hint: communityController.reply.value == ''
                     ? Text(
                         'Select',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       )
-                    : Text(
-                        reply!,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                    : Obx(
+                        () => Text(
+                          communityController.reply.value,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                 items: communities,
                 onChanged: (val) {
-                  reply = val;
-                  print(reply);
+                  communityController.changeCommunity(val);
                 },
               ),
             ),
@@ -154,23 +136,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (reply!.isEmpty) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Please Select Your Community.'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Close')),
-                          ],
-                        );
-                      });
+                if (communityController.reply.value.isEmpty) {
+                  
+                  communityController.showCustomDialog();
                 } else {
-                  DataBaseMethods().addUserCommunity(reply!);
+                  DataBaseMethods()
+                      .addUserCommunity(communityController.reply.value);
 
                   if (widget.fromProfile) {
                     Navigator.pop(context);
@@ -179,8 +150,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   } else {
                     // Navigator.push(context,
                     //     MaterialPageRoute(builder: (context) => HomeScreen()));
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (ctx) => CustomTabs()));
+                    Get.offAll(CustomTabBar());
                   }
                 }
               },

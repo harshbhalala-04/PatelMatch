@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import '../../database/database.dart';
 import 'image_picker_screen.dart';
 
@@ -19,25 +20,37 @@ class UserNameScreen extends StatefulWidget {
 class _UserNameScreenState extends State<UserNameScreen> {
   TextEditingController _usernameController = new TextEditingController();
 
-  fetchUserName() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('username')) {
-        _usernameController.text = val['username'];
-      }
-    });
-  }
-
   @override
   void initState() {
-    fetchUserName();
+    if (widget.fromProfile) {
+      _usernameController.text = DataBaseMethods().fetchUserName();
+    }
     super.initState();
+  }
+
+  void showDialog() {
+    Get.defaultDialog(
+      middleText: "Plese Select Your Name",
+      title: "",
+      middleTextStyle: TextStyle(fontSize: 20),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text('Close'),
+                style: TextButton.styleFrom(
+                  textStyle: TextStyle(fontSize: 16)
+                )
+              ),
+          ],
+        )
+      ],
+      barrierDismissible: false,
+    );
   }
 
   @override
@@ -97,59 +110,22 @@ class _UserNameScreenState extends State<UserNameScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   String username = _usernameController.text;
-                  //print(username);
-
                   if (widget.fromProfile) {
                     if (username.isEmpty) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Please Select Your Name.'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Close')),
-                              ],
-                            );
-                          });
+                      showDialog();
                     } else {
                       Constants.myName = username;
                       DataBaseMethods().updateUserName(username);
-                      // Navigator.pop(context);
-
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (ctx) => EditProfileScreen()));
                       Navigator.pop(context);
                       Navigator.popAndPushNamed(
                           context, EditProfileScreen.routeName);
                     }
                   } else {
                     if (username.isEmpty) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Please Select Your Name.'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Close')),
-                              ],
-                            );
-                          });
+                      showDialog();
                     } else {
                       DataBaseMethods().addUsername(username);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (ctx) => ImagePickerScreen()));
+                      Get.to(ImagePickerScreen());
                     }
                   }
                 },
