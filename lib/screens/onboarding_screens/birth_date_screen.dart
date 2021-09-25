@@ -1,4 +1,4 @@
-import 'package:chat/controllers/birth_date_controller.dart';
+import 'package:chat/controllers/onboarding_screen_controller/birth_date_controller.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/gender_screen.dart';
 import 'package:chat/database/database.dart';

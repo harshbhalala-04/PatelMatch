@@ -164,7 +164,7 @@
 //   }
 // }
 
-import 'package:chat/controllers/request_tab_controller.dart';
+import 'package:chat/controllers/onboarding_screen_controller/request_tab_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -21,7 +21,6 @@ class _PeopleScreenState extends State<PeopleScreen> {
               'createdAt',
               descending: true,
             )
-            
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {

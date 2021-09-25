@@ -56,7 +56,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   void initState() {
-    
     DataBaseMethods().getUserByEmailId(widget.email);
     getChatRooms();
     super.initState();

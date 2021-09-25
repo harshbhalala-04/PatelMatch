@@ -1,16 +1,6 @@
 import 'package:chat/controllers/authController.dart';
-import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:get/get.dart';
-
-import '../helper/constants.dart';
-
-import '../database/database.dart';
 import 'package:flutter/material.dart';
-import 'onboarding_screens/user_name_screen.dart';
-import '../widgets/auth_form.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
 
 class AuthScreen extends GetWidget<AuthController> {
   final TextEditingController _emailController = TextEditingController();
@@ -27,7 +17,6 @@ class AuthScreen extends GetWidget<AuthController> {
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Form(
-               
                 child: Column(
                   children: [
                     TextFormField(

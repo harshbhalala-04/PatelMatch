@@ -8,15 +8,15 @@ import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  Rxn<User> _firebaseUser = Rxn<User>();
+  Rxn<User> firebaseUser = Rxn<User>();
   final isLoading = false.obs;
   final isLogin = true.obs;
 
-  String? get user => _firebaseUser.value?.email;
+  String? get user => firebaseUser.value?.email;
 
   @override
   void onInit() {
-    _firebaseUser.bindStream(_auth.authStateChanges());
+    firebaseUser.bindStream(_auth.authStateChanges());
   }
 
   void toggleLoginStatus() {

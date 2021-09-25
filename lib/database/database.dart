@@ -1,3 +1,4 @@
+import 'package:chat/helper/user_modal.dart';
 import 'package:get/get.dart';
 import '../helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -386,7 +387,7 @@ class DataBaseMethods {
   }
 
   getChatRooms() async {
-    String myName = Constants.myName;
+    String myName = Constants.username;
     try {
       return firestore
           .collection("chatroom")
@@ -462,5 +463,17 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  ///Get Current Loggedin user Details
+
+  Future<UserModel?> getCurrentLoggedInUser(String uid) async {
+    var doc = await firestore.collection("users").doc(uid).get();
+    return UserModel.fromJson(doc.data()!);
+  }
+
+  ///Get Details of user
+  UserModel getCurrentUser(Map<String, dynamic>? userData) {
+    return UserModel.fromJson(userData!);
   }
 }

@@ -1,7 +1,9 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FeedButton extends StatelessWidget {
-  const FeedButton({Key? key}) : super(key: key);
+  final feedScreenController = Get.put(FeedScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,11 @@ class FeedButton extends StatelessWidget {
               height: 45,
               child: FloatingActionButton(
                 onPressed: () {
-                  
+                  feedScreenController.currentIndex.value += 1;
+                  if (feedScreenController.currentIndex.value >=
+                      feedScreenController.userListLength.value) {
+                    feedScreenController.currentIndex.value = 0;
+                  }
                 },
                 child: Text(
                   'Decline',
@@ -67,7 +73,13 @@ class FeedButton extends StatelessWidget {
               width: 130,
               height: 45,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  feedScreenController.currentIndex.value += 1;
+                  if (feedScreenController.currentIndex.value >=
+                      feedScreenController.userListLength.value) {
+                    feedScreenController.currentIndex.value = 0;
+                  }
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
                 child: Ink(

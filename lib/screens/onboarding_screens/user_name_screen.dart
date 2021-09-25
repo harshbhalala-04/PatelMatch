@@ -114,7 +114,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
                     if (username.isEmpty) {
                       showDialog();
                     } else {
-                      Constants.myName = username;
+                      Constants.username = username;
                       DataBaseMethods().updateUserName(username);
                       Navigator.pop(context);
                       Navigator.popAndPushNamed(

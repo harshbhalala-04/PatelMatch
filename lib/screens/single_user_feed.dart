@@ -1,24 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat/helper/user_modal.dart';
 import 'package:chat/widgets/info_title.dart';
 import 'package:chat/widgets/user_image_card.dart';
 import 'package:chat/widgets/user_info_card.dart';
 import 'package:flutter/material.dart';
 
 class SingleUserFeed extends StatelessWidget {
-  final currentUserData;
-  final userImagesLength;
-  SingleUserFeed(
-      {required this.currentUserData, required this.userImagesLength});
+  final UserModel currentUser;
+  final int userImagesLength;
+  SingleUserFeed({required this.currentUser, required this.userImagesLength});
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    print(userImagesLength);
     return Container(
       height: screenSize.height,
       width: screenSize.width,
       child: Card(
         child: SingleChildScrollView(
-          //controller: scrollController,
           child: Column(
             children: [
               CachedNetworkImage(
@@ -27,7 +27,7 @@ class SingleUserFeed extends StatelessWidget {
                 height: screenSize.height,
                 width: screenSize.width,
                 fit: BoxFit.cover,
-                imageUrl: currentUserData.imageUrl,
+                imageUrl: currentUser.imgUrl!,
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -39,7 +39,7 @@ class SingleUserFeed extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '${currentUserData.name}, ${currentUserData.age}',
+                      '${currentUser.username}, ${currentUser.age}',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                           fontSize: 24,
@@ -96,15 +96,14 @@ class SingleUserFeed extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Row(
                   children: [
-                    UserInfoCard(
-                        title: 'Height', subTitle: currentUserData.height),
-                    currentUserData.height != ' '
+                    UserInfoCard(title: 'Height', subTitle: currentUser.height),
+                    currentUser.height != null
                         ? SizedBox(width: 20)
                         : SizedBox(
                             width: 0,
                           ),
                     UserInfoCard(
-                        title: 'Community', subTitle: currentUserData.community)
+                        title: 'Community', subTitle: currentUser.community)
                   ],
                 ),
               ),
@@ -115,15 +114,14 @@ class SingleUserFeed extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Row(
                   children: [
-                    UserInfoCard(
-                        title: 'Gender', subTitle: currentUserData.userGender),
-                    currentUserData.userGender != ' '
+                    UserInfoCard(title: 'Gender', subTitle: currentUser.gender),
+                    currentUser.gender != null
                         ? SizedBox(width: 20)
                         : SizedBox(
                             width: 0,
                           ),
                     UserInfoCard(
-                        title: 'Workout', subTitle: currentUserData.workout),
+                        title: 'Workout', subTitle: currentUser.workout),
                   ],
                 ),
               ),
@@ -134,10 +132,10 @@ class SingleUserFeed extends StatelessWidget {
                   ? Container(
                       height: 0,
                     )
-                  : UserImageCard(image: currentUserData.imageUrls[1]),
-              currentUserData.education != ' ' ||
-                      currentUserData.worklife != ' ' ||
-                      currentUserData.salary != ' '
+                  : UserImageCard(image: currentUser.imgUrls![1]),
+              currentUser.education != null ||
+                      currentUser.worklife != null ||
+                      currentUser.salary != null
                   ? InfoTitle(title: 'Professional Information')
                   : Container(
                       height: 0,
@@ -147,15 +145,14 @@ class SingleUserFeed extends StatelessWidget {
                 child: Row(
                   children: [
                     UserInfoCard(
-                        title: 'Education',
-                        subTitle: currentUserData.education),
-                    currentUserData.education != ' '
+                        title: 'Education', subTitle: currentUser.education),
+                    currentUser.education != null
                         ? SizedBox(width: 20)
                         : SizedBox(
                             width: 0,
                           ),
                     UserInfoCard(
-                        title: 'Worklife', subTitle: currentUserData.worklife),
+                        title: 'Worklife', subTitle: currentUser.worklife),
                   ],
                 ),
               ),
@@ -164,18 +161,22 @@ class SingleUserFeed extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: UserInfoCard(
-                    title: 'Salary', subTitle: currentUserData.salary),
+                child: Row(
+                  children: [
+                    UserInfoCard(title: 'Salary', subTitle: currentUser.salary),
+                  ],
+                ),
               ),
+              
               SizedBox(
                 height: 30,
               ),
-             userImagesLength < 3
+              userImagesLength < 3
                   ? Container(
                       height: 0,
                     )
-                  : UserImageCard(image: currentUserData.imageUrls[2]),
-              currentUserData.drink != ' ' || currentUserData.smoke != ' '
+                  : UserImageCard(image: currentUser.imgUrls![2]),
+              currentUser.drink != null || currentUser.smoke != null
                   ? InfoTitle(title: 'Social Life')
                   : Container(
                       height: 0,
@@ -184,29 +185,27 @@ class SingleUserFeed extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Row(
                   children: [
-                    UserInfoCard(
-                        title: 'Drink', subTitle: currentUserData.drink),
-                    currentUserData.drink != ' '
+                    UserInfoCard(title: 'Drink', subTitle: currentUser.drink),
+                    currentUser.drink != null
                         ? SizedBox(width: 20)
                         : SizedBox(
                             width: 0,
                           ),
-                    UserInfoCard(
-                        title: 'Smoke', subTitle: currentUserData.smoke)
+                    UserInfoCard(title: 'Smoke', subTitle: currentUser.smoke)
                   ],
                 ),
               ),
               SizedBox(
                 height: 30,
               ),
-             userImagesLength < 4
+              userImagesLength < 4
                   ? Container(
                       height: 0,
                     )
-                  : UserImageCard(image: currentUserData.imageUrls[3]),
-              currentUserData.zodiacSign != ' ' ||
-                      currentUserData.politics != ' ' ||
-                      currentUserData.movies != ' '
+                  : UserImageCard(image: currentUser.imgUrls![3]),
+              currentUser.zodiacSign != null ||
+                      currentUser.politics != null ||
+                      currentUser.movie != null
                   ? InfoTitle(title: 'Others')
                   : Container(
                       height: 0,
@@ -216,23 +215,26 @@ class SingleUserFeed extends StatelessWidget {
                 child: Row(
                   children: [
                     UserInfoCard(
-                        title: 'Zodiac Sign',
-                        subTitle: currentUserData.zodiacSign),
-                    currentUserData.zodiacSign != ' '
+                        title: 'Zodiac Sign', subTitle: currentUser.zodiacSign),
+                    currentUser.zodiacSign != null
                         ? SizedBox(width: 20)
                         : SizedBox(
                             width: 0,
                           ),
                     UserInfoCard(
                         title: 'Political inclination',
-                        subTitle: currentUserData.politics)
+                        subTitle: currentUser.politics)
                   ],
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: UserInfoCard(
-                      title: 'Movies', subTitle: currentUserData.movies)),
+             Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Row(
+                  children: [
+                    UserInfoCard(title: 'Movies', subTitle: currentUser.movie),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 30,
               ),
@@ -240,7 +242,7 @@ class SingleUserFeed extends StatelessWidget {
                   ? Container(
                       height: 0,
                     )
-                  : UserImageCard(image: currentUserData.imageUrls[4]),
+                  : UserImageCard(image: currentUser.imgUrls![4]),
               SizedBox(
                 height: 20,
               ),
@@ -248,7 +250,7 @@ class SingleUserFeed extends StatelessWidget {
                   ? Container(
                       height: 0,
                     )
-                  : UserImageCard(image: currentUserData.imageUrls[5]),
+                  : UserImageCard(image: currentUser.imgUrls![5]),
               SizedBox(
                 height: 80,
               )

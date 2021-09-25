@@ -1,4 +1,4 @@
-import 'package:chat/controllers/image_picker_controller.dart';
+import 'package:chat/controllers/onboarding_screen_controller/image_picker_controller.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/onboarding_screens/birth_date_screen.dart';
 import 'package:chat/database/database.dart';

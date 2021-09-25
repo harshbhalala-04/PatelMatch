@@ -1,4 +1,4 @@
-import 'package:chat/controllers/community_controller.dart';
+import 'package:chat/controllers/onboarding_screen_controller/community_controller.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/chat_section/home_screen.dart';
