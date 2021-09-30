@@ -1,14 +1,26 @@
 import 'package:chat/controllers/feed_screen_controller.dart';
+import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class FeedButton extends StatelessWidget {
+  final int index;
+  final String otherUsername;
+  final String otherImageUrl;
+  final String otherUserId;
+  FeedButton(
+      {required this.index,
+      required this.otherUsername,
+      required this.otherImageUrl,
+      required this.otherUserId});
   final feedScreenController = Get.put(FeedScreenController());
-
+  final globalController = Get.put(GlobalController());
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {},
@@ -40,7 +52,7 @@ class FeedButton extends StatelessWidget {
           height: 20,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: 15,
@@ -50,11 +62,19 @@ class FeedButton extends StatelessWidget {
               height: 45,
               child: FloatingActionButton(
                 onPressed: () {
-                  feedScreenController.currentIndex.value += 1;
-                  if (feedScreenController.currentIndex.value >=
-                      feedScreenController.userListLength.value) {
-                    feedScreenController.currentIndex.value = 0;
+                  print(
+                      'This is userslist length : ${feedScreenController.usersList.length}');
+                  print('Here its index ${index + 1}');
+                  if (index + 1 == feedScreenController.usersList.length) {
+                    feedScreenController.endUser.value = false;
                   }
+                  Get.find<FeedScreenController>()
+                      .scrollController
+                      .scrollToIndex(index + 1,
+                          preferPosition: AutoScrollPosition.begin);
+
+                  DataBaseMethods()
+                      .addDeclineMethod(otherUserId, otherUsername);
                 },
                 child: Text(
                   'Decline',
@@ -74,11 +94,23 @@ class FeedButton extends StatelessWidget {
               height: 45,
               child: FloatingActionButton(
                 onPressed: () {
-                  feedScreenController.currentIndex.value += 1;
-                  if (feedScreenController.currentIndex.value >=
-                      feedScreenController.userListLength.value) {
-                    feedScreenController.currentIndex.value = 0;
+                  print(
+                      'This is userslist length : ${feedScreenController.usersList.length}');
+                  print('Here its index ${index + 1}');
+                  if (index + 1 > feedScreenController.usersList.length) {
+                    feedScreenController.endUser.value = false;
                   }
+
+                  Get.find<FeedScreenController>()
+                      .scrollController
+                      .scrollToIndex(index + 1,
+                          preferPosition: AutoScrollPosition.begin);
+
+                  DataBaseMethods().addRequestMethod(
+                      globalController.currentAppuser.value.username!,
+                      otherUsername,
+                      otherImageUrl,
+                      otherUserId);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),

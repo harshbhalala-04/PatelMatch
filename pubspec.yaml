@@ -44,7 +44,8 @@ dependencies:
   cached_network_image: ^3.0.0
   swipe_cards: ^0.1.0
   get:
-  
+  image_cropper: ^1.4.1
+  scroll_to_index: any
   
 
 dev_dependencies:

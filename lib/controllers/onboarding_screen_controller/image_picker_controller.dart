@@ -1,32 +1,42 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class ImagePickerController extends GetxController {
-  List<dynamic> tempImage = [].obs;
+  final tempImage = [].obs;
   final count = 0.obs;
   final isLoading = false.obs;
   String? imgUrl = '';
   File? _pickedImageVar;
   final newIndex = 0.obs;
+  List<File> choosenImage = [
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+  ].obs;
+  List<bool> isUploadedImage = [false, false, false, false, false, false].obs;
   List<dynamic> image = [
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-      "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    ].obs;
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+  ].obs;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
   }
-  
+
   void showCustomDialog() {
     Get.defaultDialog(
       middleText: "Plese Select At Least 1 Image",
@@ -48,6 +58,47 @@ class ImagePickerController extends GetxController {
       ],
       barrierDismissible: false,
     );
+  }
+
+  /// Crop Image
+  Future cropImage(File pickedImage) async {
+    try {
+      File? croppedFile = await ImageCropper.cropImage(
+          sourcePath: pickedImage.path,
+          aspectRatioPresets: Platform.isAndroid
+              ? [
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9
+                ]
+              : [
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio5x3,
+                  CropAspectRatioPreset.ratio5x4,
+                  CropAspectRatioPreset.ratio7x5,
+                  CropAspectRatioPreset.ratio16x9
+                ],
+          androidUiSettings: AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              lockAspectRatio: false),
+          compressQuality: 50,
+          iosUiSettings: IOSUiSettings(
+            title: 'Crop Image',
+          ));
+      if (croppedFile != null) {
+        pickedImage = croppedFile;
+      }
+      return pickedImage;
+    } catch (e) {
+      print(e);
+    }
   }
 
   void pickImage(BuildContext context, int index) async {
@@ -89,35 +140,32 @@ class ImagePickerController extends GetxController {
       if (pickedImageFile == null) {
         isLoading.toggle();
       } else {
-        final File file = File(pickedImageFile.path);
-
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        final User? user = auth.currentUser;
-
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('user_image')
-            .child(user!.uid + 'folder')
-            .child(user.uid + index.toString() + '.jpg');
-
-       
-
-        await ref.putFile(file).whenComplete(() => print('Image Upload'));
-
-        String url = await ref.getDownloadURL();
-        // setState(() {
-        //   _pickedImageVar = file;
-        //   print(_pickedImageVar);
-        //   _image[index] = url;
-        //   newIndex = index;
-        //   isLoading = false;
-        //   tempImage.add(url);
-        // });
-        _pickedImageVar = file;
-        image[index] = url;
+        File file = File(pickedImageFile.path);
+        print(file);
+        file = await cropImage(file);
+        choosenImage[index] = file;
+        isUploadedImage[index] = true;
         newIndex.value = index;
+        tempImage.insert(index, file);
+
+        // final FirebaseAuth auth = FirebaseAuth.instance;
+        // final User? user = auth.currentUser;
+
+        // final ref = FirebaseStorage.instance
+        //     .ref()
+        //     .child('user_image')
+        //     .child(user!.uid + 'folder')
+        //     .child(user.uid + index.toString() + '.jpg');
+
+        // await ref.putFile(file).whenComplete(() => print('Image Upload'));
+
+        // String url = await ref.getDownloadURL();
+
+        // _pickedImageVar = file;
+        // image[index] = url;
+        // newIndex.value = index;
         isLoading.toggle();
-        tempImage.add(url);
+        //tempImage.add(url);
       }
     }
   }

@@ -10,6 +10,7 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
     UserModel({
+        this.uid,
         this.username,
         this.age,
         this.height,
@@ -28,7 +29,7 @@ class UserModel {
         this.imgUrl,
         this.imgUrls,
     });
-
+    String? uid;
     String? username;
     String? age;
     String? height;
@@ -48,6 +49,7 @@ class UserModel {
     List<String>? imgUrls;
 
     factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        uid: json["uid"] == null ? null : json["uid"],
         username: json["username"] == null ? null : json["username"],
         age: json["age"] == null ? null : json["age"],
         height: json["height"] == null ? null : json["height"],
@@ -68,6 +70,7 @@ class UserModel {
     );
 
     Map<String, dynamic> toJson() => {
+        "uid": uid == null ? null : uid,
         "username": username == null ? null : username,
         "age": age == null ? null : age,
         "height": height == null ? null : height,

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:chat/helper/user_modal.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import '../helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,7 +109,7 @@ class DataBaseMethods {
     // print('Here update decline function complete');
   }
 
-  addRequestMethod(String myUsername, String otherUsername, int temp,
+  addRequestMethod(String myUsername, String otherUsername, 
       String otherUserImageUrl, String otherUserId) async {
     DateTime time = DateTime.now();
     var myData;
@@ -202,14 +205,6 @@ class DataBaseMethods {
           .collection("users")
           .doc(user!.uid)
           .update({"username": username});
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  addUserImage(String imgUrl) {
-    try {
-      firestore.collection("users").doc(user!.uid).update({"imgUrl": imgUrl});
     } catch (e) {
       print(e.toString());
     }
@@ -475,5 +470,41 @@ class DataBaseMethods {
   ///Get Details of user
   UserModel getCurrentUser(Map<String, dynamic>? userData) {
     return UserModel.fromJson(userData!);
+  }
+
+  uploadUserImages(List<dynamic> userImages) async {
+    List<String> urlList = [];
+    print('This is user images length: ${userImages.length}');
+    for (int i = 0; i < userImages.length; i++) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('user_image')
+          .child(user!.uid + 'folder')
+          .child(user!.uid + i.toString() + '.jpg');
+
+      await ref
+          .putFile(userImages[i])
+          .whenComplete(() => print('Image Upload'));
+
+      String url = await ref.getDownloadURL();
+      urlList.add(url);
+      if (i == 0) {
+        await firestore
+            .collection("users")
+            .doc(user!.uid)
+            .update({"imgUrl": url});
+        Constants.userImage = url;
+      }
+    }
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .update({'imgUrls': FieldValue.arrayUnion(urlList)});
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .update({'imgCount': urlList.length});
   }
 }

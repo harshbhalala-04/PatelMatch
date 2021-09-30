@@ -19,8 +19,9 @@ class CustomTabBar extends StatefulWidget {
 }
 
 class _CustomTabBarState extends State<CustomTabBar> {
-  final screenController = Get.put(ScreenController());
   final globalController = Get.put(GlobalController());
+  final screenController = Get.put(ScreenController());
+  
   PageController? pageController;
 
   void initState() {
@@ -34,109 +35,118 @@ class _CustomTabBarState extends State<CustomTabBar> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          leading: Container(
-            margin: EdgeInsets.all(4),
-            child: Obx(
-              () => InkWell(
-                onTap: () {
-                  Get.to(ProfileScreen());
-                },
-                child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(screenController.userProfileUrl.value),
-                  backgroundColor: Colors.grey,
-                ),
-              ),
-            ),
-          ),
-          centerTitle: true,
-          title: Row(
-            children: [
-              Obx(
-                () => TabButton(
-                  text: "  Feed  ",
-                  pageNumber: 0,
-                  selectedPage: screenController.selectedPage.value,
-                  onPressed: () {
-                    pageController!.animateToPage(0,
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.fastLinearToSlowEaseIn);
-                  },
-                ),
-              ),
-              
-              Obx(
-                () => TabButton(
-                  text: "  Requests  ",
-                  pageNumber: 1,
-                  selectedPage: screenController.selectedPage.value,
-                  onPressed: () {
-                    pageController!.animateToPage(1,
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.fastLinearToSlowEaseIn);
-                  },
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            Container(
-              width: 30,
-              child: Container(
-                margin: EdgeInsets.only(top: 12),
-                child: InkWell(
-                  onTap: () {
-                    Get.to(FilterScreen());
-                  },
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        'iPhone 11 Pro/Vector.svg',
-                        fit: BoxFit.cover,
-                        height: 6.94,
-                        width: 27.69,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppBar(
+              backgroundColor: Colors.white,
+              leading:Obx(
+                        () =>  screenController.userProfileUrl.value == null ||
+                      screenController.userProfileUrl.value == ''
+                  ? Container()
+                  : Container(
+                      margin: EdgeInsets.all(4),
+                      child:Obx(
+                        () => InkWell(
+                          onTap: () {
+                            Get.to(ProfileScreen());
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                screenController.userProfileUrl.value),
+                            backgroundColor: Colors.grey,
+                          ),
+                        )),
                       ),
-                      SvgPicture.asset(
-                        'iPhone 11 Pro/Vector-1.svg',
-                        fit: BoxFit.cover,
-                        height: 6.94,
-                        width: 27.69,
+                    ),
+              centerTitle: true,
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Obx(
+                    () => TabButton(
+                      text: "  Feed  ",
+                      pageNumber: 0,
+                      selectedPage: screenController.selectedPage.value,
+                      onPressed: () {
+                        pageController!.animateToPage(0,
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.fastLinearToSlowEaseIn);
+                      },
+                    ),
+                  ),
+                  Obx(
+                    () => TabButton(
+                      text: "  Requests  ",
+                      pageNumber: 1,
+                      selectedPage: screenController.selectedPage.value,
+                      onPressed: () {
+                        pageController!.animateToPage(1,
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.fastLinearToSlowEaseIn);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                Container(
+                  width: 30,
+                  child: Container(
+                    margin: EdgeInsets.only(top: 12),
+                    child: InkWell(
+                      onTap: () {
+                        Get.to(FilterScreen());
+                      },
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            'iPhone 11 Pro/Vector.svg',
+                            fit: BoxFit.cover,
+                            height: 6.94,
+                            width: 27.69,
+                          ),
+                          SvgPicture.asset(
+                            'iPhone 11 Pro/Vector-1.svg',
+                            fit: BoxFit.cover,
+                            height: 6.94,
+                            width: 27.69,
+                          ),
+                          SvgPicture.asset(
+                            'iPhone 11 Pro/Vector-2.svg',
+                            fit: BoxFit.cover,
+                            height: 6.94,
+                            width: 27.69,
+                          ),
+                        ],
                       ),
-                      SvgPicture.asset(
-                        'iPhone 11 Pro/Vector-2.svg',
-                        fit: BoxFit.cover,
-                        height: 6.94,
-                        width: 27.69,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 14,
-            ),
-            InkWell(
-              onTap: () {
-                Get.to(MessageScreen());
-              },
-              child: Container(
-                margin: EdgeInsets.only(right: 3),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SvgPicture.asset(
-                      'assets/iPhone 11 Pro 2/Vector.svg',
-                      height: 31.04,
-                      width: 36.54,
-                    ),
-                  ],
+                SizedBox(
+                  width: 14,
                 ),
-              ),
+                InkWell(
+                  onTap: () {
+                    Get.to(MessageScreen());
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 3),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SvgPicture.asset(
+                          'assets/iPhone 11 Pro 2/Vector.svg',
+                          height: 31.04,
+                          width: 36.54,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -152,9 +162,9 @@ class _CustomTabBarState extends State<CustomTabBar> {
           RequestTabScreen(),
         ],
       ),
-      floatingActionButton: Obx(() => (screenController.selectedPage.value == 0)
-          ? FeedButton()
-          : Container()),
+      // floatingActionButton: Obx(() => (screenController.selectedPage.value == 0)
+      //     ? FeedButton(index: 0)
+      //     : Container()),
     );
   }
 }
