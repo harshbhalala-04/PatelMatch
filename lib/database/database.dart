@@ -109,16 +109,20 @@ class DataBaseMethods {
     // print('Here update decline function complete');
   }
 
-  addRequestMethod(String myUsername, String otherUsername, 
-      String otherUserImageUrl, String otherUserId) async {
+  addRequestMethod(String myUsername, String otherUsername,
+      String otherUserImageUrl, String otherUserId, int bookay) async {
     DateTime time = DateTime.now();
     var myData;
     var otherData;
     String? myName;
     String? myEmail;
+    int bookayAvailable = 0;
 
     try {
       await firestore.collection("users").doc(user!.uid).get().then((val) {
+        Map<String, dynamic> tmpMap = val.data()!;
+        bookayAvailable = tmpMap['bookayAvailable'];
+        print('In try : $bookayAvailable');
         if (val.data()!.containsKey('declineUsers')) {
           List<dynamic> declineUsers = val['declineUsers'];
           for (int i = 0; i < declineUsers.length; i++) {
@@ -130,6 +134,15 @@ class DataBaseMethods {
           }
         }
       });
+      print('Here : $bookayAvailable');
+      print('Here: $bookay');
+      int remaningBookay = bookayAvailable - bookay;
+
+      print('This is remaining bookay : $remaningBookay');
+
+      if (remaningBookay < 0) {
+        remaningBookay = 0;
+      }
 
       await firestore.collection("users").doc(user!.uid).get().then((val) {
         myName = val['username'];
@@ -142,7 +155,7 @@ class DataBaseMethods {
           'time': time,
           'recieved': '',
           'sent': otherUsername,
-          'bookay': 0,
+          'bookay': bookay,
           'image': otherUserImageUrl,
           'id': otherUserId
         }
@@ -153,7 +166,7 @@ class DataBaseMethods {
           'time': time,
           'recieved': myName,
           'sent': '',
-          'bookay': 0,
+          'bookay': bookay,
           'image': Constants.userImage,
           'id': myUid,
         }
@@ -162,10 +175,10 @@ class DataBaseMethods {
       Constants.userProfileUrls.add(otherUserImageUrl);
       // Constants.userProfileEmails.add(otherEmail);
 
-      await firestore
-          .collection("users")
-          .doc(myUid)
-          .update({'friendRequest': FieldValue.arrayUnion(myMap)});
+      await firestore.collection("users").doc(myUid).update({
+        'friendRequest': FieldValue.arrayUnion(myMap),
+        'bookayAvailable': remaningBookay,
+      });
 
       await firestore
           .collection("users")

@@ -28,6 +28,7 @@ class UserModel {
         this.imgCount,
         this.imgUrl,
         this.imgUrls,
+        this.bookayAvailable,
     });
     String? uid;
     String? username;
@@ -47,6 +48,7 @@ class UserModel {
     int? imgCount;
     String? imgUrl;
     List<String>? imgUrls;
+    int? bookayAvailable;
 
     factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         uid: json["uid"] == null ? null : json["uid"],
@@ -67,6 +69,7 @@ class UserModel {
         imgCount: json["imgCount"] == null ? null : json["imgCount"],
         imgUrl: json["imgUrl"] == null ? null : json["imgUrl"],
         imgUrls: json["imgUrls"] == null ? null : List<String>.from(json["imgUrls"].map((x) => x)),
+        bookayAvailable: json["bookayAvailable"] == null ? null : json["bookayAvailable"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -88,5 +91,6 @@ class UserModel {
         "imgCount": imgCount == null ? null : imgCount,
         "imgUrl": imgUrl == null ? null : imgUrl,
         "imgUrls": imgUrls == null ? null : List<dynamic>.from(imgUrls!.map((x) => x)),
+        "bookayAvailable": bookayAvailable == null ? null : bookayAvailable,
     };
 }

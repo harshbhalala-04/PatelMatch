@@ -1,56 +1,69 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class SingleUserSent extends StatefulWidget {
+class SingleUserSent extends StatelessWidget {
   List<dynamic> sentProfiles;
 
   SingleUserSent({required this.sentProfiles});
 
   @override
-  _SingleUserSentState createState() => _SingleUserSentState();
-}
-
-class _SingleUserSentState extends State<SingleUserSent> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              Text(
-                'Sent ',
-                style: TextStyle(
-                  fontSize: 14,
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Text(
+                  'Sent ',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
               SizedBox(
                 width: 4,
               ),
-              Text('(' + widget.sentProfiles.length.toString() + ')',
+              Text('(' + sentProfiles.length.toString() + ')',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                   )),
             ],
           ),
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: widget.sentProfiles.length,
+            itemCount: sentProfiles.length,
             itemBuilder: (context, index) {
-              print('This is list tile starting');
-              print(widget.sentProfiles[index]['sent']);
-              print(widget.sentProfiles[index]['image']);
               return InkWell(
                 onTap: () {},
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundImage: CachedNetworkImageProvider(
-                        widget.sentProfiles[index]['image']),
+                        sentProfiles[index]['image']),
                     backgroundColor: Colors.grey,
                   ),
-                  title: Text(widget.sentProfiles[index]['sent']),
+                  title: Row(
+                    children: [
+                      Text("${sentProfiles[index]['sent']}  "),
+                      sentProfiles[index]['bookay'] > 0
+                          ? Text("${sentProfiles[index]['bookay'].toString()} ")
+                          : Container(),
+                      sentProfiles[index]['bookay'] > 0
+                          ? Transform.rotate(
+                              angle: 0.2,
+                              child: Image.asset(
+                                'assets/bokay.png',
+                                color: Colors.pink,
+                                width: 15,
+                                height: 20,
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
                   trailing: TextButton(
                       child: Text(
                         'View',

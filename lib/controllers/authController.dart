@@ -39,6 +39,7 @@ class AuthController extends GetxController {
         'email': email,
         'createdAt': Timestamp.now(),
         'uid': userCredential.user!.uid,
+        'bookayAvailable': 5,
       });
       Get.off(UserNameScreen(fromProfile: false));
     } on FirebaseAuthException catch (error) {

@@ -1,6 +1,7 @@
 import 'package:chat/controllers/authController.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/helper/user_modal.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,8 @@ class GlobalController extends GetxController {
     isLoading.toggle();
   }
 
+ 
+  
   @override
   void onInit() {
     // TODO: implement onInit

@@ -50,16 +50,15 @@ class FeedScreenController extends GetxController {
   getUsers() async {
     final stopwatch = Stopwatch()..start();
     List<UserModel> tmpUsersList = <UserModel>[];
+    await firestore.collection("users").doc(user!.uid).get().then((val) {
+      Map<String, dynamic> tmpMap = val.data()!;
+      gender = tmpMap['gender'];
+      print('Here fetch Gender');
+    });
     var query = firebaseFirestore
         .collection("users")
-        // .where("gender",
-        //     isEqualTo:
-        //         globalController.gender.value == "Female" ? "Male" : "Female")
+        .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
         .orderBy("createdAt", descending: true);
-
-    if (lastUser == null) {
-      endUser.toggle();
-    }
 
     if (lastUser != null) {
       isLoadingMoreData = true;
@@ -77,7 +76,6 @@ class FeedScreenController extends GetxController {
           currentItemLength = currentItemLength + snapshot.docs.length;
           if (snapshot.docs.length < itemLimit) {
             hasMoreData = false;
-
           }
         }
       });
@@ -91,6 +89,27 @@ class FeedScreenController extends GetxController {
     stopwatch.stop();
     // print('doSomething() executed in ${stopwatch.elapsed}');
   }
+
+  // void showBookayDialogue() {
+  //   Get.defaultDialog(
+  //     title: "",
+  //     content: SingleChildScrollView(
+  //       child: Column(
+  //         children: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.end,
+  //             children: [
+  //               TextButton(
+  //                 onPressed: () {},
+  //                 child: Text('Buy bouquets'),
+  //               )
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   void onInit() {

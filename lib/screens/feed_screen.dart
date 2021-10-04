@@ -25,38 +25,41 @@ class _FeedScreenState extends State<FeedScreen> {
           feedScreenController.previousItemLength = 0;
           feedScreenController.getUsers();
         },
-        builder: (controller) =>Obx(() => feedScreenController.endUser.value ?  ListView.builder(
-            controller: feedScreenController.scrollController,
-            itemCount: feedScreenController.usersList.length,
-            scrollDirection: Axis.horizontal,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Positioned(
-                    child: SingleUserFeed(
-                      currentUser: feedScreenController.usersList[index],
-                      userImagesLength:
-                          feedScreenController.usersList[index].imgUrls!.length,
-                      index: index,
-                    ),
-                  ),
-                  Positioned(
-                      top: MediaQuery.of(context).size.height - 250,
-                      left: 0,
-                      right: 0,
-                      child: FeedButton(
-                        index: index,
-                        otherImageUrl:
-                            feedScreenController.usersList[index].imgUrl!,
-                        otherUserId: feedScreenController.usersList[index].uid!,
-                        otherUsername:
-                            feedScreenController.usersList[index].username!,
-                      ))
-                ],
-              );
-            }) 
-            : Center(child: Text('No users Found'),)
-            ));
+        builder: (controller) => Obx(() => feedScreenController.endUser.value
+            ? Center(
+                child: Text('No users Found'),
+              )
+            : ListView.builder(
+                controller: feedScreenController.scrollController,
+                itemCount: feedScreenController.usersList.length,
+                scrollDirection: Axis.horizontal,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Stack(
+                    children: [
+                      Positioned(
+                        child: SingleUserFeed(
+                          currentUser: feedScreenController.usersList[index],
+                          userImagesLength: feedScreenController
+                              .usersList[index].imgUrls!.length,
+                          index: index,
+                        ),
+                      ),
+                      Positioned(
+                          top: MediaQuery.of(context).size.height - 250,
+                          left: 0,
+                          right: 0,
+                          child: FeedButton(
+                            index: index,
+                            otherImageUrl:
+                                feedScreenController.usersList[index].imgUrl!,
+                            otherUserId:
+                                feedScreenController.usersList[index].uid!,
+                            otherUsername:
+                                feedScreenController.usersList[index].username!,
+                          ))
+                    ],
+                  );
+                })));
   }
 }

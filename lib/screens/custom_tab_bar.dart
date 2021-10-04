@@ -21,7 +21,7 @@ class CustomTabBar extends StatefulWidget {
 class _CustomTabBarState extends State<CustomTabBar> {
   final globalController = Get.put(GlobalController());
   final screenController = Get.put(ScreenController());
-  
+
   PageController? pageController;
 
   void initState() {
@@ -34,62 +34,55 @@ class _CustomTabBarState extends State<CustomTabBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
+        preferredSize: Size.fromHeight(60),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppBar(
-              backgroundColor: Colors.white,
-              leading:Obx(
-                        () =>  screenController.userProfileUrl.value == null ||
-                      screenController.userProfileUrl.value == ''
-                  ? Container()
-                  : Container(
-                      margin: EdgeInsets.all(4),
-                      child:Obx(
-                        () => InkWell(
-                          onTap: () {
-                            Get.to(ProfileScreen());
-                          },
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                screenController.userProfileUrl.value),
-                            backgroundColor: Colors.grey,
-                          ),
-                        )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(4),
+                  child: Obx(() => InkWell(
+                        onTap: () {
+                          Get.to(ProfileScreen());
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              screenController.userProfileUrl.value),
+                          backgroundColor: Colors.grey,
+                        ),
+                      )),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Obx(
+                      () => TabButton(
+                        text: "  Feed  ",
+                        pageNumber: 0,
+                        selectedPage: screenController.selectedPage.value,
+                        onPressed: () {
+                          pageController!.animateToPage(0,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.fastLinearToSlowEaseIn);
+                        },
                       ),
                     ),
-              centerTitle: true,
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Obx(
-                    () => TabButton(
-                      text: "  Feed  ",
-                      pageNumber: 0,
-                      selectedPage: screenController.selectedPage.value,
-                      onPressed: () {
-                        pageController!.animateToPage(0,
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.fastLinearToSlowEaseIn);
-                      },
+                    Obx(
+                      () => TabButton(
+                        text: "  Requests  ",
+                        pageNumber: 1,
+                        selectedPage: screenController.selectedPage.value,
+                        onPressed: () {
+                          pageController!.animateToPage(1,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.fastLinearToSlowEaseIn);
+                        },
+                      ),
                     ),
-                  ),
-                  Obx(
-                    () => TabButton(
-                      text: "  Requests  ",
-                      pageNumber: 1,
-                      selectedPage: screenController.selectedPage.value,
-                      onPressed: () {
-                        pageController!.animateToPage(1,
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.fastLinearToSlowEaseIn);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
+                  ],
+                ),
                 Container(
                   width: 30,
                   child: Container(
@@ -122,9 +115,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 14,
                 ),
                 InkWell(
                   onTap: () {

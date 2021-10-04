@@ -1,6 +1,7 @@
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/widgets/bookay_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -23,7 +24,18 @@ class FeedButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
-          onTap: () {},
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return BookayDialogue(
+                    index: index,
+                    otherUsername: otherUsername,
+                    otherImageUrl: otherImageUrl,
+                    otherUserId: otherUserId);
+              },
+            );
+          },
           child: Align(
             alignment: Alignment.topRight,
             child: Container(
@@ -66,7 +78,7 @@ class FeedButton extends StatelessWidget {
                       'This is userslist length : ${feedScreenController.usersList.length}');
                   print('Here its index ${index + 1}');
                   if (index + 1 == feedScreenController.usersList.length) {
-                    feedScreenController.endUser.value = false;
+                    feedScreenController.endUser.value = true;
                   }
                   Get.find<FeedScreenController>()
                       .scrollController
@@ -97,20 +109,19 @@ class FeedButton extends StatelessWidget {
                   print(
                       'This is userslist length : ${feedScreenController.usersList.length}');
                   print('Here its index ${index + 1}');
-                  if (index + 1 > feedScreenController.usersList.length) {
-                    feedScreenController.endUser.value = false;
+                  if (index + 1 == feedScreenController.usersList.length) {
+                    feedScreenController.endUser.value = true;
                   }
-
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
                           preferPosition: AutoScrollPosition.begin);
-
                   DataBaseMethods().addRequestMethod(
                       globalController.currentAppuser.value.username!,
                       otherUsername,
                       otherImageUrl,
-                      otherUserId);
+                      otherUserId,
+                      0);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
