@@ -73,6 +73,7 @@ class FeedButton extends StatelessWidget {
               width: 130,
               height: 45,
               child: FloatingActionButton(
+                heroTag: 'DeclineButton1',
                 onPressed: () {
                   print(
                       'This is userslist length : ${feedScreenController.usersList.length}');
@@ -80,10 +81,13 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+
                   Get.find<FeedScreenController>()
                       .scrollController
-                      .scrollToIndex(index + 1,
-                          preferPosition: AutoScrollPosition.begin);
+                      .scrollToIndex(
+                        index + 1,
+                        preferPosition: AutoScrollPosition.begin,
+                      );
 
                   DataBaseMethods()
                       .addDeclineMethod(otherUserId, otherUsername);
@@ -105,6 +109,7 @@ class FeedButton extends StatelessWidget {
               width: 130,
               height: 45,
               child: FloatingActionButton(
+                heroTag: 'ConnectButton1',
                 onPressed: () {
                   print(
                       'This is userslist length : ${feedScreenController.usersList.length}');
@@ -112,10 +117,12 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+                  
+                  
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
-                          preferPosition: AutoScrollPosition.begin);
+                          preferPosition: AutoScrollPosition.end);
                   DataBaseMethods().addRequestMethod(
                       globalController.currentAppuser.value.username!,
                       otherUsername,

@@ -109,6 +109,35 @@ class DataBaseMethods {
     // print('Here update decline function complete');
   }
 
+  ///Remove request of another user from profile:
+  declineRequest(String uid) async {
+    List<dynamic> tmpMap = [];
+    List<Map<String, dynamic>> removeMap = [];
+
+    print("this is debug");
+    try {
+      await firestore.collection("users").doc(user!.uid).get().then((val) {
+        tmpMap = val['friendRequest'];
+      });
+
+      for (int i = 0; i < tmpMap.length; i++) {
+        if (tmpMap[i]['id'] == uid) {
+          Map<String, dynamic> findMap = tmpMap[i];
+          removeMap.add(findMap);
+          break;
+        }
+      }
+
+      await firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({'friendRequest': FieldValue.arrayRemove(removeMap)});
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  ///Sent request to another user.
   addRequestMethod(String myUsername, String otherUsername,
       String otherUserImageUrl, String otherUserId, int bookay) async {
     DateTime time = DateTime.now();
@@ -134,8 +163,7 @@ class DataBaseMethods {
           }
         }
       });
-      print('Here : $bookayAvailable');
-      print('Here: $bookay');
+
       int remaningBookay = bookayAvailable - bookay;
 
       print('This is remaining bookay : $remaningBookay');
@@ -184,6 +212,55 @@ class DataBaseMethods {
           .collection("users")
           .doc(otherUserId)
           .update({'friendRequest': FieldValue.arrayUnion(otherMap)});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserToMatch(String myUsername, String myImageUrl, String otherUsername,
+      String otherUserImageUrl, String otherUserId) async {
+    DateTime time = DateTime.now();
+
+    List<Map<String, dynamic>> myMatchMap = [
+      {"friendname": otherUsername, "friendImage": otherUserImageUrl}
+    ];
+
+    List<Map<String, dynamic>> otherMatchMap = [
+      {"friendname": myUsername, "friendImage": myImageUrl}
+    ];
+
+    try {
+      await firestore.collection("users").doc(user!.uid).get().then((value) {
+        Map<String, dynamic> mp = value.data()!;
+        if (mp.containsKey('friendRequest')) {
+          List<dynamic> friendList = mp['friendRequest'];
+          for (int i = 0; i < friendList.length; i++) {
+            if (friendList[i]['id'] == otherUserId) {
+              List<Map<String, dynamic>> deleteFriendRequest = [friendList[i]];
+              firestore.collection("users").doc(user!.uid).update({
+                'friendRequest': FieldValue.arrayRemove(deleteFriendRequest),
+                'matchUsers': FieldValue.arrayUnion(myMatchMap)
+              });
+            }
+          }
+        }
+      });
+
+      await firestore.collection("users").doc(otherUserId).get().then((value) {
+        Map<String, dynamic> mp = value.data()!;
+        if (mp.containsKey('friendRequest')) {
+          List<dynamic> friendList = mp['friendRequest'];
+          for (int i = 0; i < friendList.length; i++) {
+            if (friendList[i]['id'] == user!.uid) {
+              List<Map<String, dynamic>> deleteFriendRequest = [friendList[i]];
+              firestore.collection("users").doc(otherUserId).update({
+                'friendRequest': FieldValue.arrayRemove(deleteFriendRequest),
+                'matchUsers': FieldValue.arrayUnion(otherMatchMap)
+              });
+            }
+          }
+        }
+      });
     } catch (e) {
       print(e.toString());
     }

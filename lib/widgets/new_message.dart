@@ -59,12 +59,8 @@ class _NewMessageState extends State<NewMessage> {
       };
 
       DataBaseMethods()
-          .updateLastMessageSend(widget.chatRoomId, lastMessageInfoMap);
-
-      
-        
+          .updateLastMessageSend(widget.chatRoomId, lastMessageInfoMap);  
         messageId = '';
-      
     });
   }
 

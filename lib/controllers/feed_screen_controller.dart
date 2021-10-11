@@ -21,8 +21,11 @@ class FeedScreenController extends GetxController {
   int tmp = 0;
   List<UserModel> usersList = <UserModel>[];
   final AutoScrollController scrollController = AutoScrollController();
+  
   int currentItemLength = 0;
   int previousItemLength = 0;
+
+ 
 
   DocumentSnapshot? lastUser;
   bool isLoadingMoreData = false;
@@ -89,27 +92,6 @@ class FeedScreenController extends GetxController {
     stopwatch.stop();
     // print('doSomething() executed in ${stopwatch.elapsed}');
   }
-
-  // void showBookayDialogue() {
-  //   Get.defaultDialog(
-  //     title: "",
-  //     content: SingleChildScrollView(
-  //       child: Column(
-  //         children: [
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.end,
-  //             children: [
-  //               TextButton(
-  //                 onPressed: () {},
-  //                 child: Text('Buy bouquets'),
-  //               )
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   void onInit() {

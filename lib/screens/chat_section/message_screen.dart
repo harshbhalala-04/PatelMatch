@@ -1,6 +1,10 @@
-import 'package:chat/screens/chat_section/people_screen.dart';
+import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/database/database.dart';
+import 'package:chat/widgets/chat_room_list_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'conversation_screen.dart';
 
@@ -12,54 +16,73 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-
   final String? email = FirebaseAuth.instance.currentUser!.email;
-  
+  String myName = Get.find<GlobalController>().currentAppuser.value.username!;
+  final firestore = FirebaseFirestore.instance;
+  Stream? chatRoomsStream;
+  // getChatRooms() async {
+  //   chatRoomsStream = await DataBaseMethods().getChatRooms();
+  //   setState(() {});
+  // }
+
+  @override
+  void initState() {
+    print("Init state of conversation screen works here");
+    DataBaseMethods().getUserByEmailId(email!);
+
+    //getChatRooms();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Message', style: TextStyle(color: Colors.black),),
+        title: Text(
+          'Conversations',
+          style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Get.back(),
         ),
       ),
-      body: DefaultTabController(
-            length: 2,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  constraints: BoxConstraints(maxHeight: 150.0),
-                  child: Material(
-                    color: Colors.white,
-                    child: TabBar(
-                      labelColor: Colors.black,
-                      automaticIndicatorColorAdjustment: true,
-                      indicatorColor: Colors.black,
-                      unselectedLabelColor: Colors.grey,
-                      tabs: [
-                        Tab(
-                          text: 'Conversations',
-                        ),
-                        Tab(text: 'People'),
-                      ],
-                    ),
-                  ),
-                ),
-                
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ConversationScreen(email: email),
-                      PeopleScreen(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+      body: StreamBuilder(
+          stream: firestore
+              .collection("chatroom")
+              .orderBy("lastMessageTs", descending: true)
+              .where("users", arrayContains: myName)
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (!snapshot.hasData) {
+              return Center(
+                child: Text('Your Conversations appear Here.'),
+              );
+            }
+            final chatRoomDocs = snapshot.data!.docs;
+            return ListView.builder(
+                itemCount: chatRoomDocs.length,
+                shrinkWrap: true,
+                itemBuilder: (_, index) {
+                  DocumentSnapshot ds = snapshot.data.docs[index];
+                  print(ds['chatRoomId']);
+                  print('This is chat Room Id');
+                  print(ds['lastMessage']);
+                  print('This is last message');
+                  return ChatRoomListTile(
+                    chatRoomId: ds['chatRoomId'],
+                    lastMessage: ds['lastMessage'],
+                    lastMessageTs: ds['lastMessageTs'],
+                  );
+                });
+          }),
     );
   }
 }

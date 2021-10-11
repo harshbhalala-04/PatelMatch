@@ -80,7 +80,7 @@ class ImagePickerScreen extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       )
                                     : DecorationImage(
-                                        image: NetworkImage(
+                                        image: AssetImage(
                                             imagePickerController.image[index]),
                                         fit: BoxFit.cover,
                                       ),

@@ -77,6 +77,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
                   fontSize: 25,
                 ),
               ),
+              
               SizedBox(
                 height: 5,
               ),

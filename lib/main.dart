@@ -1,12 +1,9 @@
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-
-
 import './screens/auth_screen.dart';
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'controllers/bindings/authBinding.dart';
@@ -14,6 +11,12 @@ import 'screens/onboarding_screens/user_name_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.blue, // navigation bar color
+    statusBarColor: Colors.white,
+    statusBarIconBrightness: Brightness.dark,
+     // status bar color
+  ));
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp();

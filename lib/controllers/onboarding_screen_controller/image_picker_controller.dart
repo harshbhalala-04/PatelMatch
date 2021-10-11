@@ -23,12 +23,12 @@ class ImagePickerController extends GetxController {
   ].obs;
   List<bool> isUploadedImage = [false, false, false, false, false, false].obs;
   List<dynamic> image = [
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
-    "https://firebasestorage.googleapis.com/v0/b/flutter-chat-572c9.appspot.com/o/user_image_picker%2Fadd_img2.png?alt=media&token=ad98c523-9dc7-4df1-b351-10697fc59af3",
+    "assets/add_img2.png",
+    "assets/add_img2.png",
+    "assets/add_img2.png",
+    "assets/add_img2.png",
+    "assets/add_img2.png",
+    "assets/add_img2.png",
   ].obs;
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/onboarding_screens/birth_date_screen.dart';
 import 'package:chat/screens/onboarding_screens/community_screen.dart';
@@ -321,8 +322,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      : Image(
-                                          image: NetworkImage(imgUrls[0]),
+                                      : CachedNetworkImage(
+                                          imageUrl: imgUrls[0],
                                           fit: BoxFit.cover,
                                         )),
                             ),
@@ -348,8 +349,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      : Image(
-                                          image: NetworkImage(imgUrls[1]),
+                                      : CachedNetworkImage(
+                                          imageUrl: imgUrls[1],
                                           fit: BoxFit.cover,
                                         )),
                             ),
@@ -375,8 +376,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      : Image(
-                                          image: NetworkImage(imgUrls[2]),
+                                      :CachedNetworkImage(
+                                          imageUrl: imgUrls[2],
                                           fit: BoxFit.cover,
                                         )),
                             ),
@@ -409,8 +410,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      : Image(
-                                          image: NetworkImage(imgUrls[3]),
+                                      : CachedNetworkImage(
+                                          imageUrl: imgUrls[3],
                                           fit: BoxFit.cover,
                                         )),
                             ),
@@ -436,8 +437,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      : Image(
-                                          image: NetworkImage(imgUrls[4]),
+                                      :CachedNetworkImage(
+                                          imageUrl: imgUrls[4],
                                           fit: BoxFit.cover,
                                         )),
                             ),
@@ -461,10 +462,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             AssetImage('assets/add_img2.png'),
                                         fit: BoxFit.cover,
                                       )
-                                    : Image(
-                                        image: NetworkImage(imgUrls[5]),
-                                        fit: BoxFit.cover,
-                                      )),
+                                    : CachedNetworkImage(
+                                          imageUrl: imgUrls[5],
+                                          fit: BoxFit.cover,
+                                        )),
                           ),
                   ],
                 ),

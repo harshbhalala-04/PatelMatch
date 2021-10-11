@@ -1,3 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
+import 'package:get/get.dart';
+
 import '../database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +27,13 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
   dynamic name = '';
   String lastMsg = '';
   int count = 0;
-
+  String myName = Get.find<GlobalController>().currentAppuser.value.username!;
   String imageUrl =
       'https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png';
 
   getThisUserInfo() async {
     String? username =
-        widget.chatRoomId.replaceAll(Constants.myName, "").replaceAll("_", "");
+        widget.chatRoomId.replaceAll(myName, "").replaceAll("_", "");
 
     print(username!);
     print('This is other users username!');
@@ -43,11 +46,8 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
     name = querySnapshot.docs[0]['username'];
     imageUrl = querySnapshot.docs[0]['imgUrl'];
 
-    
-
     print(name);
     print('This name comes from fb');
-    
 
     setState(() {});
   }
@@ -68,7 +68,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
     String? time = DateFormat('hh:mm a').format(widget.lastMessageTs.toDate());
 
     print(time);
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
             context,
@@ -92,9 +92,10 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                     Container(
                       height: 55,
                       width: 55,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        child: Image.network(imageUrl),
+                      child: CircleAvatar(
+                        backgroundColor: Color.fromRGBO(196, 196, 196, 1),
+                        backgroundImage: NetworkImage(imageUrl),
+                        radius: 25,
                       ),
                     ),
                     SizedBox(

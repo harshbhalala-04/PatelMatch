@@ -35,110 +35,113 @@ class _CustomTabBarState extends State<CustomTabBar> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: EdgeInsets.all(4),
-                  child: Obx(() => InkWell(
-                        onTap: () {
-                          Get.to(ProfileScreen());
-                        },
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              screenController.userProfileUrl.value),
-                          backgroundColor: Colors.grey,
+        child: Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(4),
+                    child: Obx(() => InkWell(
+                          onTap: () {
+                            Get.to(ProfileScreen());
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                screenController.userProfileUrl.value),
+                            backgroundColor: Colors.grey,
+                          ),
+                        )),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(
+                        () => TabButton(
+                          text: "  Feed  ",
+                          pageNumber: 0,
+                          selectedPage: screenController.selectedPage.value,
+                          onPressed: () {
+                            pageController!.animateToPage(0,
+                                duration: Duration(milliseconds: 200),
+                                curve: Curves.fastLinearToSlowEaseIn);
+                          },
                         ),
-                      )),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => TabButton(
-                        text: "  Feed  ",
-                        pageNumber: 0,
-                        selectedPage: screenController.selectedPage.value,
-                        onPressed: () {
-                          pageController!.animateToPage(0,
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.fastLinearToSlowEaseIn);
+                      ),
+                      Obx(
+                        () => TabButton(
+                          text: "  Requests  ",
+                          pageNumber: 1,
+                          selectedPage: screenController.selectedPage.value,
+                          onPressed: () {
+                            pageController!.animateToPage(1,
+                                duration: Duration(milliseconds: 200),
+                                curve: Curves.fastLinearToSlowEaseIn);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 30,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(FilterScreen());
                         },
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'iPhone 11 Pro/Vector.svg',
+                              fit: BoxFit.cover,
+                              height: 6.94,
+                              width: 27.69,
+                            ),
+                            SvgPicture.asset(
+                              'iPhone 11 Pro/Vector-1.svg',
+                              fit: BoxFit.cover,
+                              height: 6.94,
+                              width: 27.69,
+                            ),
+                            SvgPicture.asset(
+                              'iPhone 11 Pro/Vector-2.svg',
+                              fit: BoxFit.cover,
+                              height: 6.94,
+                              width: 27.69,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Obx(
-                      () => TabButton(
-                        text: "  Requests  ",
-                        pageNumber: 1,
-                        selectedPage: screenController.selectedPage.value,
-                        onPressed: () {
-                          pageController!.animateToPage(1,
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.fastLinearToSlowEaseIn);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 30,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 12),
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(FilterScreen());
-                      },
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(MessageScreen());
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 3),
                       child: Column(
                         children: [
-                          SvgPicture.asset(
-                            'iPhone 11 Pro/Vector.svg',
-                            fit: BoxFit.cover,
-                            height: 6.94,
-                            width: 27.69,
+                          SizedBox(
+                            height: 10,
                           ),
                           SvgPicture.asset(
-                            'iPhone 11 Pro/Vector-1.svg',
-                            fit: BoxFit.cover,
-                            height: 6.94,
-                            width: 27.69,
-                          ),
-                          SvgPicture.asset(
-                            'iPhone 11 Pro/Vector-2.svg',
-                            fit: BoxFit.cover,
-                            height: 6.94,
-                            width: 27.69,
+                            'assets/iPhone 11 Pro 2/Vector.svg',
+                            height: 31.04,
+                            width: 36.54,
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Get.to(MessageScreen());
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 3),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SvgPicture.asset(
-                          'assets/iPhone 11 Pro 2/Vector.svg',
-                          height: 31.04,
-                          width: 36.54,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       body: PageView(

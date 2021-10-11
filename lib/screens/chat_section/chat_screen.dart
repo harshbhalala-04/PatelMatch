@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../database/database.dart';
 import 'package:intl/intl.dart';
 
-
 class ChatScreen extends StatefulWidget {
   late final String username;
   late final String imageUrl;
@@ -79,9 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Text(
                       message,
                       style: TextStyle(
-                        color: sendByMe
-                            ? Colors.black
-                            : Colors.white,
+                        color: sendByMe ? Colors.black : Colors.white,
                         fontSize: 15,
                       ),
                       textAlign: sendByMe ? TextAlign.end : TextAlign.start,
@@ -89,7 +86,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     Text(
                       time,
                       style: TextStyle(
-                        color: sendByMe ? Colors.black : Theme.of(context)
+                        color: sendByMe
+                            ? Colors.black
+                            : Theme.of(context)
                                 .accentTextTheme
                                 .headline1
                                 ?.color,
@@ -97,13 +96,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-            
                   ],
-                  
                 ),
               ),
             ]),
-            
       ],
     );
   }
@@ -155,7 +151,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           margin: EdgeInsets.only(top: 28),
@@ -171,14 +166,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     Navigator.pop(context);
                   }),
               SizedBox(width: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: Image.network(
-                  widget.imageUrl,
-                  height: 40,
-                  width: 40,
-                ),
-                //child: Image.network('https://images.unsplash.com/photo-1554080353-a576cf803bda?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvdG98ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80', width: 40, height: 40,),
+              CircleAvatar(
+                backgroundColor: Color.fromRGBO(196, 196, 196, 1),
+                backgroundImage: NetworkImage(widget.imageUrl),
+                radius: 25,
               ),
               SizedBox(
                 width: 10,

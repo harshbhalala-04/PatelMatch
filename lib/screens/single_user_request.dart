@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat/controllers/request_screen_controller.dart';
+import 'package:chat/screens/show_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SingleUserRequest extends StatelessWidget {
   List<dynamic> profiles;
@@ -8,6 +11,7 @@ class SingleUserRequest extends StatelessWidget {
     required this.profiles,
     required this.specialProfiles,
   });
+  final requestScreenController = Get.put(RequestScreenController());
   @override
   Widget build(BuildContext context) {
     print('This is special Profiels list: ');
@@ -40,7 +44,13 @@ class SingleUserRequest extends StatelessWidget {
                   itemCount: specialProfiles.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        print(
+                            'This is uid from request : ${specialProfiles[index]['uid']}');
+                        Get.to(ShowProfileScreen(
+                            profileType: 1,
+                            uid: specialProfiles[index]['uid']));
+                      },
                       child: Container(
                         child: Padding(
                           padding: const EdgeInsets.all(6.0),
@@ -117,7 +127,9 @@ class SingleUserRequest extends StatelessWidget {
             itemCount: profiles.length,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.to(ShowProfileScreen(profileType: 0 ,uid: profiles[index]['uid']));
+                },
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundImage:

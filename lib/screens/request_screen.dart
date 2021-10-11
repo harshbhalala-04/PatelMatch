@@ -20,14 +20,24 @@ class _RequestScreenState extends State<RequestScreen> {
   final requestScreenController = Get.put(RequestScreenController());
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('This is all profiles list:_________');
+    print(requestScreenController.profiles);
     return Scaffold(
         body: Obx(() => requestScreenController.isLoading.value
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : SingleUserRequest(
-                profiles: requestScreenController.profiles,
-                specialProfiles: requestScreenController.specialProfiles)));
+            : Obx(() => SingleUserRequest(
+                profiles: requestScreenController.profiles.value,
+                specialProfiles:
+                    requestScreenController.specialProfiles.value))));
   }
 }

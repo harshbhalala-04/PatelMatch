@@ -7,6 +7,18 @@ class RequestScreenController extends GetxController {
   final profiles = [].obs;
   final specialProfiles = [].obs;
 
+  removeUser(String uid, int profileType) {
+    if (profileType == 0) {
+      profiles.removeWhere((profile) => profile['uid'] == uid);
+      print("After removing: ");
+      print(profiles);
+    } else {
+      specialProfiles.removeWhere((specialProfile) => specialProfile['uid'] == uid);
+      print("After removing: ");
+      print(specialProfiles);
+    }
+  }
+
   fetchUserRequest() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -30,19 +42,18 @@ class RequestScreenController extends GetxController {
                 'recieve': element['recieved'],
                 'image': element['image'],
                 'time': element['time'],
-                'email': element['email'],
+                'uid': element['id'],
                 'bookay': element['bookay'],
               });
             }
-            if(element['bookay'] == 0) {
+            if (element['bookay'] == 0) {
               profiles.add({
-              'recieve': element['recieved'],
-              'image': element['image'],
-              'time': element['time'],
-              'email': element['email']
-            });
+                'recieve': element['recieved'],
+                'image': element['image'],
+                'time': element['time'],
+                'uid': element['id']
+              });
             }
-            
           }
         });
       }
