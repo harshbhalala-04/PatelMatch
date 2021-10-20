@@ -1,12 +1,16 @@
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class HeightScreen extends StatefulWidget {
-  const HeightScreen({Key? key}) : super(key: key);
+  late final fromProfile;
+
+  HeightScreen({required this.fromProfile});
 
   @override
   _HeightScreenState createState() => _HeightScreenState();
@@ -351,21 +355,20 @@ class _HeightScreenState extends State<HeightScreen> {
         setState(() {
           heightAns = val['height'];
         });
-        
       }
     });
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -389,7 +392,7 @@ class _HeightScreenState extends State<HeightScreen> {
               width: double.infinity,
               child: SearchableDropdown.single(
                 displayClearIcon: false,
-                hint: heightAns== ''
+                hint: heightAns == ''
                     ? Text(
                         'Select',
                         style: TextStyle(
@@ -421,7 +424,8 @@ class _HeightScreenState extends State<HeightScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (heightAns == null) {
+                if (widget.fromProfile) {
+                  if (heightAns == null) {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -436,17 +440,28 @@ class _HeightScreenState extends State<HeightScreen> {
                           ],
                         );
                       });
-                } else {
+                }
                   DataBaseMethods().addUserHeight(heightAns!);
                   Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                  Navigator.popAndPushNamed(
+                      context, EditProfileScreen.routeName);
+                  
+                }
+                else {
+                  DataBaseMethods().addUserHeight(heightAns!);
+                  Get.to(HandicappedScreen());
+                  
                 }
               },
-              child: Text(
-                'Submit',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

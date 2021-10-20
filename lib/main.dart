@@ -1,6 +1,7 @@
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
+import 'package:chat/screens/onboarding_screens/profile_createdBy_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import './screens/auth_screen.dart';
@@ -52,11 +53,11 @@ class _MyAppState extends State<MyApp> {
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, userSnapshot) {
+          
           if (userSnapshot.hasData) {
             if (Constants.signUpState) {
-              return UserNameScreen(fromProfile: false);
+              return ProfileCreatedByScreen();
             } else {
-              //return HomeScreen();
               return CustomTabBar();
             }
           } else {
@@ -68,8 +69,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
       },
-      //home: FeedScreen(false),
-      //home: CustomTabs(),
+    
     );
   }
 }

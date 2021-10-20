@@ -81,7 +81,6 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
-
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(

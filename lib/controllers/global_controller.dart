@@ -12,6 +12,7 @@ class GlobalController extends GetxController {
 
   getCurrentUser() async {
     isLoading.toggle();
+    print('This is get current user function');
     Get.find<AuthController>().firebaseUser.value =
         FirebaseAuth.instance.currentUser;
     UserModel? user = await DataBaseMethods().getCurrentLoggedInUser(
@@ -22,11 +23,11 @@ class GlobalController extends GetxController {
     print(currentAppuser.value.username);
     print('This is current app loggedin gender');
     print(currentAppuser.value.gender);
+    print('_________________________________________');
+
     isLoading.toggle();
   }
 
- 
-  
   @override
   void onInit() {
     // TODO: implement onInit

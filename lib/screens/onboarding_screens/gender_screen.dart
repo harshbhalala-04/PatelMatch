@@ -1,5 +1,6 @@
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/onboarding_screens/weight_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +159,7 @@ class _GenderScreenState extends State<GenderScreen> {
                   Navigator.popAndPushNamed(
                       context, EditProfileScreen.routeName);
                 } else {
-                  Get.to(CommunityScreen(fromProfile: false));
+                  Get.to(WeightScreen());
                 }
               },
               child: widget.fromProfile

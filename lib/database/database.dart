@@ -300,6 +300,20 @@ class DataBaseMethods {
     }
   }
 
+
+  addUserGotra(String gotra) {
+    
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"gotra": gotra});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+
   addUserBirthDate(String day, String month, String year) {
     String birthDate = day + '-' + month + '-' + year;
     int age;
@@ -343,6 +357,47 @@ class DataBaseMethods {
     }
   }
 
+  addUserSamaj(String samaj) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({"userSamaj": samaj});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserHandicapped(String handicapped) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"handicapped": handicapped});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserManglik(String manglik) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"manglik": manglik});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserNRI(String userNRI) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"userNRI": userNRI});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   addUserZodiacSign(String zodiacSign) {
     try {
       firestore
@@ -357,6 +412,30 @@ class DataBaseMethods {
   addUserHeight(String height) {
     try {
       firestore.collection("users").doc(user!.uid).update(({'height': height}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserStar(String star) {
+    try {
+      firestore.collection("users").doc(user!.uid).update(({'star': star}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserRashi(String rashi) {
+    try {
+      firestore.collection("users").doc(user!.uid).update(({'rashi': rashi}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserWeight(String weight) {
+    try {
+      firestore.collection("users").doc(user!.uid).update(({'weight': weight}));
     } catch (e) {
       print(e.toString());
     }
@@ -379,6 +458,39 @@ class DataBaseMethods {
           .collection("users")
           .doc(user!.uid)
           .update(({'politics': politics}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserProfileCreated(String profileCreatedBy) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update(({'profileCreatedBy': profileCreatedBy}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserMaritalStatus(String maritalStatus) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update(({'maritalStatus': maritalStatus}));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addUserMarryToSamaj(String marryToSamaj) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update(({'marryToSamaj': marryToSamaj}));
     } catch (e) {
       print(e.toString());
     }
@@ -596,5 +708,18 @@ class DataBaseMethods {
         .collection("users")
         .doc(user!.uid)
         .update({'imgCount': urlList.length});
+  }
+
+  //Uploading Filter Data for user.
+  filterAge(int start, int end) async {
+    List<int> age = [];
+    age.add(start);
+    age.add(end);
+    var ref = firestore.collection("users").doc(user!.uid);
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['age'] = age;
+      ref.update({'filters': myMap});
+    });
   }
 }

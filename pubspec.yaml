@@ -45,6 +45,7 @@ dependencies:
   swipe_cards: ^0.1.0
   get:
   image_cropper: ^1.4.1
+  google_maps_flutter: 
   scroll_to_index: any
   
 

@@ -616,7 +616,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (ctx) => HeightScreen()));
+                        MaterialPageRoute(builder: (ctx) => HeightScreen(fromProfile: true,)));
                   }),
               InkWell(
                   child: Card(

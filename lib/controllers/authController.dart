@@ -1,6 +1,7 @@
 import 'package:chat/database/database.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
+import 'package:chat/screens/onboarding_screens/profile_createdBy_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,8 +41,20 @@ class AuthController extends GetxController {
         'createdAt': Timestamp.now(),
         'uid': userCredential.user!.uid,
         'bookayAvailable': 5,
+        'isFieldAnswered': false,
+        'filters': {
+          'age': FieldValue.arrayUnion([]),
+          'drink': FieldValue.arrayUnion([]),
+          'incomeRange': FieldValue.arrayUnion([]),
+          'rashi': '',
+          'samaj': '',
+          'smoke': '',
+          'starSign': '',
+          'verifiedOnly': false,
+          'weight': FieldValue.arrayUnion([]),
+        }
       });
-      Get.off(UserNameScreen(fromProfile: false));
+      Get.off(ProfileCreatedByScreen());
     } on FirebaseAuthException catch (error) {
       Get.snackbar("Error Creating account", error.message!,
           snackPosition: SnackPosition.BOTTOM);

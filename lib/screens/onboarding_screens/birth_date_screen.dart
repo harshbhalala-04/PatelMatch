@@ -21,22 +21,7 @@ class BirthDateScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        actions: [
-          fromProfile
-              ? Container(
-                  height: 0,
-                )
-              : TextButton(
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(color: Colors.pink, fontSize: 18),
-                  ),
-                  onPressed: () {
-                    DataBaseMethods().addUserBirthDate('', '', '');
-                    Get.to(GenderScreen(fromProfile: false));
-                  },
-                ),
-        ],
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
