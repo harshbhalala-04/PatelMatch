@@ -313,6 +313,30 @@ class DataBaseMethods {
     }
   }
 
+  addUserCity(String currentCity) {
+    
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"currentCity": currentCity});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+   addUserNative(String nativeCity) {
+    
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"nativeCity": nativeCity});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
 
   addUserBirthDate(String day, String month, String year) {
     String birthDate = day + '-' + month + '-' + year;
@@ -719,6 +743,30 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['age'] = age;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterHeight(String start, String end) async {
+    List<String> height = [];
+    height.add(start);
+    height.add(end);
+    var ref = firestore.collection("users").doc(user!.uid);
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['height'] = height;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterWeight(int start, int end) async {
+    List<int> weight = [];
+    weight.add(start);
+    weight.add(end);
+    var ref = firestore.collection("users").doc(user!.uid);
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['weight'] = weight;
       ref.update({'filters': myMap});
     });
   }

@@ -73,6 +73,21 @@ class _RashiScreenState extends State<RashiScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          TextButton(
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: () {
+                    DataBaseMethods().addUserRashi('');
+                    Get.to(GotraScreen());
+                  },
+                )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

@@ -47,6 +47,8 @@ dependencies:
   image_cropper: ^1.4.1
   google_maps_flutter: 
   scroll_to_index: any
+  flutter_switch: ^0.3.2
+  multi_select_flutter: ^4.0.0
   
 
 dev_dependencies:

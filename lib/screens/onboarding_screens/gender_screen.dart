@@ -59,25 +59,7 @@ class _GenderScreenState extends State<GenderScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        actions: [
-          widget.fromProfile
-              ? Container(
-                  height: 0,
-                )
-              : TextButton(
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      color: Colors.pink,
-                      fontSize: 18,
-                    ),
-                  ),
-                  onPressed: () {
-                    DataBaseMethods().addUserGender('Male');
-                    Get.to(CommunityScreen(fromProfile: false));
-                  },
-                )
-        ],
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

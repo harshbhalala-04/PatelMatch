@@ -4,26 +4,25 @@ import 'package:chat/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class FilterAgeScreen extends StatefulWidget {
+class FilterWeightScreen extends StatefulWidget {
+  const FilterWeightScreen({Key? key}) : super(key: key);
+
   @override
-  _FilterAgeScreenState createState() => _FilterAgeScreenState();
+  _FilterWeightScreenState createState() => _FilterWeightScreenState();
 }
 
-class _FilterAgeScreenState extends State<FilterAgeScreen> {
-  static double _lowerValue = 18;
-  static double _upperValue = 70;
-
+class _FilterWeightScreenState extends State<FilterWeightScreen> {
+  static double _lowerValue = 40;
+  static double _upperValue = 130;
   RangeValues values = RangeValues(_lowerValue, _upperValue);
 
-    
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          'Age',
+          'Weight',
           style: TextStyle(color: Colors.black, fontSize: 24),
         ),
         leading: IconButton(
@@ -37,7 +36,7 @@ class _FilterAgeScreenState extends State<FilterAgeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Age',
+              'Weight',
               style: TextStyle(fontSize: 18),
             ),
             RangeSlider(
@@ -49,7 +48,7 @@ class _FilterAgeScreenState extends State<FilterAgeScreen> {
               ),
               min: _lowerValue,
               max: _upperValue,
-              divisions: 52,
+              divisions: 90,
               values: values,
               onChanged: (val) {
                 print(val);
@@ -70,13 +69,13 @@ class _FilterAgeScreenState extends State<FilterAgeScreen> {
               borderRadius: BorderRadius.all(Radius.circular(50))),
           child: ElevatedButton(
             onPressed: () {
-              List<int> age = [];
-              age.add(values.start.toInt());
-              age.add(values.end.toInt());
-              Get.find<GlobalController>().currentAppuser.value.filters!.age =
-                  age;
+              List<int> weight = [];
+              weight.add(values.start.toInt());
+              weight.add(values.end.toInt());
+              Get.find<GlobalController>().currentAppuser.value.filters!.weight =
+                  weight;
               DataBaseMethods()
-                  .filterAge(values.start.toInt(), values.end.toInt());
+                  .filterWeight(values.start.toInt(), values.end.toInt());
               Get.off(FilterScreen());
             },
             child: Text(

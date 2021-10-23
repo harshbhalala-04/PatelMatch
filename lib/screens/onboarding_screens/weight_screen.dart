@@ -66,6 +66,7 @@ class _WeightScreenState extends State<WeightScreen> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: _weightController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Start Typing...',
                   border: OutlineInputBorder(

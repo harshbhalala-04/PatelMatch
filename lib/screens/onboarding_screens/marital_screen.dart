@@ -14,6 +14,15 @@ class MaritalScreen extends StatefulWidget {
 
 class _MaritalScreenState extends State<MaritalScreen> {
   Marital? _reply;
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = Marital.Unmarried;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

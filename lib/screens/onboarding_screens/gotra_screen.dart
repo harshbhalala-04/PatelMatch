@@ -17,6 +17,21 @@ class _GotraScreenState extends State<GotraScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        actions: [
+          TextButton(
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: () {
+                    DataBaseMethods().addUserGotra('');
+                    Get.to(ManglicScreen());
+                  },
+                )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

@@ -13,6 +13,15 @@ class WillingToMarryScreen extends StatefulWidget {
 
 class _WillingToMarryScreenState extends State<WillingToMarryScreen> {
   MarryToSamaj? _reply;
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = MarryToSamaj.SameSamaj;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

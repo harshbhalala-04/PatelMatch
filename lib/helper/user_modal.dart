@@ -78,7 +78,7 @@ class UserModel {
       bookayAvailable:
           json["bookayAvailable"] == null ? null : json["bookayAvailable"],
       filters:
-          json["filters"] == null ? null : Filters.fromJson(json["filters"]),
+          json["filters"] == null ? null : Filters?.fromJson(json["filters"]),
     );
   }
 
@@ -103,13 +103,14 @@ class UserModel {
         "imgUrls":
             imgUrls == null ? null : List<dynamic>.from(imgUrls!.map((x) => x)),
         "bookayAvailable": bookayAvailable == null ? null : bookayAvailable,
-        "filters": filters == null ? null : filters!.toJson(),
+        "filters": filters == null ? null : filters?.toJson(),
       };
 }
 
 class Filters {
   Filters({
     this.age,
+    this.height,
     this.drink,
     this.incomeRange,
     this.weight,
@@ -121,21 +122,32 @@ class Filters {
   });
 
   List<dynamic>? age;
+  List<dynamic>? height;
   List<dynamic>? drink;
   List<dynamic>? incomeRange;
   List<dynamic>? weight;
   List<dynamic>? smoke;
   List<dynamic>? starSign;
-  String? rashi;
-  String? samaj;
+  List<dynamic>? rashi;
+  List<dynamic>? samaj;
   bool? verifiedOnly;
 
   factory Filters.fromJson(Map<dynamic, dynamic> json) {
-    
+    print("age: ${json["age"].length}");
+    print("Drink: ${json["drink"].length}");
+    print("Income Range: ${json["incomeRange"].length}");
+    print("weight: ${json["weight"].length}");
+    print("smoke: ${json["smoke"].length}");
+    print("starSign: ${json["starSign"].length}");
+    print("rashi: ${json["rashi"].length}");
+    print("samaj: ${json["samaj"].length}");
     return Filters(
       age: json["age"].length == 0
           ? null
           : List<dynamic>.from(json["age"].map((x) => x)),
+      height: json["height"].length == 0
+          ? null
+          : List<dynamic>.from(json["height"].map((x) => x)),
       drink: json["drink"].length == 0
           ? null
           : List<dynamic>.from(json["drink"].map((x) => x)),
@@ -151,14 +163,19 @@ class Filters {
       starSign: json["starSign"].length == 0
           ? null
           : List<dynamic>.from(json["starSign"].map((x) => x)),
-      rashi: json["rashi"] == null ? null : json["rashi"],
-      samaj: json["samaj"] == null ? null : json["samaj"],
+      rashi: json["rashi"].length == 0
+          ? null
+          : List<dynamic>.from(json["rashi"].map((x) => x)),
+      samaj: json["samaj"].length == 0
+          ? null
+          : List<dynamic>.from(json["samaj"].map((x) => x)),
       verifiedOnly: json["verifiedOnly"] == null ? null : json["verifiedOnly"],
     );
   }
 
   Map<dynamic, dynamic> toJson() => {
         "age": age == null ? null : List<dynamic>.from(age!.map((x) => x)),
+        "height": height == null ? null : List<dynamic>.from(height!.map((x) => x)),
         "drink":
             drink == null ? null : List<dynamic>.from(drink!.map((x) => x)),
         "incomeRange": incomeRange == null
@@ -171,8 +188,10 @@ class Filters {
         "starSign": starSign == null
             ? null
             : List<dynamic>.from(starSign!.map((x) => x)),
-        "rashi": rashi == null ? null : rashi,
-        "samaj": samaj == null ? null : samaj,
+        "rashi":
+            rashi == null ? null : List<dynamic>.from(rashi!.map((x) => x)),
+        "samaj":
+            samaj == null ? null : List<dynamic>.from(samaj!.map((x) => x)),
         "verifiedOnly": verifiedOnly == null ? null : verifiedOnly,
       };
 }

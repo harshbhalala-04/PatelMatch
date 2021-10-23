@@ -32,7 +32,7 @@ class AuthController extends GetxController {
       Constants.signUpState = true;
       userCredential = await _auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
-      
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user?.uid)
@@ -46,21 +46,21 @@ class AuthController extends GetxController {
           'age': FieldValue.arrayUnion([]),
           'drink': FieldValue.arrayUnion([]),
           'incomeRange': FieldValue.arrayUnion([]),
-          'rashi': '',
-          'samaj': '',
-          'smoke': '',
-          'starSign': '',
+          'rashi': FieldValue.arrayUnion([]),
+          'samaj': FieldValue.arrayUnion([]),
+          'smoke': FieldValue.arrayUnion([]),
+          'starSign': FieldValue.arrayUnion([]),
           'verifiedOnly': false,
           'weight': FieldValue.arrayUnion([]),
         }
       });
       Get.off(ProfileCreatedByScreen());
     } on FirebaseAuthException catch (error) {
+      print(error);
       Get.snackbar("Error Creating account", error.message!,
           snackPosition: SnackPosition.BOTTOM);
     }
     isLoading.toggle();
-    
   }
 
   void login(String? email, String? password) async {
@@ -72,6 +72,7 @@ class AuthController extends GetxController {
       DataBaseMethods().getUserByEmailId(email);
       Get.off(CustomTabBar());
     } on FirebaseAuthException catch (error) {
+      print(error);
       Get.snackbar("Error Logging in ", error.message!,
           snackPosition: SnackPosition.BOTTOM);
     }

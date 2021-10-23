@@ -13,6 +13,15 @@ class NRIScreen extends StatefulWidget {
 
 class _NRIScreenState extends State<NRIScreen> {
  YesNo? _reply;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = YesNo.No;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

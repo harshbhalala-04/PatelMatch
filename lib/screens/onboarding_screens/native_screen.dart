@@ -1,42 +1,16 @@
 import 'package:chat/database/database.dart';
-import 'package:chat/helper/services.dart';
-import 'package:chat/screens/onboarding_screens/native_screen.dart';
 import 'package:chat/screens/onboarding_screens/star_screen.dart';
-import 'package:chat/widgets/request_assistant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CityScreen extends StatefulWidget {
-  const CityScreen({Key? key}) : super(key: key);
+class NativeScreen extends StatefulWidget {
+  const NativeScreen({Key? key}) : super(key: key);
 
   @override
-  _CityScreenState createState() => _CityScreenState();
+  _NativeScreenState createState() => _NativeScreenState();
 }
 
-class _CityScreenState extends State<CityScreen> {
-  void showDialog() {
-    Get.defaultDialog(
-      middleText: "Plese Select Your Current Residance",
-      title: "",
-      middleTextStyle: TextStyle(fontSize: 20),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text('Close'),
-                style:
-                    TextButton.styleFrom(textStyle: TextStyle(fontSize: 16))),
-          ],
-        )
-      ],
-      barrierDismissible: false,
-    );
-  }
-
+class _NativeScreenState extends State<NativeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +27,8 @@ class _CityScreenState extends State<CityScreen> {
                     ),
                   ),
                   onPressed: () {
-                    DataBaseMethods().addUserCity('');
-                    Get.to(NativeScreen());
+                    DataBaseMethods().addUserNative('');
+                    Get.to(StarScreen());
                   },
                 )
         ],
@@ -68,7 +42,7 @@ class _CityScreenState extends State<CityScreen> {
               height: 10,
             ),
             Text(
-              'Current City of Residence',
+              'Add Your Native Place',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -92,7 +66,7 @@ class _CityScreenState extends State<CityScreen> {
                 ),
                 validator: (val) {
                   if (val!.isEmpty) {
-                    return 'Please Enter Your current residance';
+                    return 'Please Enter Your native place';
                   }
                 },
               ),
@@ -108,7 +82,7 @@ class _CityScreenState extends State<CityScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(NativeScreen());
+                Get.to(StarScreen());
               },
               child: Text('Continue',
                   style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
@@ -118,20 +92,5 @@ class _CityScreenState extends State<CityScreen> {
         ),
       ),
     );
-  }
-
-  void findPlace(String placeName) async {
-    if (placeName.length > 1) {
-      String autoCompleteUrl =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&location=37.76999%2C-122.44696&radius=500&strictbounds=true&types=establishment&key=$mapKey";
-
-      var res = await RequestAssitant.getRequest(autoCompleteUrl);
-
-      if (res == "failed") {
-        return;
-      }
-      print("Places prediction:");
-      print(res);
-    }
   }
 }

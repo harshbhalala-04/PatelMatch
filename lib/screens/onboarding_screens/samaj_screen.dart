@@ -14,6 +14,15 @@ class SamajScreen extends StatefulWidget {
 
 class _SamajScreenState extends State<SamajScreen> {
   Samaj? _reply;
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = Samaj.KadvaPatel;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

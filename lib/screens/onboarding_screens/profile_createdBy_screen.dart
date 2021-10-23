@@ -15,6 +15,16 @@ class ProfileCreatedByScreen extends StatefulWidget {
 
 class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
   ProfileCreated? _reply;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = ProfileCreated.Self;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -32,11 +32,11 @@ class _StarScreenState extends State<StarScreen> {
       child: Text('Rohini'),
     ),
     DropdownMenuItem(
-      value: "Mrigashīrsha",
+      value: "Mrigashirsha",
       child: Text('Mrigashīrsha'),
     ),
     DropdownMenuItem(
-      value: "Ārdrā",
+      value: "Ardra",
       child: Text('Ārdrā'),
     ),
     DropdownMenuItem(
@@ -133,6 +133,21 @@ class _StarScreenState extends State<StarScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          TextButton(
+            child: Text(
+              'Skip',
+              style: TextStyle(
+                color: Colors.pink,
+                fontSize: 18,
+              ),
+            ),
+            onPressed: () {
+              DataBaseMethods().addUserStar('');
+              Get.to(RashiScreen());
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -188,9 +203,8 @@ class _StarScreenState extends State<StarScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                  DataBaseMethods().addUserStar(starAns!);
-                  Get.to(RashiScreen());
-                
+                DataBaseMethods().addUserStar(starAns!);
+                Get.to(RashiScreen());
               },
               child: Text(
                 'Continue',

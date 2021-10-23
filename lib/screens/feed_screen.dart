@@ -48,7 +48,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       Positioned(
                           top: MediaQuery.of(context).size.height - 250,
                           left: 0,
-                          right: 0,
+                          right: MediaQuery.of(context).size.width - 350,
                           child: FeedButton(
                             index: index,
                             otherImageUrl:

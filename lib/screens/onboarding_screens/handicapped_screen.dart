@@ -14,6 +14,15 @@ class HandicappedScreen extends StatefulWidget {
 
 class _HandicappedScreenState extends State<HandicappedScreen> {
   YesNo? _reply;
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      _reply = YesNo.No;
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

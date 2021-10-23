@@ -1,10 +1,19 @@
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/screens/Filter_Options/filter_age_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_drink_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_height_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_income_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_star_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_verified_screen.dart';
+import 'package:chat/screens/Filter_Options/filter_weight_screen.dart';
+import 'package:chat/screens/Filter_Options/multiselect.dart';
+import 'package:chat/screens/onboarding_screens/samaj_screen.dart';
 import 'package:chat/widgets/filter_screen_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'Filter_Options/filter_rashi_screen.dart';
+import 'Filter_Options/filter_samaj_screen.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({Key? key}) : super(key: key);
@@ -53,40 +62,69 @@ class _FilterScreenState extends State<FilterScreen> {
                     },
                   )),
               InkWell(
-                child: FilterScreenCard(title: 'Weight', subtitle: ''),
-                onTap: () {},
+                child: FilterScreenCard(
+                  title: 'Weight',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .filters
+                              ?.weight?[0] ==
+                          null
+                      ? ' '
+                      : '${Get.find<GlobalController>().currentAppuser.value.filters?.weight?[0]} - ${Get.find<GlobalController>().currentAppuser.value.filters?.weight?[1]}',
+                ),
+                onTap: () {
+                  Get.off(FilterWeightScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Height', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterHeightScreen());
+                },
               ),
+            
               InkWell(
                 child: FilterScreenCard(title: 'Income Range', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterIncomeScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Samaj', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterSamajScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Verified Only', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterVerifiedScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Star Sign', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  // Get.off(FilterStarScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Rashi', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  // Get.off(FilterRashiScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Do they drink?', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterDrinkScreen(title: 'Drinking'));
+                },
               ),
               InkWell(
                 child: FilterScreenCard(title: 'Do they smoke?', subtitle: ''),
-                onTap: () {},
+                onTap: () {
+                  Get.off(FilterDrinkScreen(title: 'Smoking'));
+                },
               ),
               SizedBox(
                 height: 10,
