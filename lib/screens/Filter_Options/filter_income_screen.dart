@@ -1,3 +1,6 @@
+import 'package:chat/controllers/filter_controller.dart';
+import 'package:chat/database/database.dart';
+import 'package:chat/helper/filterpinModel.dart';
 import 'package:chat/screens/filter_screen.dart';
 import 'package:chat/widgets/filter_pin.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,14 @@ class FilterIncomeScreen extends StatefulWidget {
 }
 
 class _FilterIncomeScreenState extends State<FilterIncomeScreen> {
+   final pins = [
+    FilterPinModel(title: '0 - 2.5 Lpa', value: Get.find<FilterController>().filterIncomeList.contains('0 - 2.5 Lpa')),
+    FilterPinModel(title: '2.5 - 5 Lpa',  value: Get.find<FilterController>().filterIncomeList.contains('2.5 - 5 Lpa')),
+    FilterPinModel(title: '5 - 7.5 Lpa',  value: Get.find<FilterController>().filterIncomeList.contains('5 - 7.5 Lpa')),
+    FilterPinModel(title: '7.5 - 10 Lpa',  value: Get.find<FilterController>().filterIncomeList.contains('7.5 - 10 Lpa')),
+    FilterPinModel(title: 'Above 10 Lpa',  value: Get.find<FilterController>().filterIncomeList.contains('Above 10 Lpa')),
+  ];
+  final anyPin = FilterPinModel(title: 'Any', value: Get.find<FilterController>().filterIncomeList.contains('Any'));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,76 +37,27 @@ class _FilterIncomeScreenState extends State<FilterIncomeScreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Multiple options can be selected.',
-              style:
-                  TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 18),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 10, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'Income1',
-                    text: '0 - 2.5 Lpa',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'Income2',
-                    text: '2.5 - 5 Lpa',
-                    selectValue: false,
-                  ),
-                ],
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Multiple options can be selected.',
+                style:
+                    TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 18),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'Income3',
-                    text: '5 - 7.5 Lpa',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'Income4',
-                    text: '7.5 - 10 Lpa',
-                    selectValue: false,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'Income5',
-                    text: 'Above 10 Lpa',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'Income6',
-                    text: 'Any',
-                    selectValue: false,
-                  ),
-                ],
+              SizedBox(height: 15,),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                child: Wrap(
+                  spacing: 5,
+                  runSpacing: 3,
+                  children: [
+                    ...pins.map(filterChipWidget).toList(),
+                    toggleChipWidget(anyPin),
+                  ],
+                ),
               ),
             ),
           ],
@@ -111,6 +73,8 @@ class _FilterIncomeScreenState extends State<FilterIncomeScreen> {
           child: ElevatedButton(
             onPressed: () {
               Get.off(FilterScreen());
+              DataBaseMethods()
+                  .filterIncome(Get.find<FilterController>().filterIncomeList.value);
             },
             child: Text(
               'Done',
@@ -125,4 +89,99 @@ class _FilterIncomeScreenState extends State<FilterIncomeScreen> {
       ),
     );
   }
+  Widget toggleChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              anyPin.value = isSelected;
+              pins.forEach((pin) {
+                pin.value = isSelected;
+                 if (isSelected) {
+                  Get.find<FilterController>().filterIncomeList.add(pin.title);
+                  Get.find<FilterController>().incomeSubtitle.value = 'Any';
+                } else {
+                  Get.find<FilterController>()
+                      .filterIncomeList
+                      .remove(pin.title);
+                  Get.find<FilterController>().incomeSubtitle.value = ' ';
+                }
+              });
+              if (isSelected) {
+                Get.find<FilterController>().filterIncomeList.add(anyPin.title);
+              } else {
+                Get.find<FilterController>()
+                    .filterIncomeList
+                    .remove(anyPin.title);
+              }
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
+
+  Widget filterChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              pin.value = isSelected;
+              if (isSelected) {
+                Get.find<FilterController>().filterIncomeList.add(pin.title);
+              } else {
+                Get.find<FilterController>().filterIncomeList.remove(pin.title);
+              }
+              
+              String subtitle =
+                  Get.find<FilterController>().incomeSubtitle.value;
+              for (int i = 0;
+                  i < Get.find<FilterController>().filterIncomeList.length;
+                  i++) {
+                if (i == 0) {
+                  subtitle =
+                      Get.find<FilterController>().filterIncomeList.elementAt(i);
+                } else {
+                  subtitle = subtitle +
+                      ',' +
+                      Get.find<FilterController>().filterIncomeList.elementAt(i);
+                }
+              }
+              Get.find<FilterController>().incomeSubtitle.value = subtitle;
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
 }

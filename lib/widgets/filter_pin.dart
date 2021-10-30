@@ -1,4 +1,4 @@
-import 'package:chat/controllers/Filter_Controller/filter_rashi_controller.dart';
+import 'package:chat/controllers/filter_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

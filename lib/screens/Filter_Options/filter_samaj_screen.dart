@@ -1,4 +1,8 @@
-import 'package:chat/controllers/Filter_Controller/filter_rashi_controller.dart';
+import 'package:chat/controllers/filter_controller.dart';
+import 'package:chat/controllers/feed_screen_controller.dart';
+import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/database/database.dart';
+import 'package:chat/helper/filterpinModel.dart';
 import 'package:chat/widgets/filter_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +18,11 @@ class FilterSamajScreen extends StatefulWidget {
 
 class _FilterSamajScreenState extends State<FilterSamajScreen> {
   final filterController = Get.put(FilterController());
+  final pins = [
+    FilterPinModel(title: 'Kadva Patel', value: Get.find<FilterController>().filterSamajList.contains('Kadva Patel')),
+    FilterPinModel(title: 'Leva Patel', value: Get.find<FilterController>().filterSamajList.contains('Leva Patel')),
+  ];
+  final anyPin = FilterPinModel(title: 'Any', value: Get.find<FilterController>().filterSamajList.contains('Any'));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +38,7 @@ class _FilterSamajScreenState extends State<FilterSamajScreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -41,44 +50,17 @@ class _FilterSamajScreenState extends State<FilterSamajScreen> {
             SizedBox(
               height: 15,
             ),
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 10, bottom: 20),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      filterController.filterSamajList.add('Kadva Patel');
-                    },
-                    child: FilterPin(
-                      keyButton: 'Samaj1',
-                      text: 'Kadva Patel',
-                      selectValue: false,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'Samaj2',
-                    text: 'Leva Patel',
-                    selectValue: false,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'Samaj3',
-                    text: 'Any',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                child: Wrap(
+                  spacing: 5,
+                  runSpacing: 3,
+                  children: [
+                    ...pins.map(filterChipWidget).toList(),
+                    toggleChipWidget(anyPin),
+                  ],
+                ),
               ),
             ),
           ],
@@ -93,7 +75,12 @@ class _FilterSamajScreenState extends State<FilterSamajScreen> {
               borderRadius: BorderRadius.all(Radius.circular(50))),
           child: ElevatedButton(
             onPressed: () {
+              print(
+                  "While submitting : ${(Get.find<FilterController>().samajSubtitle.value)}");
+
               Get.off(FilterScreen());
+              DataBaseMethods()
+                  .filterSamaj(Get.find<FilterController>().filterSamajList.value);
             },
             child: Text(
               'Done',
@@ -108,4 +95,102 @@ class _FilterSamajScreenState extends State<FilterSamajScreen> {
       ),
     );
   }
+
+  Widget toggleChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              anyPin.value = isSelected;
+              pins.forEach((pin) {
+                pin.value = isSelected;
+                if (isSelected) {
+                  Get.find<FilterController>().filterSamajList.add(pin.title);
+                  Get.find<FilterController>().samajSubtitle.value = 'Any';
+                } else {
+                  Get.find<FilterController>()
+                      .filterSamajList
+                      .remove(pin.title);
+                  Get.find<FilterController>().samajSubtitle.value = ' ';
+                }
+              });
+               if (isSelected) {
+                Get.find<FilterController>().filterSamajList.add(anyPin.title);
+              } else {
+                Get.find<FilterController>()
+                    .filterSamajList
+                    .remove(anyPin.title);
+              }
+              
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
+
+  Widget filterChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              pin.value = isSelected;
+              if (isSelected) {
+                Get.find<FilterController>().filterSamajList.add(pin.title);
+              } else {
+                Get.find<FilterController>().filterSamajList.remove(pin.title);
+              }
+              
+              String subtitle =
+                  Get.find<FilterController>().samajSubtitle.value;
+              for (int i = 0;
+                  i < Get.find<FilterController>().filterSamajList.length;
+                  i++) {
+                if (i == 0) {
+                  subtitle =
+                      Get.find<FilterController>().filterSamajList.elementAt(i);
+                } else {
+                  subtitle = subtitle +
+                      ',' +
+                      Get.find<FilterController>().filterSamajList.elementAt(i);
+                }
+              }
+              Get.find<FilterController>().samajSubtitle.value = subtitle;
+             
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
 }

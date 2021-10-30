@@ -50,7 +50,9 @@ class AuthController extends GetxController {
           'samaj': FieldValue.arrayUnion([]),
           'smoke': FieldValue.arrayUnion([]),
           'starSign': FieldValue.arrayUnion([]),
-          'verifiedOnly': false,
+          'verifiedOnly': FieldValue.arrayUnion([]),
+          'height': FieldValue.arrayUnion([]),
+          'NRI': FieldValue.arrayUnion([]),
           'weight': FieldValue.arrayUnion([]),
         }
       });

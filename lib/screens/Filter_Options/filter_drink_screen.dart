@@ -1,3 +1,6 @@
+import 'package:chat/controllers/filter_controller.dart';
+import 'package:chat/database/database.dart';
+import 'package:chat/helper/filterpinModel.dart';
 import 'package:chat/screens/filter_screen.dart';
 import 'package:chat/widgets/filter_pin.dart';
 import 'package:flutter/material.dart';
@@ -12,76 +15,38 @@ class FilterDrinkScreen extends StatefulWidget {
 }
 
 class _FilterDrinkScreenState extends State<FilterDrinkScreen> {
+  final pins = [
+    FilterPinModel(
+        title: 'Never',
+        value: Get.find<FilterController>().filterDrinkList.contains('Never')),
+    FilterPinModel(
+        title: 'Socially',
+        value:
+            Get.find<FilterController>().filterDrinkList.contains('Socially')),
+    FilterPinModel(
+        title: 'Regularly',
+        value:
+            Get.find<FilterController>().filterDrinkList.contains('Regularly')),
+    FilterPinModel(
+        title: 'Planning to quit',
+        value: Get.find<FilterController>()
+            .filterDrinkList
+            .contains('Planning to quit')),
+  ];
+  final anyPin = FilterPinModel(title: 'Any',value: Get.find<FilterController>().filterDrinkList.contains('Any'));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
-          widget.title,
-          style: TextStyle(color: Colors.black, fontSize: 24),
+          'Drinking',
+          style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
             onPressed: () => Get.back()),
+        backgroundColor: Colors.white,
         centerTitle: true,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Multiple options can be selected.',
-              style:
-                  TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 18),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 10, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'drink1',
-                    text: 'Never',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'drink2',
-                    text: 'Socially',
-                    selectValue: false,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20, bottom: 20),
-              child: Row(
-                children: [
-                  FilterPin(
-                    keyButton: 'drink3',
-                    text: 'Regularly',
-                    selectValue: false,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FilterPin(
-                    keyButton: 'drink4',
-                    text: 'Planning to quit',
-                    selectValue: false,
-                  ),
-                ],
-              ),
-            ),
-            
-          ],
-        ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -93,6 +58,8 @@ class _FilterDrinkScreenState extends State<FilterDrinkScreen> {
           child: ElevatedButton(
             onPressed: () {
               Get.off(FilterScreen());
+              DataBaseMethods().filterDrink(
+                  Get.find<FilterController>().filterDrinkList.value);
             },
             child: Text(
               'Done',
@@ -105,6 +72,131 @@ class _FilterDrinkScreenState extends State<FilterDrinkScreen> {
           ),
         ),
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Multiple options can be selected.',
+              style:
+                  TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 18),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                child: Wrap(
+                  spacing: 5,
+                  runSpacing: 3,
+                  children: [
+                    ...pins.map(filterChipWidget).toList(),
+                    toggleChipWidget(anyPin),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
+  Widget toggleChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              anyPin.value = isSelected;
+              pins.forEach((pin) {
+                pin.value = isSelected;
+                if (isSelected) {
+                  Get.find<FilterController>().filterDrinkList.add(pin.title);
+                  Get.find<FilterController>().drinkSubtitle.value = 'Any';
+                } else {
+                  Get.find<FilterController>()
+                      .filterDrinkList
+                      .remove(pin.title);
+                  Get.find<FilterController>().drinkSubtitle.value = ' ';
+                }
+              });
+              if (isSelected) {
+                Get.find<FilterController>().filterDrinkList.add(anyPin.title);
+              } else {
+                Get.find<FilterController>()
+                    .filterDrinkList
+                    .remove(anyPin.title);
+              }
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
+
+  Widget filterChipWidget(FilterPinModel pin) => Container(
+        child: FilterChip(
+          backgroundColor: Colors.white,
+          label: Text(pin.title),
+          side: BorderSide(
+              width: 5, color: Colors.grey.shade100, style: BorderStyle.solid),
+          labelStyle: pin.value
+              ? TextStyle(color: Colors.white, fontSize: 18)
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+          disabledColor: Colors.white,
+          showCheckmark: false,
+          selected: pin.value,
+          onSelected: (isSelected) {
+            setState(() {
+              pin.value = isSelected;
+              if (isSelected) {
+                Get.find<FilterController>().filterDrinkList.add(pin.title);
+              } else {
+                Get.find<FilterController>().filterDrinkList.remove(pin.title);
+              }
+
+              String subtitle =
+                  Get.find<FilterController>().drinkSubtitle.value;
+              for (int i = 0;
+                  i < Get.find<FilterController>().filterDrinkList.length;
+                  i++) {
+                if (i == 0) {
+                  subtitle =
+                      Get.find<FilterController>().filterDrinkList.elementAt(i);
+                } else {
+                  subtitle = subtitle +
+                      ',' +
+                      Get.find<FilterController>().filterDrinkList.elementAt(i);
+                }
+              }
+              Get.find<FilterController>().drinkSubtitle.value = subtitle;
+            });
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.15),
+          selectedColor: Color.fromRGBO(255, 85, 115, 1),
+          padding: EdgeInsets.only(left: 16, right: 16),
+        ),
+      );
 }

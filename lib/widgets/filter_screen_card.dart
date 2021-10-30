@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 
 class FilterScreenCard extends StatelessWidget {
   final String title;
-  final String subtitle;
+  String subtitle;
 
   FilterScreenCard({required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
+    if (subtitle.length > 27) {
+      subtitle = subtitle.substring(0, 27);
+      subtitle += '...';
+    }
+   
     return Container(
       margin: EdgeInsets.all(5),
       child: Card(

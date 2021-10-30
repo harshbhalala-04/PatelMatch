@@ -40,10 +40,8 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                 'Choose minimum and maximum height.',
                 style: TextStyle(fontSize: 18),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
-  
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -55,18 +53,18 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                             color: Color.fromRGBO(141, 141, 141, 1),
                           ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Container(
                           decoration: BoxDecoration(
-                            border:  Border.all(
-                              color: Color.fromRGBO(255, 85, 115, 1),
-                              width: 2
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
+                              border: Border.all(
+                                  color: Color.fromRGBO(255, 85, 115, 1),
+                                  width: 2),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
                           width: 150,
                           child: SearchableDropdown.single(
-                            
                             displayClearIcon: false,
                             isExpanded: true,
                             iconDisabledColor: Color.fromRGBO(255, 85, 115, 1),
@@ -87,13 +85,16 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                             items: heights,
                             onChanged: (val) {
                               minHeight = val;
+
                               print(minHeight);
                             },
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Column(
                       children: [
                         Text(
@@ -102,15 +103,17 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                             color: Color.fromRGBO(141, 141, 141, 1),
                           ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Container(
                           decoration: BoxDecoration(
-                            border:  Border.all(
-                              color: Color.fromRGBO(255, 85, 115, 1),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
+                              border: Border.all(
+                                color: Color.fromRGBO(255, 85, 115, 1),
+                                width: 2,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
                           width: 140,
                           child: SearchableDropdown.single(
                             isExpanded: true,
@@ -131,8 +134,8 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                                   ),
                             items: heights,
                             onChanged: (val) {
-                              minHeight = val;
-                              print(minHeight);
+                              maxHeight = val;
+                              print(maxHeight);
                             },
                           ),
                         ),
@@ -154,14 +157,45 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
               borderRadius: BorderRadius.all(Radius.circular(50))),
           child: ElevatedButton(
             onPressed: () {
-              List<dynamic> height = [];
-              height.add(minHeight);
-              height.add(maxHeight);
-              Get.find<GlobalController>().currentAppuser.value.filters!.height =
-                  height;
-              DataBaseMethods()
-                  .filterHeight(minHeight, maxHeight);
-              Get.off(FilterScreen());
+              int intValue1 =
+                  int.parse(minHeight.replaceAll(RegExp('[^0-9]'), ''));
+              int intValue2 =
+                  int.parse(maxHeight.replaceAll(RegExp('[^0-9]'), ''));
+              if (intValue1 > intValue2) {
+                Get.defaultDialog(
+                  middleText: "Plese Select Valid Height Range",
+                  title: "",
+                  middleTextStyle: TextStyle(fontSize: 20),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: Text('Close'),
+                            style: TextButton.styleFrom(
+                                textStyle: TextStyle(fontSize: 16))),
+                      ],
+                    )
+                  ],
+                  barrierDismissible: false,
+                );
+              } else {
+                List<dynamic> height = [];
+                print(minHeight);
+                print(maxHeight);
+                height.add(minHeight);
+                height.add(maxHeight);
+                Get.find<GlobalController>()
+                    .currentAppuser
+                    .value
+                    .filters!
+                    .height = height;
+                DataBaseMethods().filterHeight(minHeight, maxHeight);
+                Get.off(FilterScreen());
+              }
             },
             child: Text(
               'Done',

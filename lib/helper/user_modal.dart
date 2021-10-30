@@ -108,18 +108,18 @@ class UserModel {
 }
 
 class Filters {
-  Filters({
-    this.age,
-    this.height,
-    this.drink,
-    this.incomeRange,
-    this.weight,
-    this.smoke,
-    this.starSign,
-    this.rashi,
-    this.samaj,
-    this.verifiedOnly,
-  });
+  Filters(
+      {this.age,
+      this.height,
+      this.drink,
+      this.incomeRange,
+      this.weight,
+      this.smoke,
+      this.starSign,
+      this.rashi,
+      this.samaj,
+      this.verifiedOnly,
+      this.nri});
 
   List<dynamic>? age;
   List<dynamic>? height;
@@ -130,52 +130,63 @@ class Filters {
   List<dynamic>? starSign;
   List<dynamic>? rashi;
   List<dynamic>? samaj;
-  bool? verifiedOnly;
+  List<dynamic>? verifiedOnly;
+  List<dynamic>? nri;
 
   factory Filters.fromJson(Map<dynamic, dynamic> json) {
-    print("age: ${json["age"].length}");
+    print("Age: ${json["age"].length}");
+    print("Height: ${json["height"].length}");
     print("Drink: ${json["drink"].length}");
-    print("Income Range: ${json["incomeRange"].length}");
-    print("weight: ${json["weight"].length}");
-    print("smoke: ${json["smoke"].length}");
-    print("starSign: ${json["starSign"].length}");
-    print("rashi: ${json["rashi"].length}");
-    print("samaj: ${json["samaj"].length}");
+    print("Incomse: ${json["incomeRange"].length}");
+    print("Weight: ${json["weight"].length}");
+    print("Smoke: ${json["smoke"].length}");
+    print("Star: ${json["starSign"].length}");
+    print("Rashi: ${json["rashi"].length}");
+    print("Samaj: ${json["samaj"].length}");
+    print("NRI: ${json["NRI"].length}");
+    print("Verify: ${json["verifiedOnly"].length}");
+
     return Filters(
       age: json["age"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["age"].map((x) => x)),
       height: json["height"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["height"].map((x) => x)),
       drink: json["drink"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["drink"].map((x) => x)),
       incomeRange: json["incomeRange"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["incomeRange"].map((x) => x)),
       weight: json["weight"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["weight"].map((x) => x)),
       smoke: json["smoke"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["smoke"].map((x) => x)),
       starSign: json["starSign"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["starSign"].map((x) => x)),
       rashi: json["rashi"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["rashi"].map((x) => x)),
       samaj: json["samaj"].length == 0
-          ? null
+          ? []
           : List<dynamic>.from(json["samaj"].map((x) => x)),
-      verifiedOnly: json["verifiedOnly"] == null ? null : json["verifiedOnly"],
+      nri: json["NRI"].length == 0
+          ? []
+          : List<dynamic>.from(json["NRI"].map((x) => x)),
+      verifiedOnly: json["verifiedOnly"].length == 0
+          ? []
+          : List<dynamic>.from(json["verifiedOnly"].map((x) => x)),
     );
   }
 
   Map<dynamic, dynamic> toJson() => {
         "age": age == null ? null : List<dynamic>.from(age!.map((x) => x)),
-        "height": height == null ? null : List<dynamic>.from(height!.map((x) => x)),
+        "height":
+            height == null ? null : List<dynamic>.from(height!.map((x) => x)),
         "drink":
             drink == null ? null : List<dynamic>.from(drink!.map((x) => x)),
         "incomeRange": incomeRange == null
@@ -192,6 +203,9 @@ class Filters {
             rashi == null ? null : List<dynamic>.from(rashi!.map((x) => x)),
         "samaj":
             samaj == null ? null : List<dynamic>.from(samaj!.map((x) => x)),
-        "verifiedOnly": verifiedOnly == null ? null : verifiedOnly,
+        "verifiedOnly": verifiedOnly == null
+            ? null
+            : List<dynamic>.from(verifiedOnly!.map((x) => x)),
+        "NRI": nri == null ? null : List<dynamic>.from(nri!.map((x) => x))
       };
 }

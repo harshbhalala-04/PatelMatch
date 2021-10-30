@@ -102,7 +102,7 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
                 child: Row(
                   children: [
                     Radio(
-                      value: ProfileCreated.Parents,
+                      value: ProfileCreated.Sibling,
                       groupValue: _reply,
                       onChanged: (ProfileCreated? value) {
                         setState(() {

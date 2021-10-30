@@ -300,21 +300,15 @@ class DataBaseMethods {
     }
   }
 
-
   addUserGotra(String gotra) {
-    
     try {
-      firestore
-          .collection("users")
-          .doc(user!.uid)
-          .update({"gotra": gotra});
+      firestore.collection("users").doc(user!.uid).update({"gotra": gotra});
     } catch (e) {
       print(e.toString());
     }
   }
 
   addUserCity(String currentCity) {
-    
     try {
       firestore
           .collection("users")
@@ -325,8 +319,7 @@ class DataBaseMethods {
     }
   }
 
-   addUserNative(String nativeCity) {
-    
+  addUserNative(String nativeCity) {
     try {
       firestore
           .collection("users")
@@ -336,7 +329,6 @@ class DataBaseMethods {
       print(e.toString());
     }
   }
-
 
   addUserBirthDate(String day, String month, String year) {
     String birthDate = day + '-' + month + '-' + year;
@@ -402,10 +394,7 @@ class DataBaseMethods {
 
   addUserManglik(String manglik) {
     try {
-      firestore
-          .collection("users")
-          .doc(user!.uid)
-          .update({"manglik": manglik});
+      firestore.collection("users").doc(user!.uid).update({"manglik": manglik});
     } catch (e) {
       print(e.toString());
     }
@@ -413,10 +402,7 @@ class DataBaseMethods {
 
   addUserNRI(String userNRI) {
     try {
-      firestore
-          .collection("users")
-          .doc(user!.uid)
-          .update({"userNRI": userNRI});
+      firestore.collection("users").doc(user!.uid).update({"userNRI": userNRI});
     } catch (e) {
       print(e.toString());
     }
@@ -743,6 +729,110 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['age'] = age;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterSamaj(Set<String> samajSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> samajList = [];
+    for (int i = 0; i < samajSet.length; i++) {
+      samajList.add(samajSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['samaj'] = samajList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterDrink(Set<String> drinkSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> drinkList = [];
+    for (int i = 0; i < drinkSet.length; i++) {
+      drinkList.add(drinkSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['drink'] = drinkList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterSmoke(Set<String> smokeSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> smokeList = [];
+    for (int i = 0; i < smokeSet.length; i++) {
+      smokeList.add(smokeSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['smoke'] = smokeList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterStar(Set<String> starSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> starList = [];
+    for (int i = 0; i < starSet.length; i++) {
+      starList.add(starSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['starSign'] = starList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterRashi(Set<String> rashiSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> rashiList = [];
+    for (int i = 0; i < rashiSet.length; i++) {
+      rashiList.add(rashiSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['rashi'] = rashiList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterIncome(Set<String> incomeSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> incomeList = [];
+    for (int i = 0; i < incomeSet.length; i++) {
+      incomeList.add(incomeSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['incomeRange'] = incomeList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterVerified(Set<String> verifiedSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> verifiedList = [];
+    for (int i = 0; i < verifiedSet.length; i++) {
+      verifiedList.add(verifiedSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['verifiedOnly'] = verifiedList;
+      ref.update({'filters': myMap});
+    });
+  }
+
+  filterNRI(Set<String> nriSet) async {
+    var ref = firestore.collection("users").doc(user!.uid);
+    List<String> nriList = [];
+    for (int i = 0; i < nriSet.length; i++) {
+      nriList.add(nriSet.elementAt(i));
+    }
+    await ref.get().then((val) {
+      Map<String, dynamic> myMap = val['filters'];
+      myMap['verifiedOnly'] = nriList;
       ref.update({'filters': myMap});
     });
   }

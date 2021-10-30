@@ -1,33 +1,31 @@
 import 'package:chat/controllers/filter_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/helper/filterpinModel.dart';
+import 'package:chat/widgets/filter_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_switch/flutter_switch.dart';
 import '../filter_screen.dart';
 
-class FilterSmokeScreen extends StatefulWidget {
-  const FilterSmokeScreen({ Key? key }) : super(key: key);
+class FilterNRIScreen extends StatefulWidget {
+  const FilterNRIScreen({Key? key}) : super(key: key);
 
   @override
-  _FilterSmokeScreenState createState() => _FilterSmokeScreenState();
+  _FilterNRIScreenState createState() => _FilterNRIScreenState();
 }
 
-class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
- final pins = [
-    FilterPinModel(title: 'Never', value: Get.find<FilterController>().filterSmokeList.contains('Never')),
-    FilterPinModel(title: 'Socially', value: Get.find<FilterController>().filterSmokeList.contains('Socially')),
-    FilterPinModel(title: 'Regularly', value: Get.find<FilterController>().filterSmokeList.contains('Regularly')),
-    FilterPinModel(title: 'Planning to quit', value: Get.find<FilterController>().filterSmokeList.contains('Planning to quit')),
-    
+class _FilterNRIScreenState extends State<FilterNRIScreen> {
+  final pins = [
+    FilterPinModel(title: 'NRI', value: Get.find<FilterController>().filterNRIList.contains('NRI')),
+    FilterPinModel(title: 'Non NRI', value: Get.find<FilterController>().filterNRIList.contains('Non NRI')),
   ];
-  final anyPin = FilterPinModel(title: 'Any', value: Get.find<FilterController>().filterSmokeList.contains('Any'));
+  final anyPin = FilterPinModel(title: 'Any', value: Get.find<FilterController>().filterNRIList.contains('Any'));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Smoking',
+          'NRI',
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -47,7 +45,7 @@ class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
             onPressed: () {
               Get.off(FilterScreen());
               DataBaseMethods()
-                  .filterSmoke(Get.find<FilterController>().filterSmokeList.value);
+                  .filterNRI(Get.find<FilterController>().filterNRIList.value);
             },
             child: Text(
               'Done',
@@ -60,7 +58,7 @@ class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
           ),
         ),
       ),
-      body: Padding(
+      body:Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,21 +108,21 @@ class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
               anyPin.value = isSelected;
               pins.forEach((pin) {
                 pin.value = isSelected;
-                if (isSelected) {
-                  Get.find<FilterController>().filterSmokeList.add(pin.title);
-                  Get.find<FilterController>().smokeSubtitle.value = 'Any';
+                 if (isSelected) {
+                  Get.find<FilterController>().filterNRIList.add(pin.title);
+                  Get.find<FilterController>().nriSubtitle.value = 'Any';
                 } else {
                   Get.find<FilterController>()
-                      .filterSmokeList
+                      .filterNRIList
                       .remove(pin.title);
-                  Get.find<FilterController>().smokeSubtitle.value = ' ';
+                  Get.find<FilterController>().nriSubtitle.value = ' ';
                 }
               });
                if (isSelected) {
-                Get.find<FilterController>().filterSmokeList.add(anyPin.title);
+                Get.find<FilterController>().filterNRIList.add(anyPin.title);
               } else {
                 Get.find<FilterController>()
-                    .filterSmokeList
+                    .filterNRIList
                     .remove(anyPin.title);
               }
             });
@@ -155,29 +153,28 @@ class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
           onSelected: (isSelected) {
             setState(() {
               pin.value = isSelected;
-              if (isSelected) {
-                Get.find<FilterController>().filterSmokeList.add(pin.title);
+               if (isSelected) {
+                Get.find<FilterController>().filterNRIList.add(pin.title);
               } else {
-                Get.find<FilterController>().filterSmokeList.remove(pin.title);
+                Get.find<FilterController>().filterNRIList.remove(pin.title);
               }
               
               String subtitle =
-                  Get.find<FilterController>().smokeSubtitle.value;
+                  Get.find<FilterController>().nriSubtitle.value;
               for (int i = 0;
-                  i < Get.find<FilterController>().filterSmokeList.length;
+                  i < Get.find<FilterController>().filterNRIList.length;
                   i++) {
                 if (i == 0) {
                   subtitle =
-                      Get.find<FilterController>().filterSmokeList.elementAt(i);
+                      Get.find<FilterController>().filterNRIList.elementAt(i);
                 } else {
                   subtitle = subtitle +
                       ',' +
-                      Get.find<FilterController>().filterSmokeList.elementAt(i);
+                      Get.find<FilterController>().filterNRIList.elementAt(i);
                 }
               }
-              Get.find<FilterController>().smokeSubtitle.value = subtitle;
+              Get.find<FilterController>().nriSubtitle.value = subtitle;
             });
-           
           },
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(50))),
