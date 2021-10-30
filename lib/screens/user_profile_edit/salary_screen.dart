@@ -33,19 +33,19 @@ class _SalaryScreenState extends State<SalaryScreen> {
         .get()
         .then((val) {
       if (val.data()!.containsKey('salary')) {
-        if (val['salary'] == "0-2.5 Lpa") {
+        if (val['salary'] == "0 - 2.5 Lpa") {
           setState(() {
             _reply = Salary.ZeroTwoLpa;
           });
-        } else if (val['salary'] == "2.5-5 Lpa") {
+        } else if (val['salary'] == "2.5 - 5 Lpa") {
           setState(() {
             _reply = Salary.TwoToFiveLpa;
           });
-        } else if (val['salary'] == "5-7.5 Lpa") {
+        } else if (val['salary'] == "5 - 7.5 Lpa") {
           setState(() {
             _reply = Salary.FiveToSevenLpa;
           });
-        } else if (val['salary'] == "7.5-10 Lpa") {
+        } else if (val['salary'] == "7.5 - 10 Lpa") {
           setState(() {
             _reply = Salary.SevenToTenLpa;
           });
@@ -108,7 +108,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
                       });
                     },
                   ),
-                  Text('0-2.5 Lpa'),
+                  Text('0 - 2.5 Lpa'),
                 ],
               ),
             ),
@@ -129,7 +129,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
                       });
                     },
                   ),
-                  Text('2.5-5 Lpa'),
+                  Text('2.5 - 5 Lpa'),
                 ],
               ),
             ),
@@ -150,7 +150,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
                       });
                     },
                   ),
-                  Text('5-7.5 Lpa'),
+                  Text('5 - 7.5 Lpa'),
                 ],
               ),
             ),
@@ -171,7 +171,7 @@ class _SalaryScreenState extends State<SalaryScreen> {
                       });
                     },
                   ),
-                  Text('7.5-10 Lpa'),
+                  Text('7.5 - 10 Lpa'),
                 ],
               ),
             ),
@@ -206,13 +206,13 @@ class _SalaryScreenState extends State<SalaryScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Salary.ZeroTwoLpa) {
-                  DataBaseMethods().addUserSalary("0-2.5 Lpa");
+                  DataBaseMethods().addUserSalary("0 - 2.5 Lpa");
                 } else if (_reply == Salary.TwoToFiveLpa) {
-                  DataBaseMethods().addUserSalary("2.5-5 Lpa");
+                  DataBaseMethods().addUserSalary("2.5 - 5 Lpa");
                 } else if (_reply == Salary.FiveToSevenLpa) {
-                  DataBaseMethods().addUserSalary("5-7.5 Lpa");
+                  DataBaseMethods().addUserSalary("5 - 7.5 Lpa");
                 } else if (_reply == Salary.SevenToTenLpa) {
-                  DataBaseMethods().addUserSalary("7.5-10 Lpa");
+                  DataBaseMethods().addUserSalary("7.5 - 10 Lpa");
                 } else if (_reply == Salary.AboveTenLpa) {
                   DataBaseMethods().addUserSalary("Above 10 Lpa");
                 }

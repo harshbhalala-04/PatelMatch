@@ -729,7 +729,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['age'] = age;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -742,7 +742,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['samaj'] = samajList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -755,7 +755,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['drink'] = drinkList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -768,7 +768,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['smoke'] = smokeList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -781,7 +781,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['starSign'] = starList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -794,7 +794,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['rashi'] = rashiList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -807,7 +807,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['incomeRange'] = incomeList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -820,7 +820,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['verifiedOnly'] = verifiedList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -833,7 +833,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['verifiedOnly'] = nriList;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -845,7 +845,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['height'] = height;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 
@@ -857,7 +857,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['weight'] = weight;
-      ref.update({'filters': myMap});
+      ref.update({'isFilterApplied': true,'filters': myMap});
     });
   }
 }

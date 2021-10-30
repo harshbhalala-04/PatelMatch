@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:chat/controllers/filter_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/global.dart';
 import 'package:chat/helper/constants.dart';
@@ -21,11 +22,10 @@ class FeedScreenController extends GetxController {
   int tmp = 0;
   List<UserModel> usersList = <UserModel>[];
   final AutoScrollController scrollController = AutoScrollController();
-  
+  final isFilterApplied = false.obs;
+
   int currentItemLength = 0;
   int previousItemLength = 0;
-
- 
 
   DocumentSnapshot? lastUser;
   bool isLoadingMoreData = false;
@@ -35,6 +35,21 @@ class FeedScreenController extends GetxController {
   final firestore = FirebaseFirestore.instance;
 
   final endUser = false.obs;
+
+  List<String> rashi = [
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Saggitarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces"
+  ];
 
   void scrollListener() {
     if (scrollController.offset >=
@@ -56,12 +71,66 @@ class FeedScreenController extends GetxController {
     await firestore.collection("users").doc(user!.uid).get().then((val) {
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
+      isFilterApplied.value = tmpMap['isFilterApplied'];
       print('Here fetch Gender');
     });
-    var query = firebaseFirestore
-        .collection("users")
-        .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
-        .orderBy("createdAt", descending: true);
+
+    Query<Map<String, dynamic>> query;
+
+    if (isFilterApplied.value) {
+      query = firebaseFirestore
+          .collection("users")
+          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          .where("NRI",
+              whereIn: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .filters
+                          ?.nri
+                          ?.length ==
+                      0
+                  ? ["NRI", "Non NRI"]
+                  : Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .filters
+                      ?.nri)
+          .where("rashi",
+                  whereIn: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .filters
+                          ?.rashi
+                          ?.length ==
+                      0
+                  ? rashi
+                  : Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .filters
+                      ?.rashi)
+          .orderBy("createdAt", descending: true);
+    } else {
+      query = firebaseFirestore
+          .collection("users")
+          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          .orderBy("createdAt", descending: true);
+    }
+
+    /*
+    Filtering feature based on:  Available in DB
+    1.  NRI (OnBoarding)              YES - Done
+    2.  Age (onboarding)              YES 
+    3.  Drink (no)                    YES <<<<<----
+    4.  Height (onboarding)           YES 
+    5.  Income Range (no)             YES <<<<<---
+    6.  Rashi (onboarding)            YES - Done
+    7.  Samaj (onboarding)            YES 
+    8.  Smoke (no)                    YES <<<<<----
+    9.  Star sign (onboarding)        YES
+    10. Verified (no)                 YES
+    11. weight (onboarding)           YES
+    */
 
     if (lastUser != null) {
       isLoadingMoreData = true;

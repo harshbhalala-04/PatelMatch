@@ -22,6 +22,7 @@ class FilterController extends GetxController {
   final drinkSubtitle = ''.obs;
   final smokeSubtitle = ''.obs;
   final isLoading = false.obs;
+ 
 
   @override
   void onInit() {

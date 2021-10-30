@@ -42,6 +42,10 @@ class AuthController extends GetxController {
         'uid': userCredential.user!.uid,
         'bookayAvailable': 5,
         'isFieldAnswered': false,
+        'isFilterApplied': false,
+        'drink': '',
+        'smoke': '',
+        'salary': '',
         'filters': {
           'age': FieldValue.arrayUnion([]),
           'drink': FieldValue.arrayUnion([]),
