@@ -22,8 +22,9 @@ class FeedScreenController extends GetxController {
   int tmp = 0;
   List<UserModel> usersList = <UserModel>[];
   final AutoScrollController scrollController = AutoScrollController();
-  final isFilterApplied = false.obs;
 
+  final isFilterApplied = false.obs;
+  final friendRequestList = [].obs;
   int currentItemLength = 0;
   int previousItemLength = 0;
 
@@ -72,77 +73,41 @@ class FeedScreenController extends GetxController {
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
       isFilterApplied.value = tmpMap['isFilterApplied'];
-      print('Here fetch Gender');
+      // if (tmpMap.containsKey('friendRequest')) {
+      //   // friendRequestList.value = tmpMap['friendRequest'];
+      // }
     });
-
+    // print("From get users : $friendRequestList");
     Query<Map<String, dynamic>> query;
 
-    if (isFilterApplied.value) {
-      query = firebaseFirestore
-          .collection("users")
-          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
-          .where("NRI",
-              whereIn: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .filters
-                          ?.nri
-                          ?.length ==
-                      0
-                  ? ["NRI", "Non NRI"]
-                  : Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .filters
-                      ?.nri)
-          .where("rashi",
-                  whereIn: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .filters
-                          ?.rashi
-                          ?.length ==
-                      0
-                  ? rashi
-                  : Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .filters
-                      ?.rashi)
-          .orderBy("createdAt", descending: true);
-    } else {
-      query = firebaseFirestore
-          .collection("users")
-          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
-          .orderBy("createdAt", descending: true);
-    }
-
-    /*
-    Filtering feature based on:  Available in DB
-    1.  NRI (OnBoarding)              YES - Done
-    2.  Age (onboarding)              YES 
-    3.  Drink (no)                    YES <<<<<----
-    4.  Height (onboarding)           YES 
-    5.  Income Range (no)             YES <<<<<---
-    6.  Rashi (onboarding)            YES - Done
-    7.  Samaj (onboarding)            YES 
-    8.  Smoke (no)                    YES <<<<<----
-    9.  Star sign (onboarding)        YES
-    10. Verified (no)                 YES
-    11. weight (onboarding)           YES
-    */
+    query = firebaseFirestore
+        .collection("users")
+        .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+        // .orderBy("friendRequest")
+        .orderBy("createdAt", descending: true);
 
     if (lastUser != null) {
       isLoadingMoreData = true;
       query = query.startAfterDocument(lastUser!);
     }
+
     query = query.limit(itemLimit);
+    // print("Friend Request: ${friendRequestList[0]['id']}");
+    // print("Friend Request: ${friendRequestList[1]['id']}");
 
     if (hasMoreData) {
       await query.get().then((snapshot) {
         if (snapshot.docs.isNotEmpty) {
           snapshot.docs.forEach((element) {
-            tmpUsersList.add(UserModel.fromJson(element.data()));
+            // int flag = 0;
+            // for (int i = 0; i < friendRequestList.length; i++) {
+            //   if (friendRequestList[i]['id'] == element.data()['uid']) {
+            //     flag = 1;
+            //   }
+            // }
+            // if (flag == 0) {
+              tmpUsersList.add(UserModel.fromJson(element.data()));
+            // }
           });
           lastUser = snapshot.docs[snapshot.docs.length - 1];
           currentItemLength = currentItemLength + snapshot.docs.length;
@@ -153,9 +118,8 @@ class FeedScreenController extends GetxController {
       });
     }
 
-    print("Here : $hasMoreData");
-
     usersList.addAll(tmpUsersList);
+
     isLoadingMoreData = false;
     update();
     stopwatch.stop();

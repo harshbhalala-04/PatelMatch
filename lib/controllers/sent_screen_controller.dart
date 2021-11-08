@@ -18,18 +18,20 @@ class SentScreenController extends GetxController {
         .get()
         .then((val) {
       if (val.data()!.containsKey('friendRequest')) {
-        List<dynamic> myMap = val['friendRequest'];
-        myMap.forEach((element) {
-          if (element['sent'] != '') {
-            sentProfiles.add({
-              'sent': element['sent'],
-              'image': element['image'],
-              'time': element['time'],
-              'email': element['email'],
-              'bookay': element['bookay']
-            });
-          }
-        });
+        if (val['friendRequest'].length != 0) {
+          List<dynamic> myMap = val['friendRequest'];
+          myMap.forEach((element) {
+            if (element['sent'] != '') {
+              sentProfiles.add({
+                'sent': element['sent'],
+                'image': element['image'],
+                'time': element['time'],
+                'email': element['email'],
+                'bookay': element['bookay']
+              });
+            }
+          });
+        }
       }
     });
     print('Sent Profiles');

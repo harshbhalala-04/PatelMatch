@@ -1,6 +1,7 @@
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/widgets/bookay_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,11 +12,13 @@ class FeedButton extends StatelessWidget {
   final String otherUsername;
   final String otherImageUrl;
   final String otherUserId;
+  final bool fromDynamicLink;
   FeedButton(
       {required this.index,
       required this.otherUsername,
       required this.otherImageUrl,
-      required this.otherUserId});
+      required this.otherUserId,
+      required this.fromDynamicLink});
   final feedScreenController = Get.put(FeedScreenController());
   final globalController = Get.put(GlobalController());
   @override
@@ -29,6 +32,7 @@ class FeedButton extends StatelessWidget {
               context: context,
               builder: (BuildContext context) {
                 return BookayDialogue(
+                    fromDynamicLink: fromDynamicLink,
                     index: index,
                     otherUsername: otherUsername,
                     otherImageUrl: otherImageUrl,
@@ -87,7 +91,9 @@ class FeedButton extends StatelessWidget {
                         index + 1,
                         preferPosition: AutoScrollPosition.begin,
                       );
-
+                  if (fromDynamicLink) {
+                    Get.offAll(CustomTabBar());
+                  }
                   DataBaseMethods()
                       .addDeclineMethod(otherUserId, otherUsername);
                 },
@@ -116,18 +122,21 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
-                  
-                  
+
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
                           preferPosition: AutoScrollPosition.end);
+                  
                   DataBaseMethods().addRequestMethod(
                       globalController.currentAppuser.value.username!,
                       otherUsername,
                       otherImageUrl,
                       otherUserId,
                       0);
+                  if (fromDynamicLink) {
+                    Get.offAll(CustomTabBar());
+                  }
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:get/get.dart';
 
@@ -9,75 +10,77 @@ import '../screens/chat_section/chat_screen.dart';
 import 'package:intl/intl.dart';
 
 class ChatRoomListTile extends StatefulWidget {
-  late final chatRoomId;
-  late final lastMessage;
+  final String chatRoomId;
+  final String lastMessage;
   late final lastMessageTs;
+  final String otherUserName;
+  final String otherUserImg;
+  final String otherUserUid;
 
-  ChatRoomListTile({
-    required this.chatRoomId,
-    required this.lastMessage,
-    required this.lastMessageTs,
-  });
+  ChatRoomListTile(
+      {required this.chatRoomId,
+      required this.lastMessage,
+      required this.lastMessageTs,
+      required this.otherUserName,
+      required this.otherUserImg,
+      required this.otherUserUid});
 
   @override
   _ChatRoomListTileState createState() => _ChatRoomListTileState();
 }
 
 class _ChatRoomListTileState extends State<ChatRoomListTile> {
-  dynamic name = '';
   String lastMsg = '';
   int count = 0;
-  String myName = Get.find<GlobalController>().currentAppuser.value.username!;
-  String imageUrl =
-      'https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png';
+  String myUid = Get.find<GlobalController>().currentAppuser.value.uid!;
+  String imageUrl = '';
+  bool isLoading = false;
+  String name = '';
+  String otherUserUid = '';
 
   getThisUserInfo() async {
-    String? username =
-        widget.chatRoomId.replaceAll(myName, "").replaceAll("_", "");
+    setState(() {
+      isLoading = true;
+    });
+    otherUserUid = widget.chatRoomId.replaceAll(myUid, "").replaceAll("_", "");
 
-    print(username!);
-    print('This is other users username!');
-
-    QuerySnapshot querySnapshot = await DataBaseMethods().getUserInfo(username);
-    print('This is query snapshot');
-    print(querySnapshot.toString());
-    print(querySnapshot.docs[0]['username']);
-
+    QuerySnapshot querySnapshot =
+        await DataBaseMethods().getUserInfo(otherUserUid);
     name = querySnapshot.docs[0]['username'];
     imageUrl = querySnapshot.docs[0]['imgUrl'];
-
-    print(name);
-    print('This name comes from fb');
-
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   void initState() {
-    getThisUserInfo();
+    //getThisUserInfo();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.lastMessage.length > 25) {
-      lastMsg = widget.lastMessage!.substring(0, 25);
+      lastMsg = widget.lastMessage.substring(0, 25);
       lastMsg += '...';
       count = 1;
     }
     String? time = DateFormat('hh:mm a').format(widget.lastMessageTs.toDate());
-
-    print(time);
+    print("User Image : ${widget.otherUserImg}");
+    print("User Name: ${widget.otherUserName}");
+    print("UID: ${widget.otherUserUid}");
     return InkWell(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ChatScreen(
-                      username: name,
-                      imageUrl: imageUrl,
-                      myName: Constants.myName,
-                      chatRoomId: widget.chatRoomId!,
+                      username: widget.otherUserName,
+                      imageUrl: widget.otherUserImg,
+                      chatRoomId: widget.chatRoomId,
+                      otherUserUid: widget.otherUserUid,
                     )));
       },
       child: Container(
@@ -92,11 +95,17 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                     Container(
                       height: 55,
                       width: 55,
-                      child: CircleAvatar(
-                        backgroundColor: Color.fromRGBO(196, 196, 196, 1),
-                        backgroundImage: NetworkImage(imageUrl),
-                        radius: 25,
-                      ),
+                      child: isLoading
+                          ? CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              backgroundImage: CachedNetworkImageProvider(
+                                widget.otherUserImg,
+                              ),
+                              radius: 25,
+                            ),
                     ),
                     SizedBox(
                       width: 10,
@@ -104,20 +113,24 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          name,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
+                        isLoading
+                            ? Container()
+                            : Text(
+                                widget.otherUserName,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
                         SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          count == 0 ? widget.lastMessage : lastMsg,
-                          maxLines: 1,
-                          softWrap: true,
-                          overflow: TextOverflow.clip,
-                        ),
+                        isLoading
+                            ? Container()
+                            : Text(
+                                count == 0 ? widget.lastMessage : lastMsg,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.clip,
+                              ),
                       ],
                     ),
                   ],

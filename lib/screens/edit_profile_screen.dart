@@ -96,8 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (index == 0) {
         Constants.userImage = url;
-        print('This is user image');
-        print(Constants.userImage);
+        
       }
       List<String> listUrl = [];
       listUrl.add(url);
@@ -110,12 +109,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         int prevImgCount = value['imgCount'];
         for (int i = 0; i < prevImgCount; i++) {
           if (index == i) {
-            print('This is url before');
-            print(value['imgUrls'][index]);
+            
             value['imgUrls'][index] = url;
-            print('This is the url after');
-            print(url);
-            print(value['imgUrls'][index]);
+           
             flag = 1;
           }
         }

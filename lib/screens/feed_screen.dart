@@ -50,6 +50,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           left: 0,
                           right: MediaQuery.of(context).size.width - 350,
                           child: FeedButton(
+                            fromDynamicLink: false,
                             index: index,
                             otherImageUrl:
                                 feedScreenController.usersList[index].imgUrl!,

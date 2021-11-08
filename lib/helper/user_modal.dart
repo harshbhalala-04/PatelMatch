@@ -26,10 +26,12 @@ class UserModel {
     this.politics,
     this.movie,
     this.imgCount,
+    this.notificationTokens,
     this.imgUrl,
     this.imgUrls,
     this.bookayAvailable,
     this.filters,
+    this.friendRequest,
   });
 
   String? uid;
@@ -48,12 +50,15 @@ class UserModel {
   String? politics;
   String? movie;
   int? imgCount;
+  List<String>? notificationTokens;
   String? imgUrl;
   List<String>? imgUrls;
   int? bookayAvailable;
   Filters? filters;
+  List<dynamic>? friendRequest;
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json) {
+   
     return UserModel(
       uid: json["uid"] == null ? null : json["uid"],
       username: json["username"] == null ? null : json["username"],
@@ -71,6 +76,12 @@ class UserModel {
       politics: json["politics"] == null ? null : json["politics"],
       movie: json["movie"] == null ? null : json["movie"],
       imgCount: json["imgCount"] == null ? null : json["imgCount"],
+      notificationTokens: json["notificationTokens"] == null
+          ? null
+          : List<String>.from(json["notificationTokens"].map((x) => x)),
+      // friendRequest: json["friendRequest"] == null
+      //     ? null
+      //     : List<dynamic>.from(json["friendRequest"].map((x) => x)),
       imgUrl: json["imgUrl"] == null ? null : json["imgUrl"],
       imgUrls: json["imgUrls"] == null
           ? null
@@ -79,6 +90,9 @@ class UserModel {
           json["bookayAvailable"] == null ? null : json["bookayAvailable"],
       filters:
           json["filters"] == null ? null : Filters?.fromJson(json["filters"]),
+      friendRequest: json["friendRequest"].length == 0
+          ? null
+          : List<dynamic>.from(json["friendRequest"].map((x) => x)),
     );
   }
 
@@ -99,11 +113,20 @@ class UserModel {
         "politics": politics == null ? null : politics,
         "movie": movie == null ? null : movie,
         "imgCount": imgCount == null ? null : imgCount,
+        "notificationTokens": notificationTokens == null
+            ? null
+            : List<dynamic>.from(notificationTokens!.map((x) => x)),
+        // "friendRequest": friendRequest == null
+        //     ? null
+        //     : List<dynamic>.from(friendRequest!.map((x) => x)),
         "imgUrl": imgUrl == null ? null : imgUrl,
         "imgUrls":
             imgUrls == null ? null : List<dynamic>.from(imgUrls!.map((x) => x)),
         "bookayAvailable": bookayAvailable == null ? null : bookayAvailable,
         "filters": filters == null ? null : filters?.toJson(),
+        "friendRequest": friendRequest == null
+            ? null
+            : List<dynamic>.from(friendRequest!.map((x) => x)),
       };
 }
 
@@ -134,18 +157,6 @@ class Filters {
   List<dynamic>? nri;
 
   factory Filters.fromJson(Map<dynamic, dynamic> json) {
-    print("Age: ${json["age"].length}");
-    print("Height: ${json["height"].length}");
-    print("Drink: ${json["drink"].length}");
-    print("Incomse: ${json["incomeRange"].length}");
-    print("Weight: ${json["weight"].length}");
-    print("Smoke: ${json["smoke"].length}");
-    print("Star: ${json["starSign"].length}");
-    print("Rashi: ${json["rashi"].length}");
-    print("Samaj: ${json["samaj"].length}");
-    print("NRI: ${json["NRI"].length}");
-    print("Verify: ${json["verifiedOnly"].length}");
-
     return Filters(
       age: json["age"].length == 0
           ? []

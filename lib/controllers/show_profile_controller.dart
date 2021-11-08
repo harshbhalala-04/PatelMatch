@@ -13,25 +13,26 @@ class ShowProfileController extends GetxController {
   String? chatRoomId;
   String myUserName =
       Get.find<GlobalController>().currentAppuser.value.username!;
+  String myUserId = Get.find<GlobalController>().currentAppuser.value.uid!;
+  String otherUserId = '';
+
   String? messageId = '';
-  
+
   fetchCurrentUser(String uid) async {
     isLoading.toggle();
-    print('This is uid: $uid');
+   
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
         .get()
         .then((val) {
-      print('This is data I got: ________________');
-      print(val.data());
+     
       Map<String, dynamic> tmpMap = val.data()!;
       currentUser.value = UserModel.fromJson(tmpMap);
     });
 
     isLoading.toggle();
   }
-
 
   getChatRoomId(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
@@ -44,20 +45,23 @@ class ShowProfileController extends GetxController {
   createChatRoom() async {
     String otherUsername = currentUser.value.username!;
     List<String> users = [myUserName, otherUsername];
+    List<String> userIds = [myUserId, currentUser.value.uid!];
 
-    List<String> usersSort = users;
-    usersSort.sort();
 
-    if (myUserName.substring(0, 1).codeUnitAt(0) ==
-        otherUsername.substring(0, 1).codeUnitAt(0)) {
-      chatRoomId = usersSort[0] + '_' + usersSort[1];
-    } else {
-      chatRoomId = getChatRoomId(myUserName, otherUsername);
-    }
+    // List<String> usersSort = users;
+    // usersSort.sort();
+
+    chatRoomId = getChatRoomId(myUserId, currentUser.value.uid!);
 
     Map<String, dynamic> chatRoomMap = {
-      "users": users,
       "chatRoomId": chatRoomId,
+      "userIds": userIds,
+      "firstUserName": users[0],
+      "secondUserName": users[1],
+      "firstUserImg": Get.find<GlobalController>().currentAppuser.value.imgUrl,
+      "secondUserImg": currentUser.value.imgUrl, 
+      "firstUserUid": Get.find<GlobalController>().currentAppuser.value.uid,
+      "secondUserUid": currentUser.value.uid,
     };
 
     DataBaseMethods().createChatRoom(chatRoomId!, chatRoomMap);
@@ -81,6 +85,7 @@ class ShowProfileController extends GetxController {
       "message": message,
       "sendBy": myUserName,
       "ts": lastMessageTs,
+      // "otherUserUid": currentUser.value.uid,
     };
 
     //message ID
@@ -89,15 +94,15 @@ class ShowProfileController extends GetxController {
     }
 
     DataBaseMethods()
-        .addMessageMethod(chatRoomId!, messageId!, messageInfoMap)
+        .addMessageMethod(
+            chatRoomId!, messageId!, messageInfoMap,)
         .then((val) {
       Map<String, dynamic> lastMessageInfoMap = {
         "lastMessage": message,
         "lastMessageTs": lastMessageTs,
       };
 
-      DataBaseMethods()
-          .updateLastMessageSend(chatRoomId!, lastMessageInfoMap);
+      DataBaseMethods().updateLastMessageSend(chatRoomId!, lastMessageInfoMap);
       messageId = '';
     });
   }

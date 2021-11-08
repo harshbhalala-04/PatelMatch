@@ -1,4 +1,8 @@
+import 'package:chat/controllers/global_controller.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 String mapKey = "AIzaSyCdAPr6-esjh1IezW2Bs5iqRXWTKT-Vrew";
 
@@ -324,3 +328,34 @@ List<DropdownMenuItem<String>> heights = [
     child: Text('6.59 ft'),
   ),
 ];
+String userId = Get.find<GlobalController>().currentAppuser.value.uid!;
+String userName = Get.find<GlobalController>().currentAppuser.value.username!;
+String imageUrl = Get.find<GlobalController>().currentAppuser.value.imgUrl!;
+
+Future<void> createDynamicLink() async {
+  Uri imageUri = Uri.parse(imageUrl);
+
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+    uriPrefix: "https://patelmatch.page.link",
+    link: Uri.parse("https://patelmatch.page.link/$userId"),
+    androidParameters:
+        AndroidParameters(packageName: "com.example.chat", minimumVersion: 0),
+    socialMetaTagParameters: SocialMetaTagParameters(
+      title: userName,
+      imageUrl: imageUri,
+    ),
+  );
+
+  final ShortDynamicLink shortLink = await parameters.buildShortLink();
+  print(shortLink.toString());
+  Uri url = shortLink.shortUrl;
+  print(url.toString());
+   await FlutterShare.share(
+    title: 'Patel Match',
+    linkUrl: url.toString(),
+    text: userName,
+    chooserTitle: 'Where You Want to Share',
+  );
+}
+
+

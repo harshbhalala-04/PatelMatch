@@ -2,6 +2,8 @@ import 'package:chat/controllers/bookay_controller.dart';
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/SubscriptionScreen.dart';
+import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +16,13 @@ class BookayDialogue extends StatelessWidget {
   final feedScreenController = Get.put(FeedScreenController());
 
   final int index;
+  final bool fromDynamicLink;
   final String otherUsername;
   final String otherImageUrl;
   final String otherUserId;
   BookayDialogue(
       {required this.index,
+      required this.fromDynamicLink,
       required this.otherUsername,
       required this.otherImageUrl,
       required this.otherUserId});
@@ -54,7 +58,9 @@ class BookayDialogue extends StatelessWidget {
                           width: 20,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(SubscriptionScreen());
+                          },
                           child: Text(
                             'Buy bouquets',
                             style: TextStyle(fontSize: 14),
@@ -155,21 +161,16 @@ class BookayDialogue extends StatelessWidget {
                       width: 175,
                       child: ElevatedButton(
                         onPressed: () {
-                          print(
-                              "This is text Editing Controller value: ${int.parse(textEditingController.text)}");
-                          print("This is bookay sent value: ${snapshot.data}");
-
                           if (int.parse(textEditingController.text) >
                               myMap['bookayAvailable']) {
-                            print('Here if statement is true');
                             Get.snackbar("You Haven't Enough Bouquets",
                                 "Buy More Bouquets",
                                 snackPosition: SnackPosition.TOP);
                           } else {
-                            if (index + 1 ==
-                                feedScreenController.usersList.length) {
-                              feedScreenController.endUser.value = true;
-                            }
+                            // if (index + 1 ==
+                            //     feedScreenController.usersList.length) {
+                            //   feedScreenController.endUser.value = true;
+                            // }
                             Get.find<FeedScreenController>()
                                 .scrollController
                                 .scrollToIndex(index + 1,
@@ -180,7 +181,11 @@ class BookayDialogue extends StatelessWidget {
                                 otherImageUrl,
                                 otherUserId,
                                 int.parse(textEditingController.text));
-                            Navigator.of(context).pop();
+                            if (fromDynamicLink) {
+                              Get.offAll(CustomTabBar());
+                            } else {
+                              Navigator.of(context).pop();
+                            }
                           }
                         },
                         child: Text(

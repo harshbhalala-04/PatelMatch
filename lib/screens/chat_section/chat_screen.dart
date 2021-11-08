@@ -1,3 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
+import 'package:get/get.dart';
+
 import '../../helper/constants.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/new_message.dart';
@@ -8,14 +11,16 @@ import 'package:intl/intl.dart';
 class ChatScreen extends StatefulWidget {
   late final String username;
   late final String imageUrl;
-  late final String myName;
+  //late final String myName;
   late final String chatRoomId;
+  late final String otherUserUid;
 
   ChatScreen({
     required this.username,
     required this.imageUrl,
-    required this.myName,
+    //required this.myName,
     required this.chatRoomId,
+    required this.otherUserUid,
   });
 
   @override
@@ -135,13 +140,16 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget bodyWidget() {
+    
     return Column(
       children: [
         chatMessages(),
         NewMessage(
           chatRoomId: widget.chatRoomId,
-          myUsername: widget.myName,
+          myUsername:
+              Get.find<GlobalController>().currentAppuser.value.username,
           otherUsername: widget.username,
+          otherUserUid: widget.otherUserUid,
         ),
       ],
     );
@@ -160,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Icon(
                     Icons.arrow_back_ios_new,
                     size: 22,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -179,12 +187,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white),
+                    color: Colors.black),
               ),
             ],
           ),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
       ),
       body: bodyWidget(),
     );

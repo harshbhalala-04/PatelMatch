@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
@@ -110,18 +111,19 @@ class DataBaseMethods {
   }
 
   ///Remove request of another user from profile:
-  declineRequest(String uid) async {
+  declineRequest(String otherUid) async {
     List<dynamic> tmpMap = [];
     List<Map<String, dynamic>> removeMap = [];
+    List<dynamic> otherTmpMap = [];
+    List<Map<String, dynamic>> otherRemoveMap = [];
 
-    print("this is debug");
     try {
       await firestore.collection("users").doc(user!.uid).get().then((val) {
         tmpMap = val['friendRequest'];
       });
 
       for (int i = 0; i < tmpMap.length; i++) {
-        if (tmpMap[i]['id'] == uid) {
+        if (tmpMap[i]['id'] == otherUid) {
           Map<String, dynamic> findMap = tmpMap[i];
           removeMap.add(findMap);
           break;
@@ -132,6 +134,23 @@ class DataBaseMethods {
           .collection("users")
           .doc(user!.uid)
           .update({'friendRequest': FieldValue.arrayRemove(removeMap)});
+
+      await firestore.collection("users").doc(otherUid).get().then((val) {
+        otherTmpMap = val['friendRequest'];
+      });
+
+      for (int i = 0; i < otherTmpMap.length; i++) {
+        if (otherTmpMap[i]['id'] == user!.uid) {
+          Map<String, dynamic> findMap = otherTmpMap[i];
+          otherRemoveMap.add(findMap);
+          break;
+        }
+      }
+
+      await firestore
+          .collection("users")
+          .doc(otherUid)
+          .update({'friendRequest': FieldValue.arrayRemove(otherRemoveMap)});
     } catch (error) {
       print(error.toString());
     }
@@ -205,6 +224,7 @@ class DataBaseMethods {
 
       await firestore.collection("users").doc(myUid).update({
         'friendRequest': FieldValue.arrayUnion(myMap),
+        'latestConnectionSentUid': otherUserId,
         'bookayAvailable': remaningBookay,
       });
 
@@ -222,54 +242,43 @@ class DataBaseMethods {
     DateTime time = DateTime.now();
 
     List<Map<String, dynamic>> myMatchMap = [
-      {"friendname": otherUsername, "friendImage": otherUserImageUrl}
+      {
+        "friendname": otherUsername,
+        "friendImage": otherUserImageUrl,
+        "friendUid": otherUserId
+      }
     ];
 
     List<Map<String, dynamic>> otherMatchMap = [
-      {"friendname": myUsername, "friendImage": myImageUrl}
+      {
+        "friendname": myUsername,
+        "friendImage": myImageUrl,
+        "friendUid": user!.uid
+      }
     ];
 
     try {
-      await firestore.collection("users").doc(user!.uid).get().then((value) {
-        Map<String, dynamic> mp = value.data()!;
-        if (mp.containsKey('friendRequest')) {
-          List<dynamic> friendList = mp['friendRequest'];
-          for (int i = 0; i < friendList.length; i++) {
-            if (friendList[i]['id'] == otherUserId) {
-              List<Map<String, dynamic>> deleteFriendRequest = [friendList[i]];
-              firestore.collection("users").doc(user!.uid).update({
-                'friendRequest': FieldValue.arrayRemove(deleteFriendRequest),
-                'matchUsers': FieldValue.arrayUnion(myMatchMap)
-              });
-            }
-          }
-        }
-      });
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({'matchUsers': FieldValue.arrayUnion(myMatchMap)});
 
-      await firestore.collection("users").doc(otherUserId).get().then((value) {
-        Map<String, dynamic> mp = value.data()!;
-        if (mp.containsKey('friendRequest')) {
-          List<dynamic> friendList = mp['friendRequest'];
-          for (int i = 0; i < friendList.length; i++) {
-            if (friendList[i]['id'] == user!.uid) {
-              List<Map<String, dynamic>> deleteFriendRequest = [friendList[i]];
-              firestore.collection("users").doc(otherUserId).update({
-                'friendRequest': FieldValue.arrayRemove(deleteFriendRequest),
-                'matchUsers': FieldValue.arrayUnion(otherMatchMap)
-              });
-            }
-          }
-        }
-      });
+      firestore
+          .collection("users")
+          .doc(otherUserId)
+          .update({'matchUsers': FieldValue.arrayUnion(otherMatchMap)});
     } catch (e) {
       print(e.toString());
     }
   }
 
-  Future addMessageMethod(String chatRoomId, String messageId,
-      Map<String, dynamic> messageInfo) async {
+  addMessageMethod(
+    String chatRoomId,
+    String messageId,
+    Map<String, dynamic> messageInfo,
+  ) async {
     try {
-      return firestore
+      await firestore
           .collection("chatroom")
           .doc(chatRoomId)
           .collection("chats")
@@ -650,22 +659,18 @@ class DataBaseMethods {
     }
   }
 
-  getUserByEmailId(String email) async {
-    try {
-      firestore.collection("users").doc(user!.uid).get().then((val) {
-        Constants.myName = val['username'];
-        Constants.userImage = val['imgUrl'];
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+  getUserByEmailId() async {
+    Constants.myName =
+        Get.find<GlobalController>().currentAppuser.value.username!;
+    Constants.userImage =
+        Get.find<GlobalController>().currentAppuser.value.imgUrl!;
   }
 
-  getUserInfo(String username) async {
+  getUserInfo(String uid) async {
     try {
-      return firestore
+      return await firestore
           .collection("users")
-          .where("username", isEqualTo: username)
+          .where("uid", isEqualTo: uid)
           .get();
     } catch (e) {
       print(e.toString());
@@ -742,7 +747,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['samaj'] = samajList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -755,7 +760,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['drink'] = drinkList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -768,7 +773,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['smoke'] = smokeList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -781,7 +786,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['starSign'] = starList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -794,7 +799,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['rashi'] = rashiList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -807,7 +812,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['incomeRange'] = incomeList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -820,7 +825,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['verifiedOnly'] = verifiedList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -833,7 +838,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['verifiedOnly'] = nriList;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -845,7 +850,7 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['height'] = height;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
   }
 
@@ -857,7 +862,44 @@ class DataBaseMethods {
     await ref.get().then((val) {
       Map<String, dynamic> myMap = val['filters'];
       myMap['weight'] = weight;
-      ref.update({'isFilterApplied': true,'filters': myMap});
+      ref.update({'isFilterApplied': true, 'filters': myMap});
     });
+  }
+
+  /// Add purchase to database
+  addMessaging(Map<dynamic, dynamic> messagePurchase) async {
+    List<Map<dynamic, dynamic>> messagePurchaseList = [];
+    messagePurchaseList.add(messagePurchase);
+    try {
+      await firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({'message': FieldValue.arrayUnion(messagePurchaseList)});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addBouquts(Map<dynamic, dynamic> bouquePurchase) async {
+    List<Map<dynamic, dynamic>> bouquePurchaseList = [];
+    bouquePurchaseList.add(bouquePurchase);
+    int bookayAvailable = 0;
+    int newBookay = bouquePurchase['bookayCount'];
+    print(bouquePurchase);
+    try {
+      await firestore.collection("users").doc(user!.uid).get().then((value) {
+        Map<String, dynamic> tmp = value.data()!;
+        print(tmp['bookayAvailable']);
+        print(tmp['bookayAvailable'].runtimeType);
+        bookayAvailable = tmp['bookayAvailable'];
+      });
+      bookayAvailable = bookayAvailable + newBookay;
+      await firestore.collection("users").doc(user!.uid).update({
+        'bookayAvailable': bookayAvailable,
+        'bouquets': FieldValue.arrayUnion(bouquePurchaseList)
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

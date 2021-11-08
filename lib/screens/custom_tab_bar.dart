@@ -4,6 +4,7 @@ import 'package:chat/screens/chat_section/message_screen.dart';
 import 'package:chat/screens/filter_screen.dart';
 import 'package:chat/screens/profile_screen.dart';
 import 'package:chat/widgets/feed_button.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -27,11 +28,14 @@ class _CustomTabBarState extends State<CustomTabBar> {
   void initState() {
     // TODO: implement initState
     pageController = PageController();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'This is from build method: ${globalController.currentAppuser.value.imgUrl}');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -45,16 +49,19 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(4),
-                    child: Obx(() => InkWell(
-                          onTap: () {
-                            Get.to(ProfileScreen());
-                          },
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                screenController.userProfileUrl.value),
-                            backgroundColor: Colors.grey,
-                          ),
-                        )),
+                    child: Obx(
+                        () => globalController.isLoading.value
+                            ? Container()
+                            : InkWell(
+                                onTap: () {
+                                  Get.to(ProfileScreen());
+                                },
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(globalController
+                                      .currentAppuser.value.imgUrl!),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              )),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +97,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       child: InkWell(
-                        
                         onTap: () {
                           Get.to(FilterScreen());
                         },

@@ -12,6 +12,7 @@ class AuthController extends GetxController {
   Rxn<User> firebaseUser = Rxn<User>();
   final isLoading = false.obs;
   final isLogin = true.obs;
+  final userEmailId = ''.obs;
 
   String? get user => firebaseUser.value?.email;
 
@@ -75,7 +76,8 @@ class AuthController extends GetxController {
     try {
       await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
-      DataBaseMethods().getUserByEmailId(email);
+      userEmailId.value = email;
+      DataBaseMethods().getUserByEmailId();
       Get.off(CustomTabBar());
     } on FirebaseAuthException catch (error) {
       print(error);

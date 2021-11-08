@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'dart:core';
 import 'dart:math';
 
-
 class NewMessage extends StatefulWidget {
   late final myUsername;
   late final chatRoomId;
   late final otherUsername;
+  late final otherUserUid;
 
   NewMessage(
       {required this.myUsername,
       required this.chatRoomId,
-      required this.otherUsername});
+      required this.otherUsername,
+      required this.otherUserUid});
   @override
   _NewMessageState createState() => _NewMessageState();
 }
@@ -21,7 +22,6 @@ class _NewMessageState extends State<NewMessage> {
   final _controller = TextEditingController();
   var _enterdMessage = '';
   String messageId = '';
-  
 
   String getMessageId() {
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -36,11 +36,13 @@ class _NewMessageState extends State<NewMessage> {
   addMessage() {
     String message = _enterdMessage;
     var lastMessageTs = DateTime.now();
+    print("this is my username: ${widget.myUsername}");
 
     Map<String, dynamic> messageInfoMap = {
       "message": message,
       "sendBy": widget.myUsername,
       "ts": lastMessageTs,
+      "otherUserUid": widget.otherUserUid
     };
 
     //message ID
@@ -49,9 +51,12 @@ class _NewMessageState extends State<NewMessage> {
     }
 
     _controller.clear();
+    print("New message chatRoomId: ${widget.chatRoomId}");
+    print("Other user id: ${widget.otherUserUid}");
 
     DataBaseMethods()
-        .addMessageMethod(widget.chatRoomId, messageId, messageInfoMap)
+        .addMessageMethod(
+            widget.chatRoomId, messageId, messageInfoMap, )
         .then((val) {
       Map<String, dynamic> lastMessageInfoMap = {
         "lastMessage": message,
@@ -59,14 +64,12 @@ class _NewMessageState extends State<NewMessage> {
       };
 
       DataBaseMethods()
-          .updateLastMessageSend(widget.chatRoomId, lastMessageInfoMap);  
-        messageId = '';
+          .updateLastMessageSend(widget.chatRoomId, lastMessageInfoMap);
+      messageId = '';
     });
   }
 
   //
-
-  
 
   // Widget chatMessages() {
   //   return StreamBuilder(
@@ -85,47 +88,50 @@ class _NewMessageState extends State<NewMessage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 60,),
-              child: Scrollbar(
-                child: TextField(
-                  controller: _controller,
-                  textCapitalization: TextCapitalization.sentences,
-                  autocorrect: true,
-                  maxLines: null,
-                  enableSuggestions: true,
-                  decoration: InputDecoration(hintText: 'Send a message...'),
-                  onChanged: (value) {
-                    setState(() {
-                      _enterdMessage = value;
-                    });
-                  },
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 60,
+                  ),
+                  child: Scrollbar(
+                    child: TextField(
+                      controller: _controller,
+                      textCapitalization: TextCapitalization.sentences,
+                      autocorrect: true,
+                      maxLines: null,
+                      enableSuggestions: true,
+                      decoration:
+                          InputDecoration(hintText: 'Send a message...'),
+                      onChanged: (value) {
+                        setState(() {
+                          _enterdMessage = value;
+                        });
+                      },
+                    ),
+                  ),
                 ),
               ),
-            ),
+              IconButton(
+                color: Theme.of(context).primaryColor,
+                icon: Icon(
+                  Icons.send,
+                ),
+                onPressed: _enterdMessage.trim().isEmpty
+                    ? null
+                    : () {
+                        addMessage();
+                      },
+              ),
+            ],
           ),
-          IconButton(
-            color: Theme.of(context).primaryColor,
-            icon: Icon(
-              Icons.send,
-            ),
-            onPressed: _enterdMessage.trim().isEmpty
-                ? null
-                : () {
-                    addMessage();
-                  },
-          ),
-        ],
-      ),
-      )
-      //margin: EdgeInsets.only(top: 8),
-      
-    );
+        )
+        //margin: EdgeInsets.only(top: 8),
+
+        );
   }
 }

@@ -10,12 +10,9 @@ class RequestScreenController extends GetxController {
   removeUser(String uid, int profileType) {
     if (profileType == 0) {
       profiles.removeWhere((profile) => profile['uid'] == uid);
-      print("After removing: ");
-      print(profiles);
     } else {
-      specialProfiles.removeWhere((specialProfile) => specialProfile['uid'] == uid);
-      print("After removing: ");
-      print(specialProfiles);
+      specialProfiles
+          .removeWhere((specialProfile) => specialProfile['uid'] == uid);
     }
   }
 
@@ -31,31 +28,31 @@ class RequestScreenController extends GetxController {
         .get()
         .then((val) {
       if (val.data()!.containsKey('friendRequest')) {
-        List<dynamic> myMap = val['friendRequest'];
-        myMap.forEach((element) {
-          if (element['recieved'] != '') {
-            print("________________________________________");
-            print(element['recieved']);
-            print(element['bookay']);
-            if (element['bookay'] != 0) {
-              specialProfiles.add({
-                'recieve': element['recieved'],
-                'image': element['image'],
-                'time': element['time'],
-                'uid': element['id'],
-                'bookay': element['bookay'],
-              });
+        if (val['friendRequest'].length != 0) {
+          List<dynamic> myMap = val['friendRequest'];
+          print("This is my map : $myMap");
+          myMap.forEach((element) {
+            if (element['recieved'] != '') {
+              if (element['bookay'] != 0) {
+                specialProfiles.add({
+                  'recieve': element['recieved'],
+                  'image': element['image'],
+                  'time': element['time'],
+                  'uid': element['id'],
+                  'bookay': element['bookay'],
+                });
+              }
+              if (element['bookay'] == 0) {
+                profiles.add({
+                  'recieve': element['recieved'],
+                  'image': element['image'],
+                  'time': element['time'],
+                  'uid': element['id']
+                });
+              }
             }
-            if (element['bookay'] == 0) {
-              profiles.add({
-                'recieve': element['recieved'],
-                'image': element['image'],
-                'time': element['time'],
-                'uid': element['id']
-              });
-            }
-          }
-        });
+          });
+        }
       }
     });
 

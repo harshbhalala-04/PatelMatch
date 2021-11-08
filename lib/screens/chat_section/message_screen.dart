@@ -6,8 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'conversation_screen.dart';
-
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
 
@@ -16,21 +14,14 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  final String? email = FirebaseAuth.instance.currentUser!.email;
-  String myName = Get.find<GlobalController>().currentAppuser.value.username!;
+  //final String? email = FirebaseAuth.instance.currentUser!.email;
+  String myUid = Get.find<GlobalController>().currentAppuser.value.uid!;
   final firestore = FirebaseFirestore.instance;
   Stream? chatRoomsStream;
-  // getChatRooms() async {
-  //   chatRoomsStream = await DataBaseMethods().getChatRooms();
-  //   setState(() {});
-  // }
 
   @override
   void initState() {
-    print("Init state of conversation screen works here");
-    DataBaseMethods().getUserByEmailId(email!);
-
-    //getChatRooms();
+    DataBaseMethods().getUserByEmailId();
     super.initState();
   }
 
@@ -53,7 +44,7 @@ class _MessageScreenState extends State<MessageScreen> {
           stream: firestore
               .collection("chatroom")
               .orderBy("lastMessageTs", descending: true)
-              .where("users", arrayContains: myName)
+              .where("userIds", arrayContains: myUid)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -61,9 +52,10 @@ class _MessageScreenState extends State<MessageScreen> {
                 child: CircularProgressIndicator(),
               );
             }
-            if (!snapshot.hasData) {
+            
+            if (snapshot.data.docs.length == 0) {
               return Center(
-                child: Text('Your Conversations appear Here.'),
+                child: Text('Your Conversations appear Here.', style: TextStyle(fontSize: 18),),
               );
             }
             final chatRoomDocs = snapshot.data!.docs;
@@ -72,14 +64,14 @@ class _MessageScreenState extends State<MessageScreen> {
                 shrinkWrap: true,
                 itemBuilder: (_, index) {
                   DocumentSnapshot ds = snapshot.data.docs[index];
-                  print(ds['chatRoomId']);
-                  print('This is chat Room Id');
-                  print(ds['lastMessage']);
-                  print('This is last message');
                   return ChatRoomListTile(
                     chatRoomId: ds['chatRoomId'],
                     lastMessage: ds['lastMessage'],
                     lastMessageTs: ds['lastMessageTs'],
+                    otherUserName: ds['firstUserName'] == Get.find<GlobalController>().currentAppuser.value.username ? ds['secondUserName'] : ds['firstUserName'],
+                    otherUserImg: ds['firstUserImg'] == Get.find<GlobalController>().currentAppuser.value.imgUrl ? ds['secondUserImg'] : ds['firstUserImg'],
+                    otherUserUid: ds['firstUserUid'] == Get.find<GlobalController>().currentAppuser.value.uid ? ds['secondUserUid'] : ds['firstUserUid'],
+                    
                   );
                 });
           }),
