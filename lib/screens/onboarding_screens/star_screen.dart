@@ -1,4 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:chat/screens/onboarding_screens/rashi_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,9 @@ import 'package:get/get.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class StarScreen extends StatefulWidget {
-  const StarScreen({Key? key}) : super(key: key);
+  late final fromProfile;
+  String response;
+  StarScreen({required this.fromProfile, this.response = ''});
 
   @override
   _StarScreenState createState() => _StarScreenState();
@@ -124,6 +128,18 @@ class _StarScreenState extends State<StarScreen> {
       child: Text('Revati'),
     ),
   ];
+
+  @override
+  void initState() {
+    if (widget.response != '') {
+      setState(() {
+        starAns = widget.response;
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,19 +150,21 @@ class _StarScreenState extends State<StarScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-          TextButton(
-            child: Text(
-              'Skip',
-              style: TextStyle(
-                color: Colors.pink,
-                fontSize: 18,
-              ),
-            ),
-            onPressed: () {
-              DataBaseMethods().addUserStar('');
-              Get.to(RashiScreen());
-            },
-          )
+          widget.fromProfile
+              ? Container()
+              : TextButton(
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: () {
+                    DataBaseMethods().addUserStar('');
+                    Get.to(RashiScreen(fromProfile: false,));
+                  },
+                )
         ],
       ),
       body: Padding(
@@ -203,13 +221,42 @@ class _StarScreenState extends State<StarScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                DataBaseMethods().addUserStar(starAns!);
-                Get.to(RashiScreen());
+                if (widget.fromProfile) {
+                  if (starAns == null) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Please Select Your Star.'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Close')),
+                            ],
+                          );
+                        });
+                  } else {
+                    Get.find<GlobalController>().currentAppuser.value.star =
+                        starAns;
+                    DataBaseMethods().addUserStar(starAns!);
+                    Get.off(EditProfileScreen());
+                  }
+                } else {
+                  DataBaseMethods().addUserStar(starAns!);
+                  Get.to(RashiScreen(fromProfile: false,));
+                }
               },
-              child: Text(
-                'Continue',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

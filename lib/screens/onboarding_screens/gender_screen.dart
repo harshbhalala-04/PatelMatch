@@ -59,7 +59,6 @@ class _GenderScreenState extends State<GenderScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -137,11 +136,10 @@ class _GenderScreenState extends State<GenderScreen> {
                 }
 
                 if (widget.fromProfile) {
-                  Navigator.pop(context);
-                  Navigator.popAndPushNamed(
-                      context, EditProfileScreen.routeName);
+                  
+                  Get.off(EditProfileScreen());
                 } else {
-                  Get.to(WeightScreen());
+                  Get.to(WeightScreen(fromProfile: false,));
                 }
               },
               child: widget.fromProfile

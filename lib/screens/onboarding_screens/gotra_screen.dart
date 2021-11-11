@@ -1,10 +1,14 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GotraScreen extends StatefulWidget {
-  const GotraScreen({Key? key}) : super(key: key);
+  late final fromProfile;
+  String response;
+  GotraScreen({required this.fromProfile, this.response = ''});
 
   @override
   _GotraScreenState createState() => _GotraScreenState();
@@ -13,12 +17,22 @@ class GotraScreen extends StatefulWidget {
 class _GotraScreenState extends State<GotraScreen> {
   TextEditingController gotraController = new TextEditingController();
   @override
+  void initState() {
+    if (widget.fromProfile) {
+      gotraController.text = widget.response;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: [
-          TextButton(
+          widget.fromProfile
+              ? Container()
+              : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -28,7 +42,7 @@ class _GotraScreenState extends State<GotraScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserGotra('');
-                    Get.to(ManglicScreen());
+                    Get.to(ManglicScreen(fromProfile: false,));
                   },
                 )
         ],
@@ -80,13 +94,22 @@ class _GotraScreenState extends State<GotraScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: ElevatedButton(
               onPressed: () {
-                String username = gotraController.text;
-
-                DataBaseMethods().addUserGotra(username);
-                Get.to(ManglicScreen());
+                String gotra = gotraController.text;
+                Get.find<GlobalController>().currentAppuser.value.gotra = gotra;
+                DataBaseMethods().addUserGotra(gotra);
+                if (widget.fromProfile) {
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(ManglicScreen(fromProfile: false,));
+                }
               },
-              child: Text('Continue',
-                  style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
+              child: widget.fromProfile
+                  ? Text('Submit',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center)
+                  : Text('Continue',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center),
               style: ButtonStyle(),
             ),
           ),

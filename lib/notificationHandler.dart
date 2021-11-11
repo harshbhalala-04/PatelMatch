@@ -64,63 +64,6 @@ dynamic handleNotificationRouting(
       Get.to(MessageScreen());
       break;
     default:
-    // case 'order':
-    //   await databaseReference
-    //       .collection('ORDERS')
-    //       .doc(message['orderId'])
-    //       .get()
-    //       .then((snapshot) {
-    //     if (snapshot.exists) {
-    //       Get.to(OrderDetails(order: Order.fromJson(snapshot.data()!)));
-    //     }
-    //   });
-    //   break;
-    // case 'category':
-    //   await databaseReference
-    //       .collection('CATEGORIES')
-    //       .doc(message['documentId'])
-    //       .get()
-    //       .then((snapshot) {
-    //     if (snapshot.exists) {
-    //       Get.to(ProductCategory(
-    //           // isSubcategory: false,
-    //           query: databaseReference
-    //               .collection('PRODUCTS')
-    //               .where('categories', arrayContainsAny: [
-    //                 {
-    //                   'id': snapshot.data()!['id'],
-    //                   'name': snapshot.data()!['name'].toLowerCase()
-    //                 }
-    //               ])
-    //               .where('isOutOfStock', isEqualTo: false)
-    //               .orderBy('createdAt', descending: true),
-    //           category: Category.fromJson(snapshot.data()!)));
-    //     }
-    //   });
-    //   break;
-    // case 'subCategory':
-    //   await databaseReference
-    //       .collection('SUBCATEGORIES')
-    //       .doc(message['documentId'])
-    //       .get()
-    //       .then((snapshot) {
-    //     if (snapshot.exists) {
-    //       Get.to(ShopProductSubCategoryView(
-    //           subCategory: SubCategory.fromJson(snapshot.data()!)));
-    //     }
-    //   });
-    //   break;
-    // case 'product':
-    //   await databaseReference
-    //       .collection('PRODUCTS')
-    //       .doc(message['documentId'])
-    //       .get()
-    //       .then((snapshot) {
-    //     if (snapshot.exists) {
-    //       Get.to(ProductPage(product: Product.fromJson(snapshot.data()!)));
-    //     }
-    //   });
-    //   break;
-    // default:
+    
   }
 }

@@ -35,10 +35,10 @@ class SentScreenController extends GetxController {
       }
     });
     print('Sent Profiles');
-
+    print("This is sent profile screen controller_______________");
     sentProfiles.sort((a, b) => b["time"].compareTo(a["time"]));
 
-    print(sentProfiles);
+    
 
     isLoading.toggle();
   }

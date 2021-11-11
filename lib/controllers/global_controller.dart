@@ -14,6 +14,7 @@ class GlobalController extends GetxController {
   String newNotificationToken = '';
   final User? _user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
+  late final List<String>? notificationTokens;
 
   getCurrentUser() async {
     isLoading.toggle();
@@ -24,31 +25,35 @@ class GlobalController extends GetxController {
     currentAppuser.value = user ?? UserModel();
     gender.value = currentAppuser.value.gender!;
     profileUrl.value = currentAppuser.value.imgUrl!;
-
+    isLoading.toggle();
     await FirebaseMessaging.instance.getToken().then((token) {
       newNotificationToken = token!;
-      print('this is token: $newNotificationToken');
     });
     if (currentAppuser.value.notificationTokens == null ||
         currentAppuser.value.notificationTokens == [] ||
         !currentAppuser.value.notificationTokens!
             .contains(newNotificationToken)) {
-      final List notificationTokens = currentAppuser.value.notificationTokens!;
-      notificationTokens.add(newNotificationToken);
-      print("__________________________________");
+      if (currentAppuser.value.notificationTokens == null) {
+        notificationTokens = [];
+      } else {
+         notificationTokens =
+            currentAppuser.value.notificationTokens;
+      }
+
+      print("________________________________");
+      print(newNotificationToken);
+      print(notificationTokens?.length);
+
+      notificationTokens?.add(newNotificationToken);
+
       print(notificationTokens);
-      print(user!.uid);
       if (newNotificationToken != '') {
-        print("enter in if block to new token");
         await FirebaseFirestore.instance
             .collection("users")
             .doc(_user!.uid)
             .update({'notificationTokens': notificationTokens});
       }
     }
-    isLoading.toggle();
-    print('Here is loading value: $isLoading');
-    print('This is from build method: ${currentAppuser.value.imgUrl}');
   }
 
   @override

@@ -144,9 +144,10 @@ class BirthDateScreen extends StatelessWidget {
                     String month = birthDateController.mm.value;
                     String year = birthDateController.yyyy.value;
                     DataBaseMethods().addUserBirthDate(date, month, year);
-                    Navigator.pop(context);
-                    Navigator.popAndPushNamed(
-                        context, EditProfileScreen.routeName);
+                    // Navigator.pop(context);
+                    // Navigator.popAndPushNamed(
+                    //     context, EditProfileScreen.routeName);
+                    Get.off(EditProfileScreen());
                   }
                 } else {
                   if (birthDateController.dd.value == 'DD') {

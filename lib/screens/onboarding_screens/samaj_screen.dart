@@ -1,4 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/willing_to_marry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,9 @@ import 'package:get/get.dart';
 enum Samaj { KadvaPatel, LevaPatel }
 
 class SamajScreen extends StatefulWidget {
-  const SamajScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  SamajScreen({required this.fromProfile, this.response = ''});
 
   @override
   _SamajScreenState createState() => _SamajScreenState();
@@ -15,7 +19,7 @@ class SamajScreen extends StatefulWidget {
 class _SamajScreenState extends State<SamajScreen> {
   Samaj? _reply;
 
-   @override
+  @override
   void initState() {
     // TODO: implement initState
     setState(() {
@@ -23,6 +27,7 @@ class _SamajScreenState extends State<SamajScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,15 +108,26 @@ class _SamajScreenState extends State<SamajScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Samaj.KadvaPatel) {
+                  Get.find<GlobalController>().currentAppuser.value.samaj =
+                      "Kadva Patel";
                   DataBaseMethods().addUserSamaj("Kadva Patel");
                 } else {
+                  Get.find<GlobalController>().currentAppuser.value.samaj =
+                      "Leva Patel";
                   DataBaseMethods().addUserSamaj("Leva Patel");
                 }
-
+                if (widget.fromProfile) {
+                  Get.off(EditProfileScreen());
+                } else {
                   Get.to(WillingToMarryScreen());
-                
+                }
               },
-              child: Text(
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
                       'Continue',
                       style: TextStyle(fontSize: 17),
                     ),

@@ -1,8 +1,10 @@
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/controllers/sent_screen_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/widgets/bookay_dialogue.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -21,6 +23,7 @@ class FeedButton extends StatelessWidget {
       required this.fromDynamicLink});
   final feedScreenController = Get.put(FeedScreenController());
   final globalController = Get.put(GlobalController());
+  final sentScreenController = Get.put(SentScreenController());
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -79,9 +82,6 @@ class FeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'DeclineButton1',
                 onPressed: () {
-                  print(
-                      'This is userslist length : ${feedScreenController.usersList.length}');
-                  print('Here its index ${index + 1}');
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
@@ -94,8 +94,15 @@ class FeedButton extends StatelessWidget {
                   if (fromDynamicLink) {
                     Get.offAll(CustomTabBar());
                   }
-                  DataBaseMethods()
-                      .addDeclineMethod(otherUserId, otherUsername);
+                  Get.find<FeedScreenController>()
+                      .usersList
+                      .removeWhere((element) => element.uid == otherUserId);
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .excludedUsers!
+                      .add(otherUserId);
+                  DataBaseMethods().addExcludeUser(otherUserId, false);
                 },
                 child: Text(
                   'Decline',
@@ -116,18 +123,36 @@ class FeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'ConnectButton1',
                 onPressed: () {
-                  print(
-                      'This is userslist length : ${feedScreenController.usersList.length}');
-                  print('Here its index ${index + 1}');
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
-
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
                           preferPosition: AutoScrollPosition.end);
-                  
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .excludedUsers!
+                      .add(otherUserId);
+                   Get.find<FeedScreenController>()
+                      .usersList
+                      .removeWhere((element) => element.uid == otherUserId);
+                  DateTime time = DateTime.now(); //DateTime
+                  Timestamp myTimeStamp =
+                      Timestamp.fromDate(time); //To TimeStamp
+                  print(myTimeStamp);
+                  Get.find<SentScreenController>().sentProfiles.add({
+                    'sent': otherUsername,
+                    'image': otherImageUrl,
+                    'time': myTimeStamp,
+                    'email': null,
+                    'bookay': 0
+                  });
+                  Get.find<SentScreenController>()
+                      .sentProfiles
+                      .sort((a, b) => b["time"].compareTo(a["time"]));
+                  DataBaseMethods().addExcludeUser(otherUserId, true);
                   DataBaseMethods().addRequestMethod(
                       globalController.currentAppuser.value.username!,
                       otherUsername,

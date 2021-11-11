@@ -1,10 +1,14 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/user_profile_edit/height_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WeightScreen extends StatefulWidget {
-  const WeightScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  WeightScreen({required this.fromProfile, this.response = ''});
 
   @override
   _WeightScreenState createState() => _WeightScreenState();
@@ -12,6 +16,14 @@ class WeightScreen extends StatefulWidget {
 
 class _WeightScreenState extends State<WeightScreen> {
   TextEditingController _weightController = new TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.fromProfile) {
+      _weightController.text = widget.response;
+    }
+    super.initState();
+  }
 
   void showDialog() {
     Get.defaultDialog(
@@ -27,16 +39,15 @@ class _WeightScreenState extends State<WeightScreen> {
                   Get.back();
                 },
                 child: Text('Close'),
-                style: TextButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 16)
-                )
-              ),
+                style:
+                    TextButton.styleFrom(textStyle: TextStyle(fontSize: 16))),
           ],
         )
       ],
       barrierDismissible: false,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,17 +104,28 @@ class _WeightScreenState extends State<WeightScreen> {
             child: ElevatedButton(
               onPressed: () {
                 String weight = _weightController.text;
-                if (weight.isEmpty) {
-                  showDialog();
+                if (widget.fromProfile) {
+                  if (weight.isEmpty) {
+                    showDialog();
+                  } else {
+                    Get.find<GlobalController>().currentAppuser.value.weight =
+                        weight;
+                    DataBaseMethods().addUserWeight(weight);
+                    Get.off(EditProfileScreen());
+                  }
                 } else {
-                  DataBaseMethods().addUserWeight(weight);
-                  Get.to(HeightScreen(fromProfile: false,));
+                  if (weight.isEmpty) {
+                    showDialog();
+                  } else {
+                    DataBaseMethods().addUserWeight(weight);
+                    Get.to(HeightScreen(
+                      fromProfile: false,
+                    ));
+                  }
                 }
               },
-              child: 
-                   Text('Continue',
-                      style: TextStyle(fontSize: 17),
-                      textAlign: TextAlign.center),
+              child: Text('Continue',
+                  style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
               style: ButtonStyle(),
             ),
           ),

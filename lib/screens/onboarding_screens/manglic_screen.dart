@@ -1,5 +1,7 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/feed_screen.dart';
 import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,9 @@ import 'package:get/get.dart';
 enum YesNo { Yes, No }
 
 class ManglicScreen extends StatefulWidget {
-  const ManglicScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  ManglicScreen({required this.fromProfile, this.response = ''});
 
   @override
   _ManglicScreenState createState() => _ManglicScreenState();
@@ -16,6 +20,25 @@ class ManglicScreen extends StatefulWidget {
 
 class _ManglicScreenState extends State<ManglicScreen> {
   YesNo? _reply;
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.response == 'Yes') {
+      setState(() {
+        _reply = YesNo.Yes;
+      });
+    } else if (widget.response == 'No') {
+      setState(() {
+        _reply = YesNo.No;
+      });
+    } else {
+      setState(() {
+        _reply = YesNo.No;
+      });
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +49,9 @@ class _ManglicScreenState extends State<ManglicScreen> {
           onPressed: () => Get.back(),
         ),
         actions: [
-          TextButton(
+          widget.fromProfile
+              ? Container()
+              : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -111,17 +136,29 @@ class _ManglicScreenState extends State<ManglicScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == YesNo.No) {
+                  Get.find<GlobalController>().currentAppuser.value.manglik =
+                      "No";
                   DataBaseMethods().addUserHandicapped("No");
                 } else {
+                  Get.find<GlobalController>().currentAppuser.value.manglik =
+                      "Yes";
                   DataBaseMethods().addUserHandicapped("Yes");
                 }
-
-                Get.to(CustomTabBar());
+                if (widget.fromProfile) {
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(CustomTabBar());
+                }
               },
-              child: Text(
-                'Continue',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

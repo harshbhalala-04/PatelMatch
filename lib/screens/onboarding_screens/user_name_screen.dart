@@ -1,3 +1,4 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,9 +10,12 @@ import '../../database/database.dart';
 import 'image_picker_screen.dart';
 
 class UserNameScreen extends StatefulWidget {
+  final String relation;
   late final fromProfile;
+  String response;
 
-  UserNameScreen({required this.fromProfile});
+  UserNameScreen(
+      {required this.relation, this.fromProfile, this.response = ''});
 
   @override
   _UserNameScreenState createState() => _UserNameScreenState();
@@ -23,14 +27,14 @@ class _UserNameScreenState extends State<UserNameScreen> {
   @override
   void initState() {
     if (widget.fromProfile) {
-      _usernameController.text = DataBaseMethods().fetchUserName();
+      _usernameController.text = widget.response;
     }
     super.initState();
   }
 
   void showDialog() {
     Get.defaultDialog(
-      middleText: "Plese Select Your Name",
+      middleText: "Plese Select Your ${widget.relation} Name",
       title: "",
       middleTextStyle: TextStyle(fontSize: 20),
       actions: [
@@ -42,10 +46,8 @@ class _UserNameScreenState extends State<UserNameScreen> {
                   Get.back();
                 },
                 child: Text('Close'),
-                style: TextButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 16)
-                )
-              ),
+                style:
+                    TextButton.styleFrom(textStyle: TextStyle(fontSize: 16))),
           ],
         )
       ],
@@ -71,13 +73,12 @@ class _UserNameScreenState extends State<UserNameScreen> {
                 height: 10,
               ),
               Text(
-                'Enter Your Full Name',
+                'Enter Your ${widget.relation} Full Name',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
                 ),
               ),
-              
               SizedBox(
                 height: 5,
               ),
@@ -115,11 +116,27 @@ class _UserNameScreenState extends State<UserNameScreen> {
                     if (username.isEmpty) {
                       showDialog();
                     } else {
-                      Constants.username = username;
-                      DataBaseMethods().updateUserName(username);
-                      Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                      if (widget.relation == ' ') {
+                        Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .username = username;
+                        Constants.username = username;
+                        DataBaseMethods().updateUserName(username);
+                      } else if (widget.relation == "Father") {
+                        Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .fatherName = username;
+                        DataBaseMethods().updateFatherName(username);
+                      } else if (widget.relation == "Mother") {
+                        Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .motherName = username;
+                        DataBaseMethods().updateMotherName(username);
+                      }
+                      Get.off(EditProfileScreen());
                     }
                   } else {
                     if (username.isEmpty) {

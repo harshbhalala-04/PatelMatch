@@ -156,6 +156,34 @@ class DataBaseMethods {
     }
   }
 
+  ///add user to Exclude Users List
+  addExcludeUser(String ohterUid, bool fromConnect) async {
+    List<String> uidList = [];
+    uidList.add(ohterUid);
+    await firestore
+        .collection("users")
+        .doc(user!.uid)
+        .update({"excludedUsers": FieldValue.arrayUnion(uidList)});
+
+    if (fromConnect) {
+      List<String> myUidList = [];
+      myUidList.add(user!.uid);
+      await firestore
+          .collection("users")
+          .doc(ohterUid)
+          .update({"excludedUsers": FieldValue.arrayUnion(myUidList)});
+    }
+  }
+
+  removeExcludeUser(String otherUid) async {
+    List<String> otherUidList = [];
+    otherUidList.add(otherUid);
+    await firestore
+        .collection("users")
+        .doc(user!.uid)
+        .update({"excludedUsers": FieldValue.arrayRemove(otherUidList)});
+  }
+
   ///Sent request to another user.
   addRequestMethod(String myUsername, String otherUsername,
       String otherUserImageUrl, String otherUserId, int bookay) async {
@@ -334,6 +362,28 @@ class DataBaseMethods {
           .collection("users")
           .doc(user!.uid)
           .update({"nativeCity": nativeCity});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addFatherNative(String nativeCity) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"fatherNative": nativeCity});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addMotherNative(String nativeCity) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"motherNative": nativeCity});
     } catch (e) {
       print(e.toString());
     }
@@ -553,9 +603,47 @@ class DataBaseMethods {
     }
   }
 
+  addFatherWorklife(String worklife) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"fatherOccupation": worklife});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addMotherWorklife(String worklife) {
+    try {
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"motherOccupation": worklife});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   addUserSalary(String salary) {
     try {
       firestore.collection("users").doc(user!.uid).update({"salary": salary});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addFatherSalary(String salary) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({"fatherAvgAnnualIncome": salary});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addMotherSalary(String salary) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({"motherAvgAnnualIncome": salary});
     } catch (e) {
       print(e.toString());
     }
@@ -654,6 +742,22 @@ class DataBaseMethods {
   updateUserName(String name) {
     try {
       firestore.collection("users").doc(user!.uid).update({'username': name});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  updateFatherName(String name) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({'fatherName': name});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  updateMotherName(String name) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({'motherName': name});
     } catch (e) {
       print(e.toString());
     }

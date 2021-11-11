@@ -54,7 +54,7 @@ class _CityScreenState extends State<CityScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserCity('');
-                    Get.to(NativeScreen());
+                    Get.to(NativeScreen(fromProfile: false, relation: ' ',));
                   },
                 )
         ],
@@ -108,7 +108,7 @@ class _CityScreenState extends State<CityScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(NativeScreen());
+                Get.to(NativeScreen(fromProfile: false, relation: ' ',));
               },
               child: Text('Continue',
                   style: TextStyle(fontSize: 17), textAlign: TextAlign.center),

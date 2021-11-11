@@ -47,6 +47,8 @@ class AuthController extends GetxController {
         'drink': '',
         'smoke': '',
         'salary': '',
+        'friendRequest': FieldValue.arrayUnion([]),
+        'excludedUsers': FieldValue.arrayUnion([]),
         'filters': {
           'age': FieldValue.arrayUnion([]),
           'drink': FieldValue.arrayUnion([]),
@@ -61,7 +63,7 @@ class AuthController extends GetxController {
           'weight': FieldValue.arrayUnion([]),
         }
       });
-      Get.off(ProfileCreatedByScreen());
+      Get.off(ProfileCreatedByScreen(fromProfile: false,));
     } on FirebaseAuthException catch (error) {
       print(error);
       Get.snackbar("Error Creating account", error.message!,

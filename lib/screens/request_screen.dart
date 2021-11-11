@@ -28,8 +28,7 @@ class _RequestScreenState extends State<RequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('This is all profiles list:_________');
-    print(requestScreenController.profiles);
+    
     return Scaffold(
         body: Obx(() => requestScreenController.isLoading.value
             ? Center(

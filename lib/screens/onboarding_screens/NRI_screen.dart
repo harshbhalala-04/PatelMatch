@@ -1,27 +1,43 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/city_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum YesNo{Yes, No}
+enum YesNo { Yes, No }
+
 class NRIScreen extends StatefulWidget {
-  const NRIScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  NRIScreen({required this.fromProfile, this.response = ''});
 
   @override
   _NRIScreenState createState() => _NRIScreenState();
 }
 
 class _NRIScreenState extends State<NRIScreen> {
- YesNo? _reply;
+  YesNo? _reply;
 
   @override
   void initState() {
     // TODO: implement initState
-    setState(() {
-      _reply = YesNo.No;
-    });
+    if (widget.response == 'Yes') {
+      setState(() {
+        _reply = YesNo.Yes;
+      });
+    } else if (widget.response == 'No') {
+      setState(() {
+        _reply = YesNo.No;
+      });
+    } else {
+      setState(() {
+        _reply = YesNo.No;
+      });
+    }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,17 +118,28 @@ class _NRIScreenState extends State<NRIScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == YesNo.No) {
+                  Get.find<GlobalController>().currentAppuser.value.userNRI =
+                      "No";
                   DataBaseMethods().addUserNRI("No");
                 } else {
+                  Get.find<GlobalController>().currentAppuser.value.userNRI =
+                      "Yes";
                   DataBaseMethods().addUserHandicapped("Yes");
                 }
 
-                Get.to(CityScreen());
+                if (widget.fromProfile) {
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(CityScreen());
+                }
               },
-              child: Text(
-                      'Continue',
-                      style: TextStyle(fontSize: 17),
-                    ),
+              child: widget.fromProfile ? Text(
+                'Submit',
+                style: TextStyle(fontSize: 17),
+              ): Text(
+                'Continue',
+                style: TextStyle(fontSize: 17),
+              ),
               style: ButtonStyle(),
             ),
           ),

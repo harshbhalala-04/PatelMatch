@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
         builder: (context, userSnapshot) {
           if (userSnapshot.hasData) {
             if (Constants.signUpState) {
-              return ProfileCreatedByScreen();
+              return ProfileCreatedByScreen(fromProfile: false,);
             } else {
               return CustomTabBar();
             }

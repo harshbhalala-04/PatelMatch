@@ -1,3 +1,4 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
@@ -9,8 +10,8 @@ import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class HeightScreen extends StatefulWidget {
   late final fromProfile;
-
-  HeightScreen({required this.fromProfile});
+  String response;
+  HeightScreen({required this.fromProfile, this.response = ''});
 
   @override
   _HeightScreenState createState() => _HeightScreenState();
@@ -343,20 +344,12 @@ class _HeightScreenState extends State<HeightScreen> {
 
   @override
   void initState() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+    if (widget.response != '') {
+      setState(() {
+        heightAns = widget.response;
+      });
+    }
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('height')) {
-        setState(() {
-          heightAns = val['height'];
-        });
-      }
-    });
     super.initState();
   }
 
@@ -426,31 +419,32 @@ class _HeightScreenState extends State<HeightScreen> {
               onPressed: () {
                 if (widget.fromProfile) {
                   if (heightAns == null) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Please Select Your Height.'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Close')),
-                          ],
-                        );
-                      });
-                }
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Please Select Your Height.'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Close')),
+                            ],
+                          );
+                        });
+                  } else {
+                    Get.find<GlobalController>().currentAppuser.value.height =
+                        heightAns;
+                    DataBaseMethods().addUserHeight(heightAns!);
+                    
+                    Get.off(EditProfileScreen());
+                  }
+                } else {
                   DataBaseMethods().addUserHeight(heightAns!);
-                  Navigator.pop(context);
-                  Navigator.popAndPushNamed(
-                      context, EditProfileScreen.routeName);
-                  
-                }
-                else {
-                  DataBaseMethods().addUserHeight(heightAns!);
-                  Get.to(HandicappedScreen());
-                  
+                  Get.to(HandicappedScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

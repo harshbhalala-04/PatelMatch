@@ -43,7 +43,7 @@ class ProfileFeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'DeclineButton2',
                 onPressed: () {
-                  DataBaseMethods().declineRequest(uid);
+                  DataBaseMethods().removeExcludeUser(uid);
                   requestScreenController.removeUser(uid, profileType);
                   Get.back();
                 },

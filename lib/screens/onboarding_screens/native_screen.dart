@@ -1,16 +1,26 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/star_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NativeScreen extends StatefulWidget {
-  const NativeScreen({Key? key}) : super(key: key);
+  final String relation;
+  final bool fromProfile;
+   String response;
+  NativeScreen(
+      {required this.relation,
+      required this.fromProfile,
+      this.response = ''});
 
   @override
   _NativeScreenState createState() => _NativeScreenState();
 }
 
 class _NativeScreenState extends State<NativeScreen> {
+  TextEditingController _nativeController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +28,9 @@ class _NativeScreenState extends State<NativeScreen> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
-          TextButton(
+          widget.fromProfile
+              ? Container()
+              : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -28,7 +40,9 @@ class _NativeScreenState extends State<NativeScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserNative('');
-                    Get.to(StarScreen());
+                    Get.to(StarScreen(
+                      fromProfile: false,
+                    ));
                   },
                 )
         ],
@@ -42,7 +56,7 @@ class _NativeScreenState extends State<NativeScreen> {
               height: 10,
             ),
             Text(
-              'Add Your Native Place',
+              'Add Your ${widget.relation} Native Place',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -54,9 +68,7 @@ class _NativeScreenState extends State<NativeScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                onChanged: (val) {
-                  // findPlace(val);
-                },
+                controller: _nativeController,
                 decoration: InputDecoration(
                   hintText: 'Start Typing...',
                   border: OutlineInputBorder(
@@ -82,10 +94,35 @@ class _NativeScreenState extends State<NativeScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(StarScreen());
+                if (widget.fromProfile) {
+                  if (widget.relation == "Father's") {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .fatherNativePlace = _nativeController.text;
+                    DataBaseMethods().addFatherNative(_nativeController.text);
+                  } else if (widget.relation == "Mother's") {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .motherNativePlace = _nativeController.text;
+                    DataBaseMethods().addMotherNative(_nativeController.text);
+                  }
+                  Get.off(EditProfileScreen());
+                } else {
+                  DataBaseMethods().addUserNative(_nativeController.text);
+                  Get.to(StarScreen(
+                    fromProfile: false,
+                  ));
+                }
               },
-              child: Text('Continue',
-                  style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
+              child: widget.fromProfile
+                  ? Text('Submit',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center)
+                  : Text('Continue',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center),
               style: ButtonStyle(),
             ),
           ),

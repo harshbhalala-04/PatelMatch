@@ -1,6 +1,7 @@
 import 'package:chat/controllers/bookay_controller.dart';
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/controllers/sent_screen_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/SubscriptionScreen.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
@@ -40,7 +41,6 @@ class BookayDialogue extends StatelessWidget {
             return Container();
           }
           Map<String, dynamic> myMap = snapshot.data!.data()!;
-          print('Bookay value : ${myMap['bookayAvailable']}');
           return Container(
             height: 400,
             child: AlertDialog(
@@ -175,6 +175,29 @@ class BookayDialogue extends StatelessWidget {
                                 .scrollController
                                 .scrollToIndex(index + 1,
                                     preferPosition: AutoScrollPosition.begin);
+                            Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .excludedUsers!
+                                .add(otherUserId);
+                            Get.find<FeedScreenController>()
+                                .usersList
+                                .removeWhere(
+                                    (element) => element.uid == otherUserId);
+                            DateTime time = DateTime.now(); //DateTime
+                            Timestamp myTimeStamp =
+                                Timestamp.fromDate(time); //To TimeStamp
+                            Get.find<SentScreenController>().sentProfiles.add({
+                              'sent': otherUsername,
+                              'image': otherImageUrl,
+                              'time': myTimeStamp,
+                              'bookay': int.parse(textEditingController.text)
+                            });
+                            Get.find<SentScreenController>()
+                                .sentProfiles
+                                .sort((a, b) => b["time"].compareTo(a["time"]));
+                            DataBaseMethods().addExcludeUser(otherUserId, true);
+                            print("Here exclue method complete");
                             DataBaseMethods().addRequestMethod(
                                 globalController.currentAppuser.value.username!,
                                 otherUsername,

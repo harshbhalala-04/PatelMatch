@@ -1,4 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/NRI_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,9 @@ import 'package:get/get.dart';
 enum Marital { Unmarried, Widow, Divorced, Seperated }
 
 class MaritalScreen extends StatefulWidget {
-  const MaritalScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  MaritalScreen({required this.fromProfile, this.response = ''});
 
   @override
   _MaritalScreenState createState() => _MaritalScreenState();
@@ -15,14 +19,33 @@ class MaritalScreen extends StatefulWidget {
 class _MaritalScreenState extends State<MaritalScreen> {
   Marital? _reply;
 
-   @override
+  @override
   void initState() {
     // TODO: implement initState
-    setState(() {
-      _reply = Marital.Unmarried;
-    });
+    if (widget.response == 'Unmarried') {
+      setState(() {
+        _reply = Marital.Unmarried;
+      });
+    } else if (widget.response == 'Widow') {
+      setState(() {
+        _reply = Marital.Widow;
+      });
+    } else if (widget.response == 'Divorced') {
+      setState(() {
+        _reply = Marital.Divorced;
+      });
+    } else if (widget.response == 'Seperated') {
+      setState(() {
+        _reply = Marital.Seperated;
+      });
+    } else {
+      setState(() {
+        _reply = Marital.Unmarried;
+      });
+    }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,19 +165,41 @@ class _MaritalScreenState extends State<MaritalScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Marital.Unmarried) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .maritalStatus = "Unmarried";
                   DataBaseMethods().addUserMaritalStatus("Unmarried");
                 } else if (_reply == Marital.Widow) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .maritalStatus = "Widow/Widower";
                   DataBaseMethods().addUserMaritalStatus("Widow/Widower");
                 } else if (_reply == Marital.Divorced) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .maritalStatus = "Divorced";
                   DataBaseMethods().addUserMaritalStatus("Divorced");
                 } else if (_reply == Marital.Seperated) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .maritalStatus = "Seperated";
                   DataBaseMethods().addUserMaritalStatus("Seperated");
-                } 
-
-                Get.to(NRIScreen());
+                }
+                if (widget.fromProfile) {
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(NRIScreen(fromProfile: false,));
+                }
               },
-              child: Text(
+              child: widget.fromProfile ?  Text(
                 'Submit',
+                style: TextStyle(fontSize: 17),
+              ) :  Text(
+                'Continue',
                 style: TextStyle(fontSize: 17),
               ),
               style: ButtonStyle(),

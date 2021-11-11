@@ -114,7 +114,7 @@ class SingleUserFeed extends StatelessWidget {
                               width: 0,
                             ),
                       UserInfoCard(
-                          title: 'Community', subTitle: currentUser.community)
+                          title: 'Community', subTitle: 'Community')
                     ],
                   ),
                 ),
@@ -133,7 +133,7 @@ class SingleUserFeed extends StatelessWidget {
                               width: 0,
                             ),
                       UserInfoCard(
-                          title: 'Workout', subTitle: currentUser.workout),
+                          title: 'Workout', subTitle: 'Workout'),
                     ],
                   ),
                 ),

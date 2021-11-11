@@ -1,13 +1,17 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 enum Drink { Never, Socially, Regularly, Planningtoquit }
 
 class DrinkScreen extends StatefulWidget {
-  const DrinkScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  DrinkScreen({required this.fromProfile, this.response = ''});
 
   @override
   _DrinkScreenState createState() => _DrinkScreenState();
@@ -18,38 +22,28 @@ class _DrinkScreenState extends State<DrinkScreen> {
 
   @override
   void initState() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+    if (widget.response == 'Never') {
+      setState(() {
+        _reply = Drink.Never;
+      });
+    } else if (widget.response == 'Socially') {
+      setState(() {
+        _reply = Drink.Socially;
+      });
+    } else if (widget.response == 'Regularly') {
+      setState(() {
+        _reply = Drink.Regularly;
+      });
+    } else if (widget.response == 'Planning to quit') {
+      setState(() {
+        _reply = Drink.Planningtoquit;
+      });
+    } else {
+      setState(() {
+        _reply = Drink.Never;
+      });
+    }
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('drink')) {
-        if (val['drink'] == 'Never') {
-          setState(() {
-            _reply = Drink.Never;
-          });
-        } else if (val['drink'] == 'Socially') {
-          setState(() {
-            _reply = Drink.Socially;
-          });
-        } else if (val['drink'] == 'Regularly') {
-          setState(() {
-            _reply = Drink.Regularly;
-          });
-        } else if (val['drink'] == 'Planning to quit') {
-          setState(() {
-            _reply = Drink.Planningtoquit;
-          });
-        }
-      } else {
-        setState(() {
-          _reply = Drink.Never;
-        });
-      }
-    });
     super.initState();
   }
 
@@ -175,18 +169,24 @@ class _DrinkScreenState extends State<DrinkScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Drink.Never) {
+                  Get.find<GlobalController>().currentAppuser.value.drink =
+                      "Never";
                   DataBaseMethods().addUserDrink("Never");
                 } else if (_reply == Drink.Socially) {
+                  Get.find<GlobalController>().currentAppuser.value.drink =
+                      "Socially";
                   DataBaseMethods().addUserDrink("Socially");
                 } else if (_reply == Drink.Regularly) {
+                  Get.find<GlobalController>().currentAppuser.value.drink =
+                      "Regularly";
                   DataBaseMethods().addUserDrink("Regularly");
                 } else if (_reply == Drink.Planningtoquit) {
+                  Get.find<GlobalController>().currentAppuser.value.drink =
+                      "Planning to quit";
                   DataBaseMethods().addUserDrink("Planning to quit");
                 }
 
-                Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                Get.off(EditProfileScreen());
               },
               child: Text(
                 'Submit',

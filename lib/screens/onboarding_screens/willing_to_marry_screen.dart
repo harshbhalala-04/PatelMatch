@@ -103,7 +103,7 @@ class _WillingToMarryScreenState extends State<WillingToMarryScreen> {
                 } else {
                   DataBaseMethods().addUserMarryToSamaj("Any Samaj");
                 }
-                Get.to(UserNameScreen(fromProfile: false));
+                Get.to(UserNameScreen(relation: ' ', fromProfile: false));
               },
               child: Text(
                 'Continue',

@@ -6,6 +6,7 @@ class RequestScreenController extends GetxController {
   final isLoading = false.obs;
   final profiles = [].obs;
   final specialProfiles = [].obs;
+  final sentProfiles = [].obs;
 
   removeUser(String uid, int profileType) {
     if (profileType == 0) {
@@ -63,10 +64,13 @@ class RequestScreenController extends GetxController {
     isLoading.toggle();
   }
 
+  
+
   @override
   void onInit() {
     // TODO: implement onInit
     fetchUserRequest();
+    
     super.onInit();
   }
 }

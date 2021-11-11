@@ -1,13 +1,17 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 enum Smoke { Never, Socially, Regularly, Planningtoquit }
 
 class SmokeScreen extends StatefulWidget {
-  const SmokeScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  SmokeScreen({required this.fromProfile, this.response = ''});
 
   @override
   _SmokeScreenState createState() => _SmokeScreenState();
@@ -18,39 +22,28 @@ class _SmokeScreenState extends State<SmokeScreen> {
 
   @override
   void initState() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+    if (widget.response == 'Never') {
+      setState(() {
+        _reply = Smoke.Never;
+      });
+    } else if (widget.response == 'Socially') {
+      setState(() {
+        _reply = Smoke.Socially;
+      });
+    } else if (widget.response == 'Regularly') {
+      setState(() {
+        _reply = Smoke.Regularly;
+      });
+    } else if (widget.response == 'Planning to quit') {
+      setState(() {
+        _reply = Smoke.Planningtoquit;
+      });
+    } else {
+      setState(() {
+        _reply = Smoke.Never;
+      });
+    }
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      if (val.data()!.containsKey('smoke')) {
-        if (val['smoke'] == 'Never') {
-          setState(() {
-            _reply = Smoke.Never;
-          });
-        } else if (val['smoke'] == 'Socially') {
-          setState(() {
-            _reply = Smoke.Socially;
-          });
-        } else if (val['smoke'] == 'Regularly') {
-          setState(() {
-            _reply = Smoke.Regularly;
-          });
-        } else if (val['smoke'] == 'Planning to quit') {
-          setState(() {
-            _reply = Smoke.Planningtoquit;
-          });
-        }
-      } else {
-        setState(() {
-          _reply = Smoke.Never;
-        });
-        
-      }
-    });
     super.initState();
   }
 
@@ -173,18 +166,25 @@ class _SmokeScreenState extends State<SmokeScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Smoke.Never) {
+                  Get.find<GlobalController>().currentAppuser.value.smoke =
+                      "Never";
                   DataBaseMethods().addUserSmoke("Never");
                 } else if (_reply == Smoke.Socially) {
+                  Get.find<GlobalController>().currentAppuser.value.smoke =
+                      "Socially";
                   DataBaseMethods().addUserSmoke("Socially");
                 } else if (_reply == Smoke.Regularly) {
+                  Get.find<GlobalController>().currentAppuser.value.smoke =
+                      "Regularly";
                   DataBaseMethods().addUserSmoke("Regularly");
                 } else if (_reply == Smoke.Planningtoquit) {
+                  Get.find<GlobalController>().currentAppuser.value.smoke =
+                      "Planning to quit";
                   DataBaseMethods().addUserSmoke("Planning to quit");
                 }
-
-                Navigator.pop(context);
-                      Navigator.popAndPushNamed(
-                          context, EditProfileScreen.routeName);
+                Get.off(EditProfileScreen());
+                // Navigator.pop(context);
+                // Navigator.popAndPushNamed(context, EditProfileScreen.routeName);
               },
               child: Text(
                 'Submit',

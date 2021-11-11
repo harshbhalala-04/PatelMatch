@@ -10,12 +10,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:quiver/iterables.dart';
 
 class FeedScreenController extends GetxController {
   final globalController = Get.put(GlobalController());
   final temp = 0.obs;
   final currentIndex = 0.obs;
-  final potentialUsersList = <UserModel>[].obs;
   final userListLength = 0.obs;
   int currentPageIndex = 0;
   String gender = '';
@@ -25,6 +25,7 @@ class FeedScreenController extends GetxController {
 
   final isFilterApplied = false.obs;
   final friendRequestList = [].obs;
+  List<String> tmpUsersUid = [];
   int currentItemLength = 0;
   int previousItemLength = 0;
 
@@ -69,22 +70,28 @@ class FeedScreenController extends GetxController {
   getUsers() async {
     final stopwatch = Stopwatch()..start();
     List<UserModel> tmpUsersList = <UserModel>[];
+
     await firestore.collection("users").doc(user!.uid).get().then((val) {
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
       isFilterApplied.value = tmpMap['isFilterApplied'];
-      // if (tmpMap.containsKey('friendRequest')) {
-      //   // friendRequestList.value = tmpMap['friendRequest'];
-      // }
     });
-    // print("From get users : $friendRequestList");
     Query<Map<String, dynamic>> query;
 
-    query = firebaseFirestore
-        .collection("users")
-        .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
-        // .orderBy("friendRequest")
-        .orderBy("createdAt", descending: true);
+    if (globalController.currentAppuser.value.excludedUsers?.length == 0) {
+      query = firebaseFirestore
+          .collection("users")
+          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          .orderBy("createdAt", descending: true);
+    } else {
+      query = firebaseFirestore
+          .collection("users")
+          .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          // .where("uid",
+          //     whereNotIn: globalController.currentAppuser.value.excludedUsers)
+          // .orderBy("uid")
+          .orderBy("createdAt", descending: true);
+    }
 
     if (lastUser != null) {
       isLoadingMoreData = true;
@@ -92,24 +99,21 @@ class FeedScreenController extends GetxController {
     }
 
     query = query.limit(itemLimit);
-    // print("Friend Request: ${friendRequestList[0]['id']}");
-    // print("Friend Request: ${friendRequestList[1]['id']}");
 
     if (hasMoreData) {
       await query.get().then((snapshot) {
         if (snapshot.docs.isNotEmpty) {
           snapshot.docs.forEach((element) {
-            // int flag = 0;
-            // for (int i = 0; i < friendRequestList.length; i++) {
-            //   if (friendRequestList[i]['id'] == element.data()['uid']) {
-            //     flag = 1;
-            //   }
-            // }
-            // if (flag == 0) {
+            if (globalController.currentAppuser.value.excludedUsers?.length ==
+                0 || !globalController.currentAppuser.value.excludedUsers!
+                .contains(element.data()['uid'])) {
               tmpUsersList.add(UserModel.fromJson(element.data()));
-            // }
+              tmpUsersUid.add(element.data()['uid']);
+            }
           });
           lastUser = snapshot.docs[snapshot.docs.length - 1];
+          print("This is last user data");
+          print(lastUser?.data());
           currentItemLength = currentItemLength + snapshot.docs.length;
           if (snapshot.docs.length < itemLimit) {
             hasMoreData = false;
@@ -117,13 +121,15 @@ class FeedScreenController extends GetxController {
         }
       });
     }
-
     usersList.addAll(tmpUsersList);
-
+    print("Loop Starts");
+    for (int i = 0; i < usersList.length; i++) {
+      print(usersList[i].username);
+    }
+    print("Loop End");
     isLoadingMoreData = false;
     update();
     stopwatch.stop();
-    // print('doSomething() executed in ${stopwatch.elapsed}');
   }
 
   @override

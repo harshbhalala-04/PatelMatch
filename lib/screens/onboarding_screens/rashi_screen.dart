@@ -1,11 +1,17 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/onboarding_screens/gotra_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
+import '../edit_profile_screen.dart';
+
 class RashiScreen extends StatefulWidget {
-  const RashiScreen({Key? key}) : super(key: key);
+   late final fromProfile;
+  String response;
+  RashiScreen({required this.fromProfile, this.response = ''});
+
 
   @override
   _RashiScreenState createState() => _RashiScreenState();
@@ -64,6 +70,17 @@ class _RashiScreenState extends State<RashiScreen> {
     ),
 
   ];
+
+  @override
+  void initState() {
+    if (widget.response != '') {
+      setState(() {
+        rashiAns = widget.response;
+      });
+    }
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +91,7 @@ class _RashiScreenState extends State<RashiScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-          TextButton(
+          widget.fromProfile ? Container() : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -84,7 +101,7 @@ class _RashiScreenState extends State<RashiScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserRashi('');
-                    Get.to(GotraScreen());
+                    Get.to(GotraScreen(fromProfile: false,));
                   },
                 )
         ],
@@ -127,7 +144,6 @@ class _RashiScreenState extends State<RashiScreen> {
                       ),
                 isExpanded: true,
                 items: rashis,
-                //value: heightAns == '' ? Text('') : Text(heightAns!),
                 onChanged: (val) {
                   rashiAns = val;
                   print(rashiAns);
@@ -144,11 +160,37 @@ class _RashiScreenState extends State<RashiScreen> {
             child: ElevatedButton(
               onPressed: () {
                 
+                  if (widget.fromProfile) {
+                  if (rashiAns == null) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Please Select Your Rashi.'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Close')),
+                            ],
+                          );
+                        });
+                  } else {
+                    Get.find<GlobalController>().currentAppuser.value.rashi =
+                        rashiAns;
+                    DataBaseMethods().addUserRashi(rashiAns!);
+                    Get.off(EditProfileScreen());
+                  }
+                } else {
                   DataBaseMethods().addUserRashi(rashiAns!);
-                  Get.to(GotraScreen());
-                
+                  Get.to(GotraScreen(fromProfile: false,));
+                }
               },
-              child: Text(
+              child: widget.fromProfile ?  Text(
+                'Submit',
+                style: TextStyle(fontSize: 17),
+              ):  Text(
                 'Continue',
                 style: TextStyle(fontSize: 17),
               ),

@@ -1,9 +1,21 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/constants.dart';
+import 'package:chat/screens/onboarding_screens/NRI_screen.dart';
 import 'package:chat/screens/onboarding_screens/birth_date_screen.dart';
 import 'package:chat/screens/onboarding_screens/community_screen.dart';
+import 'package:chat/screens/onboarding_screens/gotra_screen.dart';
+import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
+import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
+import 'package:chat/screens/onboarding_screens/marital_screen.dart';
+import 'package:chat/screens/onboarding_screens/native_screen.dart';
+import 'package:chat/screens/onboarding_screens/profile_createdBy_screen.dart';
+import 'package:chat/screens/onboarding_screens/rashi_screen.dart';
+import 'package:chat/screens/onboarding_screens/samaj_screen.dart';
+import 'package:chat/screens/onboarding_screens/star_screen.dart';
+import 'package:chat/screens/onboarding_screens/weight_screen.dart';
 import 'package:chat/screens/user_profile_edit/drink_screen.dart';
 import 'package:chat/screens/user_profile_edit/education_screen.dart';
 import 'package:chat/screens/onboarding_screens/gender_screen.dart';
@@ -17,10 +29,12 @@ import 'package:chat/screens/user_profile_edit/smoke_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:chat/screens/user_profile_edit/work_life_screen.dart';
 import 'package:chat/screens/user_profile_edit/workout_screen.dart';
+import 'package:chat/widgets/filter_screen_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -96,7 +110,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (index == 0) {
         Constants.userImage = url;
-        
       }
       List<String> listUrl = [];
       listUrl.add(url);
@@ -109,9 +122,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         int prevImgCount = value['imgCount'];
         for (int i = 0; i < prevImgCount; i++) {
           if (index == i) {
-            
             value['imgUrls'][index] = url;
-           
+
             flag = 1;
           }
         }
@@ -372,7 +384,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      :CachedNetworkImage(
+                                      : CachedNetworkImage(
                                           imageUrl: imgUrls[2],
                                           fit: BoxFit.cover,
                                         )),
@@ -433,7 +445,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               AssetImage('assets/add_img2.png'),
                                           fit: BoxFit.cover,
                                         )
-                                      :CachedNetworkImage(
+                                      : CachedNetworkImage(
                                           imageUrl: imgUrls[4],
                                           fit: BoxFit.cover,
                                         )),
@@ -459,9 +471,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         fit: BoxFit.cover,
                                       )
                                     : CachedNetworkImage(
-                                          imageUrl: imgUrls[5],
-                                          fit: BoxFit.cover,
-                                        )),
+                                        imageUrl: imgUrls[5],
+                                        fit: BoxFit.cover,
+                                      )),
                           ),
                   ],
                 ),
@@ -479,17 +491,72 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 height: 10,
               ),
               InkWell(
+                child: FilterScreenCard(
+                  title: 'Profile Created By',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .profileCreatedBy ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy!,
+                ),
+                onTap: () {
+                  Get.off(ProfileCreatedByScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: 'Samaj',
+                  subtitle:
+                      Get.find<GlobalController>().currentAppuser.value.samaj ==
+                              null
+                          ? ' '
+                          : Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .samaj!,
+                ),
+                onTap: () {
+                  Get.off(SamajScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .samaj ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .samaj!,
+                  ));
+                },
+              ),
+              InkWell(
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: ListTile(
                     //leading: Text('Name'),
                     title: Text(
-                      'Name',
+                      'Full Name',
                       style: TextStyle(fontSize: 12, color: Colors.black54),
                     ),
                     subtitle: Text(
-                      Constants.myName,
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .username!,
                       style: TextStyle(fontSize: 18, color: Colors.black87),
                     ),
                     trailing: Icon(
@@ -500,12 +567,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) => UserNameScreen(fromProfile: true)));
+                  Get.off(UserNameScreen(
+                    relation: ' ',
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .username!,
+                  ));
                 },
               ),
+              InkWell(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: ListTile(
+                      title: Text(
+                        'Gender',
+                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                      ),
+                      subtitle: Text(
+                        Constants.gender,
+                        style: TextStyle(fontSize: 18, color: Colors.black87),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_right,
+                        color: Colors.pink,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Get.off(GenderScreen(fromProfile: true));
+                  }),
               InkWell(
                   child: Card(
                     shape: RoundedRectangleBorder(
@@ -530,363 +624,575 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) =>
-                                BirthDateScreen(fromProfile: true)));
+                    Get.off(BirthDateScreen(fromProfile: true));
                   }),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Gender',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.gender,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                GenderScreen(fromProfile: true)));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Weight',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .weight ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .weight!,
+                ),
+                onTap: () {
+                  Get.off(WeightScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .weight!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Community',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.community,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CommunityScreen(fromProfile: true)));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Height',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .height ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .height!,
+                ),
+                onTap: () {
+                  Get.off(HeightScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .height!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Height',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.height,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (ctx) => HeightScreen(fromProfile: true,)));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Handicapped',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .handicapped ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .handicapped!,
+                ),
+                onTap: () {
+                  Get.off(HandicappedScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .handicapped!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Workout',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.workout,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WorkoutScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Marital Status',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .maritalStatus ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .maritalStatus!,
+                ),
+                onTap: () {
+                  Get.off(MaritalScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .maritalStatus!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Education',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.education,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EducationScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'NRI Status',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .userNRI ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .userNRI!,
+                ),
+                onTap: () {
+                  Get.off(NRIScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .userNRI!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Worklife',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.worklife,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WorkLifeScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Current City of Residence',
+                  subtitle: ' ',
+                ),
+                onTap: () {},
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Salary',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.salary,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SalaryScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Star Sign',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .star ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>().currentAppuser.value.star!,
+                ),
+                onTap: () {
+                  Get.off(StarScreen(
+                    fromProfile: true,
+                    response:
+                        Get.find<GlobalController>().currentAppuser.value.star!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Drink',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.drink,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => DrinkScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Rashi',
+                  subtitle:
+                      Get.find<GlobalController>().currentAppuser.value.rashi ==
+                              null
+                          ? ' '
+                          : Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .rashi!,
+                ),
+                onTap: () {
+                  Get.off(RashiScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .rashi!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Smoke',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.smoke,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SmokeScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Gotra',
+                  subtitle:
+                      Get.find<GlobalController>().currentAppuser.value.gotra ==
+                              null
+                          ? ' '
+                          : Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .gotra!,
+                ),
+                onTap: () {
+                  Get.off(GotraScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .gotra!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Zodiac Sign',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.zodiacSign,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Manglik',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .manglik ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .manglik!,
+                ),
+                onTap: () {
+                  print(Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .manglik);
+                  Get.off(ManglicScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .manglik ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .manglik!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Politics',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.politics,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PoliticalScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Employment Status',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .worklife ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .worklife!,
+                ),
+                onTap: () {
+                  Get.off(WorkLifeScreen(
+                    relation: ' ',
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .worklife ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .worklife!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Movies',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.movies,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MovieScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Annual Income',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .salary ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .salary!,
+                ),
+                onTap: () {
+                  Get.off(SalaryScreen(
+                    relation: ' ',
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .salary!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Hometown',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.hometown,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HometownScreen()));
-                  }),
+                child: FilterScreenCard(
+                  title: 'Drinking Habits',
+                  subtitle:
+                      Get.find<GlobalController>().currentAppuser.value.drink ==
+                              null
+                          ? ' '
+                          : Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .drink!,
+                ),
+                onTap: () {
+                  Get.off(DrinkScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .drink!,
+                  ));
+                },
+              ),
               InkWell(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: ListTile(
-                      title: Text(
-                        'Current location',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                      subtitle: Text(
-                        Constants.currentLocation,
-                        style: TextStyle(fontSize: 18, color: Colors.black87),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_right,
-                        color: Colors.pink,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  onTap: () {}),
+                child: FilterScreenCard(
+                  title: 'Smoking Habits',
+                  subtitle:
+                      Get.find<GlobalController>().currentAppuser.value.smoke ==
+                              null
+                          ? ' '
+                          : Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .smoke!,
+                ),
+                onTap: () {
+                  Get.off(SmokeScreen(
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .smoke!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: 'Number of Siblings',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .siblings ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .siblings!,
+                ),
+                onTap: () {},
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Father's Name",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .fatherName ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherName!,
+                ),
+                onTap: () {
+                  Get.off(UserNameScreen(
+                    relation: "Father",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .fatherName ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .fatherName!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Father's Native Place",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .fatherNativePlace ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherNativePlace!,
+                ),
+                onTap: () {
+                  Get.off(NativeScreen(
+                    relation: "Father's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherNativePlace == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherNativePlace!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Father's Occupation",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .fatherOccupation ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherOccupation!,
+                ),
+                onTap: () {
+                  Get.off(WorkLifeScreen(
+                    relation: "Father's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherOccupation == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherOccupation!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Father's Average Annual Income",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .fatherAvgAnnualIncome ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherAvgAnnualIncome!,
+                ),
+                onTap: () {
+                  Get.off(SalaryScreen(
+                    relation: "Father's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherAvgAnnualIncome == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .fatherAvgAnnualIncome!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Mother's Name",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .motherName ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherName!,
+                ),
+                onTap: () {
+                  Get.off(UserNameScreen(
+                    relation: "Mother",
+                    fromProfile: true,
+                    response:Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherName == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherName!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Mother's Native Place",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .motherNativePlace ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherNativePlace!,
+                ),
+                onTap: () {
+                  Get.off(NativeScreen(
+                    relation: "Mother's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherNativePlace == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherNativePlace!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Mother's Occupation",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .motherOccupation ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherOccupation!,
+                ),
+                onTap: () {
+                  Get.off(WorkLifeScreen(
+                    relation: "Mother's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherOccupation == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherOccupation!,
+                  ));
+                },
+              ),
+              InkWell(
+                child: FilterScreenCard(
+                  title: "Mother's Average Annual Income",
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .motherAvgAnnualIncome ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherAvgAnnualIncome!,
+                ),
+                onTap: () {
+                  Get.off(SalaryScreen(
+                    relation: "Mother's",
+                    fromProfile: true,
+                    response: Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherAvgAnnualIncome == null ? ' ' : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .motherAvgAnnualIncome!,
+                  ));
+                },
+              ),
             ],
           ),
         ),

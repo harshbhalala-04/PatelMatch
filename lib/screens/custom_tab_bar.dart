@@ -35,7 +35,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
   @override
   Widget build(BuildContext context) {
     print(
-        'This is from build method: ${globalController.currentAppuser.value.imgUrl}');
+        'This is from build method: ${Get.find<GlobalController>().profileUrl.value}');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),

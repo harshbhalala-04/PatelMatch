@@ -1,4 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/samaj_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,9 @@ import 'package:get/get.dart';
 enum ProfileCreated { Self, Parents, Sibling, Relative, Friend }
 
 class ProfileCreatedByScreen extends StatefulWidget {
-  const ProfileCreatedByScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  String response;
+  ProfileCreatedByScreen({required this.fromProfile, this.response = ''});
 
   @override
   _ProfileCreatedByScreenState createState() => _ProfileCreatedByScreenState();
@@ -19,9 +23,32 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    setState(() {
-      _reply = ProfileCreated.Self;
-    });
+    if (widget.response == 'Self') {
+      setState(() {
+        _reply = ProfileCreated.Self;
+      });
+    } else if (widget.response == 'Parents') {
+      setState(() {
+        _reply = ProfileCreated.Parents;
+      });
+    } else if (widget.response == 'Sibling') {
+      setState(() {
+        _reply = ProfileCreated.Sibling;
+      });
+    } else if (widget.response == 'Relative') {
+      setState(() {
+        _reply = ProfileCreated.Relative;
+      });
+    } else if (widget.response == 'Friend') {
+      setState(() {
+        _reply = ProfileCreated.Friend;
+      });
+    } else {
+      setState(() {
+        _reply = ProfileCreated.Self;
+      });
+    }
+
     super.initState();
   }
 
@@ -167,23 +194,53 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == ProfileCreated.Self) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .profileCreatedBy = 'Self';
                   DataBaseMethods().addUserProfileCreated("Self");
                 } else if (_reply == ProfileCreated.Sibling) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .profileCreatedBy = 'Sibling';
                   DataBaseMethods().addUserProfileCreated("Sibling");
                 } else if (_reply == ProfileCreated.Relative) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .profileCreatedBy = 'Relative';
                   DataBaseMethods().addUserProfileCreated("Relative");
                 } else if (_reply == ProfileCreated.Parents) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .profileCreatedBy = 'Parents';
                   DataBaseMethods().addUserProfileCreated("Parents");
                 } else {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .profileCreatedBy = 'Friend';
                   DataBaseMethods().addUserProfileCreated("Friend");
                 }
 
-                Get.to(SamajScreen());
+                if (widget.fromProfile) {
+                  // Navigator.pop(context);
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(SamajScreen(fromProfile: false,));
+                }
               },
-              child: Text(
-                'Submit',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),
