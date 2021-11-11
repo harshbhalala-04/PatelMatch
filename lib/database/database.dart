@@ -4,6 +4,7 @@ import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -325,7 +326,7 @@ class DataBaseMethods {
     }
   }
 
-  addUsername(String username) {
+  addUsername(String username) async {
     Constants.myName = username;
     try {
       firestore
@@ -335,6 +336,9 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('username', username);
   }
 
   addUserGotra(String gotra) {
@@ -389,7 +393,7 @@ class DataBaseMethods {
     }
   }
 
-  addUserBirthDate(String day, String month, String year) {
+  addUserBirthDate(String day, String month, String year) async {
     String birthDate = day + '-' + month + '-' + year;
     int age;
     DateTime currentDate = DateTime.now();
@@ -419,28 +423,34 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('birthdate', birthDate);
   }
 
-  addUserCommunity(String community) {
-    try {
-      firestore
-          .collection("users")
-          .doc(user!.uid)
-          .update({"community": community});
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // addUserCommunity(String community) {
+  //   try {
+  //     firestore
+  //         .collection("users")
+  //         .doc(user!.uid)
+  //         .update({"community": community});
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
-  addUserSamaj(String samaj) {
+  addUserSamaj(String samaj) async {
     try {
       firestore.collection("users").doc(user!.uid).update({"userSamaj": samaj});
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('samaj', samaj);
   }
 
-  addUserHandicapped(String handicapped) {
+  addUserHandicapped(String handicapped) async {
     try {
       firestore
           .collection("users")
@@ -449,22 +459,32 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('handicapped', handicapped);
   }
 
-  addUserManglik(String manglik) {
+  addUserManglik(String manglik) async {
     try {
       firestore.collection("users").doc(user!.uid).update({"manglik": manglik});
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('manglik', manglik);
   }
 
-  addUserNRI(String userNRI) {
+  addUserNRI(String userNRI) async {
     try {
       firestore.collection("users").doc(user!.uid).update({"userNRI": userNRI});
     } catch (e) {
       print(e.toString());
     }
+
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('NRI', userNRI);
   }
 
   addUserZodiacSign(String zodiacSign) {
@@ -478,12 +498,15 @@ class DataBaseMethods {
     }
   }
 
-  addUserHeight(String height) {
+  addUserHeight(String height) async {
     try {
       firestore.collection("users").doc(user!.uid).update(({'height': height}));
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('height', height);
   }
 
   addUserStar(String star) {
@@ -502,12 +525,15 @@ class DataBaseMethods {
     }
   }
 
-  addUserWeight(String weight) {
+  addUserWeight(String weight) async{
     try {
       firestore.collection("users").doc(user!.uid).update(({'weight': weight}));
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('weight', weight);
   }
 
   addUserWorkout(String workout) {
@@ -532,7 +558,7 @@ class DataBaseMethods {
     }
   }
 
-  addUserProfileCreated(String profileCreatedBy) {
+  addUserProfileCreated(String profileCreatedBy) async {
     try {
       firestore
           .collection("users")
@@ -541,9 +567,12 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('profileCreatedBy', profileCreatedBy);
   }
 
-  addUserMaritalStatus(String maritalStatus) {
+  addUserMaritalStatus(String maritalStatus)async {
     try {
       firestore
           .collection("users")
@@ -552,9 +581,12 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('maritalStatus', maritalStatus);
   }
 
-  addUserMarryToSamaj(String marryToSamaj) {
+  addUserMarryToSamaj(String marryToSamaj) async {
     try {
       firestore
           .collection("users")
@@ -563,6 +595,9 @@ class DataBaseMethods {
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('marryToSamaj', marryToSamaj);
   }
 
   addUserMovie(String movie) {
@@ -584,12 +619,15 @@ class DataBaseMethods {
     }
   }
 
-  addUserGender(String gender) {
+  addUserGender(String gender) async {
     try {
       firestore.collection("users").doc(user!.uid).update({"gender": gender});
     } catch (e) {
       print(e.toString());
     }
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setString('gender', gender);
   }
 
   addUserWorklife(String worklife) {
@@ -635,7 +673,10 @@ class DataBaseMethods {
 
   addFatherSalary(String salary) {
     try {
-      firestore.collection("users").doc(user!.uid).update({"fatherAvgAnnualIncome": salary});
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"fatherAvgAnnualIncome": salary});
     } catch (e) {
       print(e.toString());
     }
@@ -643,7 +684,10 @@ class DataBaseMethods {
 
   addMotherSalary(String salary) {
     try {
-      firestore.collection("users").doc(user!.uid).update({"motherAvgAnnualIncome": salary});
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"motherAvgAnnualIncome": salary});
     } catch (e) {
       print(e.toString());
     }
@@ -789,9 +833,9 @@ class DataBaseMethods {
   }
 
   ///Get Details of user
-  UserModel getCurrentUser(Map<String, dynamic>? userData) {
-    return UserModel.fromJson(userData!);
-  }
+  // UserModel getCurrentUser(Map<String, dynamic>? userData) {
+  //   return UserModel.fromJson(userData!);
+  // }
 
   uploadUserImages(List<dynamic> userImages) async {
     List<String> urlList = [];
@@ -816,6 +860,9 @@ class DataBaseMethods {
             .update({"imgUrl": url});
         Constants.userImage = url;
       }
+      final SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString('imgUrl', url);
     }
 
     await FirebaseFirestore.instance

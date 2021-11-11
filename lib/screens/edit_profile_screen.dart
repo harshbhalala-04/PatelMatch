@@ -5,7 +5,6 @@ import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/screens/onboarding_screens/NRI_screen.dart';
 import 'package:chat/screens/onboarding_screens/birth_date_screen.dart';
-import 'package:chat/screens/onboarding_screens/community_screen.dart';
 import 'package:chat/screens/onboarding_screens/gotra_screen.dart';
 import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
@@ -17,18 +16,12 @@ import 'package:chat/screens/onboarding_screens/samaj_screen.dart';
 import 'package:chat/screens/onboarding_screens/star_screen.dart';
 import 'package:chat/screens/onboarding_screens/weight_screen.dart';
 import 'package:chat/screens/user_profile_edit/drink_screen.dart';
-import 'package:chat/screens/user_profile_edit/education_screen.dart';
 import 'package:chat/screens/onboarding_screens/gender_screen.dart';
 import 'package:chat/screens/user_profile_edit/height_screen.dart';
-import 'package:chat/screens/user_profile_edit/hometown_screen.dart';
-import 'package:chat/screens/user_profile_edit/movie_screen.dart';
-import 'package:chat/screens/user_profile_edit/political_screen.dart';
 import 'package:chat/screens/user_profile_edit/salary_screen.dart';
-import 'package:chat/screens/user_profile_edit/sign_screen.dart';
 import 'package:chat/screens/user_profile_edit/smoke_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:chat/screens/user_profile_edit/work_life_screen.dart';
-import 'package:chat/screens/user_profile_edit/workout_screen.dart';
 import 'package:chat/widgets/filter_screen_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -156,7 +149,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void fetchUserImage() async {
-    print('init state running');
+  
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
@@ -165,8 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      print('This is the data I got');
-      print(val['imgCount']);
+      
       imgCount = val['imgCount'];
       print(imgCount);
     });

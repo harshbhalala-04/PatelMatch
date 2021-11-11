@@ -19,6 +19,7 @@ class ProfileCreatedByScreen extends StatefulWidget {
 
 class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
   ProfileCreated? _reply;
+  final globalController = Get.put(GlobalController());
 
   @override
   void initState() {
@@ -194,34 +195,44 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == ProfileCreated.Self) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .profileCreatedBy = 'Self';
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy = 'Self';
+                  }
                   DataBaseMethods().addUserProfileCreated("Self");
                 } else if (_reply == ProfileCreated.Sibling) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .profileCreatedBy = 'Sibling';
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy = 'Sibling';
+                  }
                   DataBaseMethods().addUserProfileCreated("Sibling");
                 } else if (_reply == ProfileCreated.Relative) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .profileCreatedBy = 'Relative';
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy = 'Relative';
+                  }
                   DataBaseMethods().addUserProfileCreated("Relative");
                 } else if (_reply == ProfileCreated.Parents) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .profileCreatedBy = 'Parents';
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy = 'Parents';
+                  }
                   DataBaseMethods().addUserProfileCreated("Parents");
                 } else {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .profileCreatedBy = 'Friend';
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .profileCreatedBy = 'Friend';
+                  }
                   DataBaseMethods().addUserProfileCreated("Friend");
                 }
 
@@ -229,7 +240,9 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
                   // Navigator.pop(context);
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(SamajScreen(fromProfile: false,));
+                  Get.to(SamajScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

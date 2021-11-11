@@ -25,6 +25,7 @@ class GlobalController extends GetxController {
     currentAppuser.value = user ?? UserModel();
     gender.value = currentAppuser.value.gender!;
     profileUrl.value = currentAppuser.value.imgUrl!;
+    print("Here profile url before loading false: ${profileUrl.value}");
     isLoading.toggle();
     await FirebaseMessaging.instance.getToken().then((token) {
       newNotificationToken = token!;
@@ -36,17 +37,11 @@ class GlobalController extends GetxController {
       if (currentAppuser.value.notificationTokens == null) {
         notificationTokens = [];
       } else {
-         notificationTokens =
-            currentAppuser.value.notificationTokens;
+        notificationTokens = currentAppuser.value.notificationTokens;
       }
-
-      print("________________________________");
-      print(newNotificationToken);
-      print(notificationTokens?.length);
 
       notificationTokens?.add(newNotificationToken);
 
-      print(notificationTokens);
       if (newNotificationToken != '') {
         await FirebaseFirestore.instance
             .collection("users")

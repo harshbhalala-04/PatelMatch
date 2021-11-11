@@ -108,8 +108,10 @@ class _WeightScreenState extends State<WeightScreen> {
                   if (weight.isEmpty) {
                     showDialog();
                   } else {
-                    Get.find<GlobalController>().currentAppuser.value.weight =
-                        weight;
+                    
+                      Get.find<GlobalController>().currentAppuser.value.weight =
+                          weight;
+                    
                     DataBaseMethods().addUserWeight(weight);
                     Get.off(EditProfileScreen());
                   }

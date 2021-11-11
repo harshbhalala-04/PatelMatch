@@ -167,10 +167,10 @@ class BookayDialogue extends StatelessWidget {
                                 "Buy More Bouquets",
                                 snackPosition: SnackPosition.TOP);
                           } else {
-                            // if (index + 1 ==
-                            //     feedScreenController.usersList.length) {
-                            //   feedScreenController.endUser.value = true;
-                            // }
+                            if (index + 1 ==
+                                feedScreenController.usersList.length) {
+                              feedScreenController.endUser.value = true;
+                            }
                             Get.find<FeedScreenController>()
                                 .scrollController
                                 .scrollToIndex(index + 1,
@@ -180,10 +180,10 @@ class BookayDialogue extends StatelessWidget {
                                 .value
                                 .excludedUsers!
                                 .add(otherUserId);
-                            Get.find<FeedScreenController>()
-                                .usersList
-                                .removeWhere(
-                                    (element) => element.uid == otherUserId);
+                            // Get.find<FeedScreenController>()
+                            //     .usersList
+                            //     .removeWhere(
+                            //         (element) => element.uid == otherUserId);
                             DateTime time = DateTime.now(); //DateTime
                             Timestamp myTimeStamp =
                                 Timestamp.fromDate(time); //To TimeStamp

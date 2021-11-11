@@ -35,6 +35,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 scrollDirection: Axis.horizontal,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  index = feedScreenController.currentIndex.value;
                   return Stack(
                     children: [
                       Positioned(

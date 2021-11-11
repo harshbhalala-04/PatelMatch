@@ -42,7 +42,9 @@ class _GotraScreenState extends State<GotraScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserGotra('');
-                    Get.to(ManglicScreen(fromProfile: false,));
+                    Get.to(ManglicScreen(
+                      fromProfile: false,
+                    ));
                   },
                 )
         ],
@@ -95,12 +97,17 @@ class _GotraScreenState extends State<GotraScreen> {
             child: ElevatedButton(
               onPressed: () {
                 String gotra = gotraController.text;
-                Get.find<GlobalController>().currentAppuser.value.gotra = gotra;
+                if (widget.fromProfile) {
+                  Get.find<GlobalController>().currentAppuser.value.gotra =
+                      gotra;
+                }
                 DataBaseMethods().addUserGotra(gotra);
                 if (widget.fromProfile) {
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(ManglicScreen(fromProfile: false,));
+                  Get.to(ManglicScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

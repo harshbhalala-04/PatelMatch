@@ -6,6 +6,7 @@ import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,7 +34,10 @@ class AuthController extends GetxController {
       Constants.signUpState = true;
       userCredential = await _auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
-
+      final SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString('email', email);
+      
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user?.uid)
@@ -63,7 +67,9 @@ class AuthController extends GetxController {
           'weight': FieldValue.arrayUnion([]),
         }
       });
-      Get.off(ProfileCreatedByScreen(fromProfile: false,));
+      Get.off(ProfileCreatedByScreen(
+        fromProfile: false,
+      ));
     } on FirebaseAuthException catch (error) {
       print(error);
       Get.snackbar("Error Creating account", error.message!,

@@ -15,7 +15,7 @@ import 'package:quiver/iterables.dart';
 class FeedScreenController extends GetxController {
   final globalController = Get.put(GlobalController());
   final temp = 0.obs;
-  final currentIndex = 0.obs;
+
   final userListLength = 0.obs;
   int currentPageIndex = 0;
   String gender = '';
@@ -37,6 +37,10 @@ class FeedScreenController extends GetxController {
   final firestore = FirebaseFirestore.instance;
 
   final endUser = false.obs;
+
+  int fnTerminate = 0;
+
+  final currentIndex = 0.obs;
 
   List<String> rashi = [
     "Aries",
@@ -93,6 +97,13 @@ class FeedScreenController extends GetxController {
           .orderBy("createdAt", descending: true);
     }
 
+    print("___________________");
+    print(usersList.length == 0 && fnTerminate == 1 && !hasMoreData);
+    print("usersList.length = ${usersList.length}");
+    print("Function terminate: $fnTerminate");
+    print("Has More data : $hasMoreData");
+    
+
     if (lastUser != null) {
       isLoadingMoreData = true;
       query = query.startAfterDocument(lastUser!);
@@ -105,8 +116,9 @@ class FeedScreenController extends GetxController {
         if (snapshot.docs.isNotEmpty) {
           snapshot.docs.forEach((element) {
             if (globalController.currentAppuser.value.excludedUsers?.length ==
-                0 || !globalController.currentAppuser.value.excludedUsers!
-                .contains(element.data()['uid'])) {
+                    0 ||
+                !globalController.currentAppuser.value.excludedUsers!
+                    .contains(element.data()['uid'])) {
               tmpUsersList.add(UserModel.fromJson(element.data()));
               tmpUsersUid.add(element.data()['uid']);
             }
@@ -115,19 +127,31 @@ class FeedScreenController extends GetxController {
           print("This is last user data");
           print(lastUser?.data());
           currentItemLength = currentItemLength + snapshot.docs.length;
+          print("Snapshot length: ");
+          print(snapshot.docs.length);
           if (snapshot.docs.length < itemLimit) {
+            print("Here it does hasmoredata false");
             hasMoreData = false;
           }
         }
       });
     }
     usersList.addAll(tmpUsersList);
+    if (usersList.length < 5 && hasMoreData) {
+      getUsers();
+    }
+    if (usersList.length == 0 && fnTerminate == 1 && !hasMoreData) {
+      print("Here it enter in terminate condition");
+      endUser.value = true;
+      return;
+    }
     print("Loop Starts");
     for (int i = 0; i < usersList.length; i++) {
       print(usersList[i].username);
     }
     print("Loop End");
     isLoadingMoreData = false;
+    fnTerminate = 1;
     update();
     stopwatch.stop();
   }
@@ -144,3 +168,28 @@ class FeedScreenController extends GetxController {
     super.onClose();
   }
 }
+
+
+// if (usersList.length == 0 && fnTerminate == 1) {
+    //   print("Here it enter in terminate condition");
+    //   endUser.value = true;
+    //   return;
+    // }
+
+
+
+
+
+ // if (globalController.currentAppuser.value.excludedUsers?.length ==
+            //         0 ||
+            //     !globalController.currentAppuser.value.excludedUsers!
+            //         .contains(element.data()['uid'])) {
+              // tmpUsersList.add(UserModel.fromJson(element.data()));
+              // tmpUsersUid.add(element.data()['uid']);}
+
+
+              // if (usersList.length < 5 && hasMoreData) {
+    //   print("Here length: _________");
+    //   print(usersList.length);
+    //   getUsers();
+    // }

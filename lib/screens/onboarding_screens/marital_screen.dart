@@ -165,43 +165,55 @@ class _MaritalScreenState extends State<MaritalScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Marital.Unmarried) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .maritalStatus = "Unmarried";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .maritalStatus = "Unmarried";
+                  }
                   DataBaseMethods().addUserMaritalStatus("Unmarried");
                 } else if (_reply == Marital.Widow) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .maritalStatus = "Widow/Widower";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .maritalStatus = "Widow/Widower";
+                  }
                   DataBaseMethods().addUserMaritalStatus("Widow/Widower");
                 } else if (_reply == Marital.Divorced) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .maritalStatus = "Divorced";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .maritalStatus = "Divorced";
+                  }
                   DataBaseMethods().addUserMaritalStatus("Divorced");
                 } else if (_reply == Marital.Seperated) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .maritalStatus = "Seperated";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .maritalStatus = "Seperated";
+                  }
                   DataBaseMethods().addUserMaritalStatus("Seperated");
                 }
                 if (widget.fromProfile) {
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(NRIScreen(fromProfile: false,));
+                  Get.to(NRIScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
-              child: widget.fromProfile ?  Text(
-                'Submit',
-                style: TextStyle(fontSize: 17),
-              ) :  Text(
-                'Continue',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

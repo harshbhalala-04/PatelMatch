@@ -136,12 +136,16 @@ class _ManglicScreenState extends State<ManglicScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == YesNo.No) {
-                  Get.find<GlobalController>().currentAppuser.value.manglik =
-                      "No";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.manglik =
+                        "No";
+                  }
                   DataBaseMethods().addUserHandicapped("No");
                 } else {
-                  Get.find<GlobalController>().currentAppuser.value.manglik =
-                      "Yes";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.manglik =
+                        "Yes";
+                  }
                   DataBaseMethods().addUserHandicapped("Yes");
                 }
                 if (widget.fromProfile) {

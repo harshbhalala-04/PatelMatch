@@ -108,12 +108,16 @@ class _SamajScreenState extends State<SamajScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == Samaj.KadvaPatel) {
-                  Get.find<GlobalController>().currentAppuser.value.samaj =
-                      "Kadva Patel";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.samaj =
+                        "Kadva Patel";
+                  }
                   DataBaseMethods().addUserSamaj("Kadva Patel");
                 } else {
-                  Get.find<GlobalController>().currentAppuser.value.samaj =
-                      "Leva Patel";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.samaj =
+                        "Leva Patel";
+                  }
                   DataBaseMethods().addUserSamaj("Leva Patel");
                 }
                 if (widget.fromProfile) {

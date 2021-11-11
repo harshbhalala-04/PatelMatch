@@ -118,23 +118,29 @@ class _HandicappedScreenState extends State<HandicappedScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == YesNo.No) {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .handicapped = "No";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .handicapped = "No";
+                  }
                   DataBaseMethods().addUserHandicapped("No");
                 } else {
-                  Get.find<GlobalController>()
-                      .currentAppuser
-                      .value
-                      .handicapped = "Yes";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .handicapped = "Yes";
+                  }
                   DataBaseMethods().addUserHandicapped("Yes");
                 }
 
                 if (widget.fromProfile) {
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(MaritalScreen(fromProfile: false,));
+                  Get.to(MaritalScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

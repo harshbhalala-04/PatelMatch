@@ -118,12 +118,16 @@ class _NRIScreenState extends State<NRIScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_reply == YesNo.No) {
-                  Get.find<GlobalController>().currentAppuser.value.userNRI =
-                      "No";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.userNRI =
+                        "No";
+                  }
                   DataBaseMethods().addUserNRI("No");
                 } else {
-                  Get.find<GlobalController>().currentAppuser.value.userNRI =
-                      "Yes";
+                  if (widget.fromProfile) {
+                    Get.find<GlobalController>().currentAppuser.value.userNRI =
+                        "Yes";
+                  }
                   DataBaseMethods().addUserHandicapped("Yes");
                 }
 
@@ -133,13 +137,15 @@ class _NRIScreenState extends State<NRIScreen> {
                   Get.to(CityScreen());
                 }
               },
-              child: widget.fromProfile ? Text(
-                'Submit',
-                style: TextStyle(fontSize: 17),
-              ): Text(
-                'Continue',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

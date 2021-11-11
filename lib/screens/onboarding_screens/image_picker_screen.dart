@@ -105,7 +105,7 @@ class ImagePickerScreen extends StatelessWidget {
                 } else {
                   Get.to(BirthDateScreen(fromProfile: false));
                   DataBaseMethods()
-                      .uploadUserImages(imagePickerController.tempImage);
+                      .uploadUserImages(imagePickerController.tempImage,);
                 }
               },
               child: Text(

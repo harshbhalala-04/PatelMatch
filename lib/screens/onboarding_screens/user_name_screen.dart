@@ -117,23 +117,29 @@ class _UserNameScreenState extends State<UserNameScreen> {
                       showDialog();
                     } else {
                       if (widget.relation == ' ') {
-                        Get.find<GlobalController>()
-                            .currentAppuser
-                            .value
-                            .username = username;
+                        if (widget.fromProfile) {
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .username = username;
+                        }
                         Constants.username = username;
                         DataBaseMethods().updateUserName(username);
                       } else if (widget.relation == "Father") {
-                        Get.find<GlobalController>()
-                            .currentAppuser
-                            .value
-                            .fatherName = username;
+                        if (widget.fromProfile) {
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .fatherName = username;
+                        }
                         DataBaseMethods().updateFatherName(username);
                       } else if (widget.relation == "Mother") {
-                        Get.find<GlobalController>()
-                            .currentAppuser
-                            .value
-                            .motherName = username;
+                        if (widget.fromProfile) {
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .motherName = username;
+                        }
                         DataBaseMethods().updateMotherName(username);
                       }
                       Get.off(EditProfileScreen());

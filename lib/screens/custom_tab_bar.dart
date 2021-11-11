@@ -28,7 +28,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
   void initState() {
     // TODO: implement initState
     pageController = PageController();
-
+    globalController.getCurrentUser();
     super.initState();
   }
 
@@ -49,19 +49,18 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(4),
-                    child: Obx(
-                        () => globalController.isLoading.value
-                            ? Container()
-                            : InkWell(
-                                onTap: () {
-                                  Get.to(ProfileScreen());
-                                },
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(globalController
-                                      .currentAppuser.value.imgUrl!),
-                                  backgroundColor: Colors.grey,
-                                ),
-                              )),
+                    child: Obx(() => globalController.isLoading.value
+                        ? Container()
+                        : InkWell(
+                            onTap: () {
+                              Get.to(ProfileScreen());
+                            },
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(globalController
+                                  .currentAppuser.value.imgUrl!),
+                              backgroundColor: Colors.grey,
+                            ),
+                          )),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

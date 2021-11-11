@@ -85,6 +85,7 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+                  Get.find<FeedScreenController>().currentIndex.value += 1;
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(
@@ -94,9 +95,9 @@ class FeedButton extends StatelessWidget {
                   if (fromDynamicLink) {
                     Get.offAll(CustomTabBar());
                   }
-                  Get.find<FeedScreenController>()
-                      .usersList
-                      .removeWhere((element) => element.uid == otherUserId);
+                  // Get.find<FeedScreenController>()
+                  //     .usersList
+                  //     .removeWhere((element) => element.uid == otherUserId);
                   Get.find<GlobalController>()
                       .currentAppuser
                       .value
@@ -126,6 +127,7 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+                  Get.find<FeedScreenController>().currentIndex.value += 1;
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
@@ -135,13 +137,12 @@ class FeedButton extends StatelessWidget {
                       .value
                       .excludedUsers!
                       .add(otherUserId);
-                   Get.find<FeedScreenController>()
-                      .usersList
-                      .removeWhere((element) => element.uid == otherUserId);
+                  //  Get.find<FeedScreenController>()
+                  //     .usersList
+                  //     .removeWhere((element) => element.uid == otherUserId);
                   DateTime time = DateTime.now(); //DateTime
                   Timestamp myTimeStamp =
                       Timestamp.fromDate(time); //To TimeStamp
-                  print(myTimeStamp);
                   Get.find<SentScreenController>().sentProfiles.add({
                     'sent': otherUsername,
                     'image': otherImageUrl,
