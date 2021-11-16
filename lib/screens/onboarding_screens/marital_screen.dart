@@ -55,6 +55,8 @@ class _MaritalScreenState extends State<MaritalScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -166,6 +168,7 @@ class _MaritalScreenState extends State<MaritalScreen> {
               onPressed: () {
                 if (_reply == Marital.Unmarried) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value
@@ -174,6 +177,7 @@ class _MaritalScreenState extends State<MaritalScreen> {
                   DataBaseMethods().addUserMaritalStatus("Unmarried");
                 } else if (_reply == Marital.Widow) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value
@@ -182,6 +186,7 @@ class _MaritalScreenState extends State<MaritalScreen> {
                   DataBaseMethods().addUserMaritalStatus("Widow/Widower");
                 } else if (_reply == Marital.Divorced) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value
@@ -190,6 +195,7 @@ class _MaritalScreenState extends State<MaritalScreen> {
                   DataBaseMethods().addUserMaritalStatus("Divorced");
                 } else if (_reply == Marital.Seperated) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value

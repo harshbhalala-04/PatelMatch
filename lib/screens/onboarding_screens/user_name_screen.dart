@@ -37,6 +37,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
       middleText: "Plese Select Your ${widget.relation} Name",
       title: "",
       middleTextStyle: TextStyle(fontSize: 20),
+      
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -57,12 +58,16 @@ class _UserNameScreenState extends State<UserNameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
+          title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -73,7 +78,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
                 height: 10,
               ),
               Text(
-                'Enter Your ${widget.relation} Full Name',
+                'Enter Your${widget.relation} Full Name',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
@@ -125,15 +130,16 @@ class _UserNameScreenState extends State<UserNameScreen> {
                         }
                         Constants.username = username;
                         DataBaseMethods().updateUserName(username);
-                      } else if (widget.relation == "Father") {
+                      } else if (widget.relation == " Father") {
                         if (widget.fromProfile) {
+                          final globalController = Get.put(GlobalController());
                           Get.find<GlobalController>()
                               .currentAppuser
                               .value
                               .fatherName = username;
                         }
                         DataBaseMethods().updateFatherName(username);
-                      } else if (widget.relation == "Mother") {
+                      } else if (widget.relation == " Mother") {
                         if (widget.fromProfile) {
                           Get.find<GlobalController>()
                               .currentAppuser
@@ -167,7 +173,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

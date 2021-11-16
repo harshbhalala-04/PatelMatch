@@ -7,7 +7,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class ImagePickerController extends GetxController {
-  final tempImage = [].obs;
+  final tempImage = [
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+    File(''),
+  ].obs;
   final count = 0.obs;
   final isLoading = false.obs;
   String? imgUrl = '';
@@ -146,24 +153,11 @@ class ImagePickerController extends GetxController {
         choosenImage[index] = file;
         isUploadedImage[index] = true;
         newIndex.value = index;
-        tempImage.insert(index, file);
-
-        // final FirebaseAuth auth = FirebaseAuth.instance;
-        // final User? user = auth.currentUser;
-
-        // final ref = FirebaseStorage.instance
-        //     .ref()
-        //     .child('user_image')
-        //     .child(user!.uid + 'folder')
-        //     .child(user.uid + index.toString() + '.jpg');
-
-        // await ref.putFile(file).whenComplete(() => print('Image Upload'));
-
-        // String url = await ref.getDownloadURL();
-
-        // _pickedImageVar = file;
-        // image[index] = url;
-        // newIndex.value = index;
+        // tempImage.insert(index, file);
+        tempImage[index] = file;
+        for (int i = 0; i < tempImage.length; i++) {
+          print(tempImage[i]);
+        }
         isLoading.toggle();
         //tempImage.add(url);
       }

@@ -19,6 +19,7 @@ import 'package:chat/screens/user_profile_edit/drink_screen.dart';
 import 'package:chat/screens/onboarding_screens/gender_screen.dart';
 import 'package:chat/screens/user_profile_edit/height_screen.dart';
 import 'package:chat/screens/user_profile_edit/salary_screen.dart';
+import 'package:chat/screens/user_profile_edit/siblings_screen.dart';
 import 'package:chat/screens/user_profile_edit/smoke_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:chat/screens/user_profile_edit/work_life_screen.dart';
@@ -149,7 +150,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void fetchUserImage() async {
-  
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
@@ -158,7 +158,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .doc(user!.uid)
         .get()
         .then((val) {
-      
       imgCount = val['imgCount'];
       print(imgCount);
     });
@@ -174,6 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print(imgCount);
         for (i = 0; i < imgCount!; i++) {
           imgUrls[i] = val['imgUrls'][i];
+          print(imgUrls[i]);
         }
       });
     });
@@ -277,6 +277,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -956,7 +957,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           .value
                           .siblings!,
                 ),
-                onTap: () {},
+                onTap: () {
+                  Get.off(SiblingScreen());
+                },
               ),
               InkWell(
                 child: FilterScreenCard(
@@ -974,7 +977,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 onTap: () {
                   Get.off(UserNameScreen(
-                    relation: "Father",
+                    relation: " Father",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
                                 .currentAppuser
@@ -1005,15 +1008,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 onTap: () {
                   Get.off(NativeScreen(
-                    relation: "Father's",
+                    relation: " Father's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherNativePlace == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherNativePlace!,
+                                .currentAppuser
+                                .value
+                                .fatherNativePlace ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .fatherNativePlace!,
                   ));
                 },
               ),
@@ -1036,12 +1042,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     relation: "Father's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherOccupation == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherOccupation!,
+                                .currentAppuser
+                                .value
+                                .fatherOccupation ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .fatherOccupation!,
                   ));
                 },
               ),
@@ -1064,12 +1073,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     relation: "Father's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherAvgAnnualIncome == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .fatherAvgAnnualIncome!,
+                                .currentAppuser
+                                .value
+                                .fatherAvgAnnualIncome ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .fatherAvgAnnualIncome!,
                   ));
                 },
               ),
@@ -1089,15 +1101,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 onTap: () {
                   Get.off(UserNameScreen(
-                    relation: "Mother",
+                    relation: " Mother",
                     fromProfile: true,
-                    response:Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherName == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherName!,
+                    response: Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .motherName ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .motherName!,
                   ));
                 },
               ),
@@ -1117,15 +1132,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 onTap: () {
                   Get.off(NativeScreen(
-                    relation: "Mother's",
+                    relation: " Mother's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherNativePlace == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherNativePlace!,
+                                .currentAppuser
+                                .value
+                                .motherNativePlace ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .motherNativePlace!,
                   ));
                 },
               ),
@@ -1148,12 +1166,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     relation: "Mother's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherOccupation == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherOccupation!,
+                                .currentAppuser
+                                .value
+                                .motherOccupation ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .motherOccupation!,
                   ));
                 },
               ),
@@ -1176,12 +1197,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     relation: "Mother's",
                     fromProfile: true,
                     response: Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherAvgAnnualIncome == null ? ' ' : Get.find<GlobalController>()
-                          .currentAppuser
-                          .value
-                          .motherAvgAnnualIncome!,
+                                .currentAppuser
+                                .value
+                                .motherAvgAnnualIncome ==
+                            null
+                        ? ' '
+                        : Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .motherAvgAnnualIncome!,
                   ));
                 },
               ),

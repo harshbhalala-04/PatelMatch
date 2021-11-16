@@ -43,9 +43,17 @@ class ProfileFeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'DeclineButton2',
                 onPressed: () {
+                  
                   DataBaseMethods().removeExcludeUser(uid);
                   requestScreenController.removeUser(uid, profileType);
+
                   Get.back();
+                   DataBaseMethods().removeUserFromFriendRequest(
+                          uid,
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .uid!);
                 },
                 child: Text(
                   'Decline',
@@ -96,7 +104,7 @@ class ProfileFeedButton extends StatelessWidget {
                     height: 45,
                     alignment: Alignment.center,
                     child: Text(
-                      'Connect',
+                      'Accept',
                       style: TextStyle(
                         fontSize: 18,
                       ),

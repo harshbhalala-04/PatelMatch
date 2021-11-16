@@ -54,6 +54,16 @@ class _WeightScreenState extends State<WeightScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -108,10 +118,10 @@ class _WeightScreenState extends State<WeightScreen> {
                   if (weight.isEmpty) {
                     showDialog();
                   } else {
-                    
-                      Get.find<GlobalController>().currentAppuser.value.weight =
-                          weight;
-                    
+                    final globalController = Get.put(GlobalController());
+                    Get.find<GlobalController>().currentAppuser.value.weight =
+                        weight;
+
                     DataBaseMethods().addUserWeight(weight);
                     Get.off(EditProfileScreen());
                   }
@@ -126,8 +136,13 @@ class _WeightScreenState extends State<WeightScreen> {
                   }
                 }
               },
-              child: Text('Continue',
-                  style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
+              child: widget.fromProfile
+                  ? Text('Submit',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center)
+                  : Text('Continue',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center),
               style: ButtonStyle(),
             ),
           ),

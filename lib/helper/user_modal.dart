@@ -9,48 +9,51 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
-  UserModel({
-    this.uid,
-    this.username,
-    this.age,
-    this.height,
-    this.weight,
-    this.handicapped,
-    this.gender,
-    this.education,
-    this.worklife,
-    this.maritalStatus,
-    this.salary,
-    this.profileCreatedBy,
-    this.drink,
-    this.smoke,
-    this.zodiacSign,
-    this.politics,
-    this.movie,
-    this.imgCount,
-    this.notificationTokens,
-    this.imgUrl,
-    this.imgUrls,
-    this.bookayAvailable,
-    this.filters,
-    this.friendRequest,
-    this.excludedUsers,
-    this.samaj,
-    this.userNRI,
-    this.star,
-    this.rashi,
-    this.manglik,
-    this.gotra,
-    this.siblings,
-    this.fatherName,
-    this.fatherNativePlace,
-    this.fatherAvgAnnualIncome,
-    this.fatherOccupation,
-    this.motherName,
-    this.motherNativePlace,
-    this.motherOccupation,
-    this.motherAvgAnnualIncome,
-  });
+  UserModel(
+      {this.uid,
+      this.username,
+      this.age,
+      this.height,
+      this.weight,
+      this.handicapped,
+      this.gender,
+      this.education,
+      this.worklife,
+      this.maritalStatus,
+      this.salary,
+      this.profileCreatedBy,
+      this.drink,
+      this.smoke,
+      this.zodiacSign,
+      this.politics,
+      this.movie,
+      this.imgCount,
+      this.notificationTokens,
+      this.imgUrl,
+      this.imgUrls,
+      this.bookayAvailable,
+      this.filters,
+      this.friendRequest,
+      this.excludedUsers,
+      this.samaj,
+      this.userNRI,
+      this.star,
+      this.rashi,
+      this.manglik,
+      this.gotra,
+      this.siblings,
+      this.fatherName,
+      this.fatherNativePlace,
+      this.fatherAvgAnnualIncome,
+      this.fatherOccupation,
+      this.motherName,
+      this.motherNativePlace,
+      this.motherOccupation,
+      this.motherAvgAnnualIncome,
+      this.totalBrothers,
+      this.totalSisters,
+      this.marriedBrothers,
+      this.marriedSisters});
 
   String? uid;
   String? username;
@@ -92,6 +95,10 @@ class UserModel {
   String? motherNativePlace;
   String? motherOccupation;
   String? motherAvgAnnualIncome;
+  String? totalBrothers;
+  String? totalSisters;
+  String? marriedBrothers;
+  String? marriedSisters;
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json) {
     return UserModel(
@@ -113,16 +120,32 @@ class UserModel {
         maritalStatus:
             json["maritalStatus"] == null ? null : json["maritalStatus"],
         manglik: json["manglik"] == null ? null : json["manglik"],
-        gotra:  json["gotra"] == null ? null : json["gotra"],
-        siblings:  json["siblings"] == null ? null : json["siblings"],
+        gotra: json["gotra"] == null ? null : json["gotra"],
+        siblings: json["siblings"] == null ? null : json["siblings"],
         fatherName: json["fatherName"] == null ? null : json["fatherName"],
-        fatherNativePlace: json["fatherNativePlace"] == null ? null : json["fatherNativePlace"],
-        fatherAvgAnnualIncome:  json["fatherAvgAnnualIncome"] == null ? null : json["fatherAvgAnnualIncome"],
-        fatherOccupation:json["fatherOccupation"] == null ? null : json["fatherOccupation"] ,
-        motherName: json["motherName"] == null ? null : json["motherName"] ,
-        motherAvgAnnualIncome: json["motherAvgAnnualIncome"] == null ? null : json["motherAvgAnnualIncome"],
-        motherNativePlace: json["motherNativePlace"] == null ? null : json["motherNativePlace"],
-        motherOccupation: json["motherOccupation"] == null ? null : json["motherOccupation"] ,
+        totalBrothers:
+            json["totalBrothers"] == null ? null : json["totalBrothers"],
+        totalSisters:
+            json["totalSisters"] == null ? null : json["totalSisters"],
+        marriedBrothers:
+            json["marriedBrothers"] == null ? null : json["marriedBrothers"],
+        marriedSisters:
+            json["marriedSisters"] == null ? null : json["marriedSisters"],
+        fatherNativePlace:
+            json["fatherNative"] == null ? null : json["fatherNative"],
+        fatherAvgAnnualIncome: json["fatherAvgAnnualIncome"] == null
+            ? null
+            : json["fatherAvgAnnualIncome"],
+        fatherOccupation:
+            json["fatherOccupation"] == null ? null : json["fatherOccupation"],
+        motherName: json["motherName"] == null ? null : json["motherName"],
+        motherAvgAnnualIncome: json["motherAvgAnnualIncome"] == null
+            ? null
+            : json["motherAvgAnnualIncome"],
+        motherNativePlace:
+            json["motherNative"] == null ? null : json["motherNative"],
+        motherOccupation:
+            json["motherOccupation"] == null ? null : json["motherOccupation"],
         drink: json["drink"] == null ? null : json["drink"],
         smoke: json["smoke"] == null ? null : json["smoke"],
         zodiacSign: json["zodiacSign"] == null ? null : json["zodiacSign"],
@@ -169,13 +192,17 @@ class UserModel {
         "gotra": gotra == null ? null : gotra,
         "siblings": siblings == null ? null : siblings,
         "fatherName": fatherName == null ? null : fatherName,
-        "fatherNativePlace":fatherNativePlace == null ? null : fatherNativePlace,
-        "fatherAvgAnnualIncome":fatherAvgAnnualIncome == null ? null : fatherAvgAnnualIncome,
-        "fatherOccupation":fatherOccupation == null ? null : fatherOccupation,
+        "fatherNativePlace":
+            fatherNativePlace == null ? null : fatherNativePlace,
+        "fatherAvgAnnualIncome":
+            fatherAvgAnnualIncome == null ? null : fatherAvgAnnualIncome,
+        "fatherOccupation": fatherOccupation == null ? null : fatherOccupation,
         "motherName": motherName == null ? null : motherName,
-        "motherAvgAnnualIncome": motherAvgAnnualIncome == null ? null : motherAvgAnnualIncome,
-        "motherNativePlace":motherNativePlace == null ? null : motherNativePlace,
-        "motherOccupation":motherOccupation == null ? null : motherOccupation,
+        "motherAvgAnnualIncome":
+            motherAvgAnnualIncome == null ? null : motherAvgAnnualIncome,
+        "motherNativePlace":
+            motherNativePlace == null ? null : motherNativePlace,
+        "motherOccupation": motherOccupation == null ? null : motherOccupation,
         "profileCreatedBy": profileCreatedBy == null ? null : profileCreatedBy,
         "drink": drink == null ? null : drink,
         "smoke": smoke == null ? null : smoke,

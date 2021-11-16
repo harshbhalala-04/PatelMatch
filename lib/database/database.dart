@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -266,6 +267,35 @@ class DataBaseMethods {
     }
   }
 
+  removeUserFromFriendRequest(String otherUserUid, String myUid) {
+    try {
+      firestore.collection("users").doc(myUid).get().then((value) {
+        Map<dynamic, dynamic> myMap = value.data()!;
+        List<dynamic> frndRequest = myMap['friendRequest'];
+        for (int i = 0; i < frndRequest.length; i++) {
+          print(frndRequest[i]['recieved']);
+        }
+        frndRequest.removeWhere((element) => element['id'] == otherUserUid);
+        firestore
+            .collection("users")
+            .doc(myUid)
+            .update({'friendRequest': frndRequest});
+      });
+      firestore.collection("users").doc(otherUserUid).get().then((value) {
+        Map<dynamic, dynamic> myMap = value.data()!;
+
+        List<dynamic> frndRequest = myMap['friendRequest'];
+        frndRequest.removeWhere((element) => element['id'] == myUid);
+        firestore
+            .collection("users")
+            .doc(otherUserUid)
+            .update({'friendRequest': frndRequest});
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   addUserToMatch(String myUsername, String myImageUrl, String otherUsername,
       String otherUserImageUrl, String otherUserId) async {
     DateTime time = DateTime.now();
@@ -285,8 +315,24 @@ class DataBaseMethods {
         "friendUid": user!.uid
       }
     ];
-
     try {
+      await firestore.collection("users").doc(user!.uid).get().then((val) {
+        if (!val.data()!.containsKey('matchUsers')) {
+          firestore.collection("users").doc(user!.uid).update({
+            "freeTrial": true,
+          });
+          Get.find<FeedScreenController>().freeTrial.value = true;
+        }
+      });
+
+      await firestore.collection("users").doc(otherUserId).get().then((val) {
+        if (!val.data()!.containsKey('matchUsers')) {
+          firestore.collection("users").doc(otherUserId).update({
+            "freeTrial": true,
+          });
+        }
+      });
+
       firestore
           .collection("users")
           .doc(user!.uid)
@@ -339,6 +385,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('username', username);
+    print(sharedPreferences.getString('username'));
   }
 
   addUserGotra(String gotra) {
@@ -426,6 +473,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('birthdate', birthDate);
+    print(sharedPreferences.getString('birthdate'));
   }
 
   // addUserCommunity(String community) {
@@ -448,6 +496,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('samaj', samaj);
+    print(sharedPreferences.getString('samaj'));
   }
 
   addUserHandicapped(String handicapped) async {
@@ -462,6 +511,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('handicapped', handicapped);
+    print(sharedPreferences.getString('handicapped'));
   }
 
   addUserManglik(String manglik) async {
@@ -473,6 +523,21 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('manglik', manglik);
+    print(sharedPreferences.getString('manglik'));
+  }
+
+  addUserSiblings(String totalBrothers, String totalSisters,
+      String marriedBrothers, String marriedSisters) {
+    try {
+      firestore.collection("users").doc(user!.uid).update({
+        "totalBrothers": totalBrothers,
+        "totalSisters": totalSisters,
+        "marriedBrothers": marriedBrothers,
+        "marriedSisters": marriedSisters
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   addUserNRI(String userNRI) async {
@@ -482,9 +547,14 @@ class DataBaseMethods {
       print(e.toString());
     }
 
+    // final SharedPreferences sharedPreferences =
+    //     await SharedPreferences.getInstance();
+    // sharedPreferences.setString('NRI', userNRI);
+
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    sharedPreferences.setString('NRI', userNRI);
+    sharedPreferences.setBool('answers', true);
+    print(sharedPreferences.getBool('answers'));
   }
 
   addUserZodiacSign(String zodiacSign) {
@@ -507,6 +577,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('height', height);
+    print(sharedPreferences.getString('height'));
   }
 
   addUserStar(String star) {
@@ -525,7 +596,7 @@ class DataBaseMethods {
     }
   }
 
-  addUserWeight(String weight) async{
+  addUserWeight(String weight) async {
     try {
       firestore.collection("users").doc(user!.uid).update(({'weight': weight}));
     } catch (e) {
@@ -534,6 +605,7 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('weight', weight);
+    print(sharedPreferences.getString('weight'));
   }
 
   addUserWorkout(String workout) {
@@ -570,9 +642,10 @@ class DataBaseMethods {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('profileCreatedBy', profileCreatedBy);
+    print(sharedPreferences.getString('profileCreatedBy'));
   }
 
-  addUserMaritalStatus(String maritalStatus)async {
+  addUserMaritalStatus(String maritalStatus) async {
     try {
       firestore
           .collection("users")
@@ -839,32 +912,33 @@ class DataBaseMethods {
 
   uploadUserImages(List<dynamic> userImages) async {
     List<String> urlList = [];
-    print('This is user images length: ${userImages.length}');
+    File file = File('');
     for (int i = 0; i < userImages.length; i++) {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('user_image')
-          .child(user!.uid + 'folder')
-          .child(user!.uid + i.toString() + '.jpg');
+      if (userImages[i].path != '') {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child(user!.uid + 'folder')
+            .child(user!.uid + i.toString() + '.jpg');
 
-      await ref
-          .putFile(userImages[i])
-          .whenComplete(() => print('Image Upload'));
+        await ref
+            .putFile(userImages[i])
+            .whenComplete(() => print('Image Upload'));
 
-      String url = await ref.getDownloadURL();
-      urlList.add(url);
-      if (i == 0) {
-        await firestore
-            .collection("users")
-            .doc(user!.uid)
-            .update({"imgUrl": url});
-        Constants.userImage = url;
+        String url = await ref.getDownloadURL();
+        urlList.add(url);
+        if (i == 0) {
+          await firestore
+              .collection("users")
+              .doc(user!.uid)
+              .update({"imgUrl": url});
+          Constants.userImage = url;
+        }
+        final SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setString('imgUrl', url);
       }
-      final SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.setString('imgUrl', url);
     }
-
     await FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -1021,11 +1095,15 @@ class DataBaseMethods {
   addMessaging(Map<dynamic, dynamic> messagePurchase) async {
     List<Map<dynamic, dynamic>> messagePurchaseList = [];
     messagePurchaseList.add(messagePurchase);
+    Get.find<FeedScreenController>().messageOpenTill.value =
+        messagePurchase['newTimestamp'];
+    print(
+        "New Time stamp: ${Get.find<FeedScreenController>().messageOpenTill}");
     try {
-      await firestore
-          .collection("users")
-          .doc(user!.uid)
-          .update({'message': FieldValue.arrayUnion(messagePurchaseList)});
+      await firestore.collection("users").doc(user!.uid).update({
+        'message': FieldValue.arrayUnion(messagePurchaseList),
+        'messageOpenTill': messagePurchase['newTimestamp']
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -1040,8 +1118,6 @@ class DataBaseMethods {
     try {
       await firestore.collection("users").doc(user!.uid).get().then((value) {
         Map<String, dynamic> tmp = value.data()!;
-        print(tmp['bookayAvailable']);
-        print(tmp['bookayAvailable'].runtimeType);
         bookayAvailable = tmp['bookayAvailable'];
       });
       bookayAvailable = bookayAvailable + newBookay;

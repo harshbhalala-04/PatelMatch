@@ -52,6 +52,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),

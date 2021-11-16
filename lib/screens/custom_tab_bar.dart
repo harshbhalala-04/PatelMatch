@@ -28,14 +28,12 @@ class _CustomTabBarState extends State<CustomTabBar> {
   void initState() {
     // TODO: implement initState
     pageController = PageController();
-    globalController.getCurrentUser();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'This is from build method: ${Get.find<GlobalController>().profileUrl.value}');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -96,6 +94,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     child: Container(
                       margin: EdgeInsets.only(top: 5),
                       child: InkWell(
+                        key: Key("Filter"),
                         onTap: () {
                           Get.to(FilterScreen());
                         },
@@ -125,6 +124,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     ),
                   ),
                   InkWell(
+                    key: Key("Message"),
                     onTap: () {
                       Get.to(MessageScreen());
                     },
@@ -161,9 +161,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
           RequestTabScreen(),
         ],
       ),
-      // floatingActionButton: Obx(() => (screenController.selectedPage.value == 0)
-      //     ? FeedButton(index: 0)
-      //     : Container()),
+     
     );
   }
 }

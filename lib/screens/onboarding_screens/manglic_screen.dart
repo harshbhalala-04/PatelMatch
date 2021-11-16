@@ -48,6 +48,8 @@ class _ManglicScreenState extends State<ManglicScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -137,21 +139,23 @@ class _ManglicScreenState extends State<ManglicScreen> {
               onPressed: () {
                 if (_reply == YesNo.No) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.manglik =
                         "No";
                   }
-                  DataBaseMethods().addUserHandicapped("No");
+                  DataBaseMethods().addUserManglik("No");
                 } else {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.manglik =
                         "Yes";
                   }
-                  DataBaseMethods().addUserHandicapped("Yes");
+                  DataBaseMethods().addUserManglik("Yes");
                 }
                 if (widget.fromProfile) {
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(CustomTabBar());
+                  Get.offAll(CustomTabBar(), );
                 }
               },
               child: widget.fromProfile

@@ -19,7 +19,7 @@ class ProfileCreatedByScreen extends StatefulWidget {
 
 class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
   ProfileCreated? _reply;
-  final globalController = Get.put(GlobalController());
+  // final globalController = Get.put(GlobalController());
 
   @override
   void initState() {
@@ -55,206 +55,215 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Profile Created By',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _reply = ProfileCreated.Self;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: ProfileCreated.Self,
-                      groupValue: _reply,
-                      onChanged: (ProfileCreated? value) {
-                        setState(() {
-                          _reply = value!;
-                        });
-                      },
-                    ),
-                    Text('Self'),
-                  ],
+                Text(
+                  'Profile Created By',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _reply = ProfileCreated.Parents;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: ProfileCreated.Parents,
-                      groupValue: _reply,
-                      onChanged: (ProfileCreated? value) {
-                        setState(() {
-                          _reply = value!;
-                        });
-                      },
-                    ),
-                    Text('Parents'),
-                  ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _reply = ProfileCreated.Self;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: ProfileCreated.Self,
+                        groupValue: _reply,
+                        onChanged: (ProfileCreated? value) {
+                          setState(() {
+                            _reply = value!;
+                          });
+                        },
+                      ),
+                      Text('Self'),
+                    ],
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _reply = ProfileCreated.Sibling;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: ProfileCreated.Sibling,
-                      groupValue: _reply,
-                      onChanged: (ProfileCreated? value) {
-                        setState(() {
-                          _reply = value!;
-                        });
-                      },
-                    ),
-                    Text('Sibling'),
-                  ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _reply = ProfileCreated.Parents;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: ProfileCreated.Parents,
+                        groupValue: _reply,
+                        onChanged: (ProfileCreated? value) {
+                          setState(() {
+                            _reply = value!;
+                          });
+                        },
+                      ),
+                      Text('Parents'),
+                    ],
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _reply = ProfileCreated.Relative;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: ProfileCreated.Relative,
-                      groupValue: _reply,
-                      onChanged: (ProfileCreated? value) {
-                        setState(() {
-                          _reply = value!;
-                        });
-                      },
-                    ),
-                    Text('Relative'),
-                  ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _reply = ProfileCreated.Sibling;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: ProfileCreated.Sibling,
+                        groupValue: _reply,
+                        onChanged: (ProfileCreated? value) {
+                          setState(() {
+                            _reply = value!;
+                          });
+                        },
+                      ),
+                      Text('Sibling'),
+                    ],
+                  ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _reply = ProfileCreated.Friend;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: ProfileCreated.Friend,
-                      groupValue: _reply,
-                      onChanged: (ProfileCreated? value) {
-                        setState(() {
-                          _reply = value!;
-                        });
-                      },
-                    ),
-                    Text('Friend'),
-                  ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _reply = ProfileCreated.Relative;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: ProfileCreated.Relative,
+                        groupValue: _reply,
+                        onChanged: (ProfileCreated? value) {
+                          setState(() {
+                            _reply = value!;
+                          });
+                        },
+                      ),
+                      Text('Relative'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _reply = ProfileCreated.Friend;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: ProfileCreated.Friend,
+                        groupValue: _reply,
+                        onChanged: (ProfileCreated? value) {
+                          setState(() {
+                            _reply = value!;
+                          });
+                        },
+                      ),
+                      Text('Friend'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            child: ElevatedButton(
-              onPressed: () {
-                if (_reply == ProfileCreated.Self) {
-                  if (widget.fromProfile) {
-                    Get.find<GlobalController>()
-                        .currentAppuser
-                        .value
-                        .profileCreatedBy = 'Self';
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_reply == ProfileCreated.Self) {
+                    if (widget.fromProfile) {
+                      final globalController = Get.put(GlobalController());
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy = 'Self';
+                    }
+                    DataBaseMethods().addUserProfileCreated("Self");
+                  } else if (_reply == ProfileCreated.Sibling) {
+                    if (widget.fromProfile) {
+                      final globalController = Get.put(GlobalController());
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy = 'Sibling';
+                    }
+                    DataBaseMethods().addUserProfileCreated("Sibling");
+                  } else if (_reply == ProfileCreated.Relative) {
+                    if (widget.fromProfile) {
+                      final globalController = Get.put(GlobalController());
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy = 'Relative';
+                    }
+                    DataBaseMethods().addUserProfileCreated("Relative");
+                  } else if (_reply == ProfileCreated.Parents) {
+                    if (widget.fromProfile) {
+                      final globalController = Get.put(GlobalController());
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy = 'Parents';
+                    }
+                    DataBaseMethods().addUserProfileCreated("Parents");
+                  } else {
+                    if (widget.fromProfile) {
+                      Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .profileCreatedBy = 'Friend';
+                    }
+                    DataBaseMethods().addUserProfileCreated("Friend");
                   }
-                  DataBaseMethods().addUserProfileCreated("Self");
-                } else if (_reply == ProfileCreated.Sibling) {
+    
                   if (widget.fromProfile) {
-                    Get.find<GlobalController>()
-                        .currentAppuser
-                        .value
-                        .profileCreatedBy = 'Sibling';
+                    // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
+                  } else {
+                    Get.to(SamajScreen(
+                      fromProfile: false,
+                    ));
                   }
-                  DataBaseMethods().addUserProfileCreated("Sibling");
-                } else if (_reply == ProfileCreated.Relative) {
-                  if (widget.fromProfile) {
-                    Get.find<GlobalController>()
-                        .currentAppuser
-                        .value
-                        .profileCreatedBy = 'Relative';
-                  }
-                  DataBaseMethods().addUserProfileCreated("Relative");
-                } else if (_reply == ProfileCreated.Parents) {
-                  if (widget.fromProfile) {
-                    Get.find<GlobalController>()
-                        .currentAppuser
-                        .value
-                        .profileCreatedBy = 'Parents';
-                  }
-                  DataBaseMethods().addUserProfileCreated("Parents");
-                } else {
-                  if (widget.fromProfile) {
-                    Get.find<GlobalController>()
-                        .currentAppuser
-                        .value
-                        .profileCreatedBy = 'Friend';
-                  }
-                  DataBaseMethods().addUserProfileCreated("Friend");
-                }
-
-                if (widget.fromProfile) {
-                  // Navigator.pop(context);
-                  Get.off(EditProfileScreen());
-                } else {
-                  Get.to(SamajScreen(
-                    fromProfile: false,
-                  ));
-                }
-              },
-              child: widget.fromProfile
-                  ? Text(
-                      'Submit',
-                      style: TextStyle(fontSize: 17),
-                    )
-                  : Text(
-                      'Continue',
-                      style: TextStyle(fontSize: 17),
-                    ),
-              style: ButtonStyle(),
+                },
+                child: widget.fromProfile
+                    ? Text(
+                        'Submit',
+                        style: TextStyle(fontSize: 17),
+                      )
+                    : Text(
+                        'Continue',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                style: ButtonStyle(),
+              ),
             ),
           ),
         ),

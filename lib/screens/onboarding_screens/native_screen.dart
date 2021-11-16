@@ -27,6 +27,8 @@ class _NativeScreenState extends State<NativeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -56,7 +58,7 @@ class _NativeScreenState extends State<NativeScreen> {
               height: 10,
             ),
             Text(
-              'Add Your ${widget.relation} Native Place',
+              'Add Your${widget.relation} Native Place',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -95,13 +97,15 @@ class _NativeScreenState extends State<NativeScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (widget.fromProfile) {
-                  if (widget.relation == "Father's") {
+                  if (widget.relation == " Father's") {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value
                         .fatherNativePlace = _nativeController.text;
                     DataBaseMethods().addFatherNative(_nativeController.text);
-                  } else if (widget.relation == "Mother's") {
+                  } else if (widget.relation == " Mother's") {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value

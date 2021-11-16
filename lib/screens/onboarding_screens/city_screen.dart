@@ -43,6 +43,8 @@ class _CityScreenState extends State<CityScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           TextButton(
                   child: Text(

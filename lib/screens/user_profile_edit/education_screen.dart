@@ -70,6 +70,8 @@ class _EducationScreenState extends State<EducationScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

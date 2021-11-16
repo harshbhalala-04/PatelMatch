@@ -85,7 +85,7 @@ class ShowProfileController extends GetxController {
       "message": message,
       "sendBy": myUserName,
       "ts": lastMessageTs,
-      // "otherUserUid": currentUser.value.uid,
+      "otherUserUid": currentUser.value.uid,
     };
 
     //message ID

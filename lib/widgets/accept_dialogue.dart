@@ -87,6 +87,12 @@ class AcceptDialogue extends StatelessWidget {
                       showProfileScreenController.createChatRoom();
                       showProfileScreenController
                           .addMessage(textEditingController.text);
+                      DataBaseMethods().removeUserFromFriendRequest(
+                          showProfileScreenController.currentUser.value.uid!,
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .uid!);
                       DataBaseMethods().addUserToMatch(
                           myUsername,
                           userProfile,

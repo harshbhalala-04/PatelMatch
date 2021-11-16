@@ -149,6 +149,8 @@ class _StarScreenState extends State<StarScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -238,6 +240,7 @@ class _StarScreenState extends State<StarScreen> {
                           );
                         });
                   } else {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.star =
                         starAns;
                     DataBaseMethods().addUserStar(starAns!);

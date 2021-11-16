@@ -38,6 +38,10 @@ class FeedScreenController extends GetxController {
 
   final endUser = false.obs;
 
+  final messageOpenTill = Timestamp.now().obs;
+
+  final freeTrial = false.obs;
+
   int fnTerminate = 0;
 
   final currentIndex = 0.obs;
@@ -78,7 +82,10 @@ class FeedScreenController extends GetxController {
     await firestore.collection("users").doc(user!.uid).get().then((val) {
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
-      isFilterApplied.value = tmpMap['isFilterApplied'];
+      messageOpenTill.value = tmpMap['messageOpenTill'];
+      freeTrial.value = tmpMap['freeTrial'];
+
+      // isFilterApplied.value = tmpMap['isFilterApplied'];
     });
     Query<Map<String, dynamic>> query;
 
@@ -91,18 +98,8 @@ class FeedScreenController extends GetxController {
       query = firebaseFirestore
           .collection("users")
           .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
-          // .where("uid",
-          //     whereNotIn: globalController.currentAppuser.value.excludedUsers)
-          // .orderBy("uid")
           .orderBy("createdAt", descending: true);
     }
-
-    print("___________________");
-    print(usersList.length == 0 && fnTerminate == 1 && !hasMoreData);
-    print("usersList.length = ${usersList.length}");
-    print("Function terminate: $fnTerminate");
-    print("Has More data : $hasMoreData");
-    
 
     if (lastUser != null) {
       isLoadingMoreData = true;
@@ -124,13 +121,10 @@ class FeedScreenController extends GetxController {
             }
           });
           lastUser = snapshot.docs[snapshot.docs.length - 1];
-          print("This is last user data");
-          print(lastUser?.data());
+
           currentItemLength = currentItemLength + snapshot.docs.length;
-          print("Snapshot length: ");
-          print(snapshot.docs.length);
+
           if (snapshot.docs.length < itemLimit) {
-            print("Here it does hasmoredata false");
             hasMoreData = false;
           }
         }
@@ -141,15 +135,10 @@ class FeedScreenController extends GetxController {
       getUsers();
     }
     if (usersList.length == 0 && fnTerminate == 1 && !hasMoreData) {
-      print("Here it enter in terminate condition");
       endUser.value = true;
       return;
     }
-    print("Loop Starts");
-    for (int i = 0; i < usersList.length; i++) {
-      print(usersList[i].username);
-    }
-    print("Loop End");
+
     isLoadingMoreData = false;
     fnTerminate = 1;
     update();
@@ -168,28 +157,3 @@ class FeedScreenController extends GetxController {
     super.onClose();
   }
 }
-
-
-// if (usersList.length == 0 && fnTerminate == 1) {
-    //   print("Here it enter in terminate condition");
-    //   endUser.value = true;
-    //   return;
-    // }
-
-
-
-
-
- // if (globalController.currentAppuser.value.excludedUsers?.length ==
-            //         0 ||
-            //     !globalController.currentAppuser.value.excludedUsers!
-            //         .contains(element.data()['uid'])) {
-              // tmpUsersList.add(UserModel.fromJson(element.data()));
-              // tmpUsersUid.add(element.data()['uid']);}
-
-
-              // if (usersList.length < 5 && hasMoreData) {
-    //   print("Here length: _________");
-    //   print(usersList.length);
-    //   getUsers();
-    // }

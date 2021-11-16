@@ -90,6 +90,8 @@ class _RashiScreenState extends State<RashiScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           widget.fromProfile ? Container() : TextButton(
                   child: Text(
@@ -177,6 +179,7 @@ class _RashiScreenState extends State<RashiScreen> {
                           );
                         });
                   } else {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.rashi =
                         rashiAns;
                     DataBaseMethods().addUserRashi(rashiAns!);

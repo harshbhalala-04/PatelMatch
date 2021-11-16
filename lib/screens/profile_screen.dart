@@ -1,10 +1,14 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/constants.dart';
 import 'package:chat/helper/services.dart';
+import 'package:chat/screens/SubscriptionScreen.dart';
 import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -27,19 +31,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .then((val) {
       setState(() {
         Constants.userImage = val['imgUrls'][0];
+        Constants.myName = val['username'];
         print(Constants.userImage);
         print('User Image');
       });
     });
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .get()
-        .then((val) {
-      setState(() {
-        Constants.myName = val['username'];
-      });
-    });
+  }
+
+  removeAllSharedPreferences() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    
+    sharedPreferences.setBool('login', false);
+    sharedPreferences.setBool('answers', false);
+
+    sharedPreferences.remove('profileCreatedBy');
+    sharedPreferences.remove('samaj');
+    sharedPreferences.remove('marryToSamaj');
+    sharedPreferences.remove('username');
+    sharedPreferences.remove('gender');
+    sharedPreferences.remove('imgUrl');
+    sharedPreferences.remove('birthdate');
+    sharedPreferences.remove('weight');
+    sharedPreferences.remove('height');
+    sharedPreferences.remove('handicapped');
+    sharedPreferences.remove('maritalStatus');
+    sharedPreferences.remove('NRI');
   }
 
   @override
@@ -77,86 +94,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CircleAvatar(
                       backgroundColor: Colors.transparent,
                       backgroundImage: NetworkImage(
-                        Constants.userImage,
+                        Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .imgUrl!,
                       ),
                       radius: 60,
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      Constants.myName,
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
+                    Obx(() => Text(
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .username!,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        )),
                     SizedBox(
                       height: 20,
                     ),
                     ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Edit Profile'),
+                      leading: Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfileScreen()))
-                            .then((_) {
-                          fetchUserImg();
-                        });
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfileScreen()));
                       },
                     ),
                     ListTile(
                       leading: Text(
                         '\u{20B9}',
-                        style: TextStyle(fontSize: 24, color: Colors.grey),
+                        style: TextStyle(fontSize: 24, color: Colors.black87),
                       ),
-                      title: Text('Plans'),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                        leading: Container(
-                          height: 30,
-                          child: Image(
-                            image: AssetImage('assets/referral_img.png'),
-                            fit: BoxFit.cover,
-                          ),
+                      title: Text(
+                        'Plans',
+                        style: TextStyle(
+                          fontSize: 20,
                         ),
-                        title: Text('Referrals'),
-                        onTap: () {}),
-                    ListTile(
-                      leading: Icon(Icons.share),
-                      title: Text('Share this app'),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.person_add_alt_1),
-                      title: Text('Share My Profile'),
+                      ),
                       onTap: () {
-                        createDynamicLink();
-
+                        Get.to(SubscriptionScreen());
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.star_border),
-                      title: Text('Rate this app'),
+                      leading: Icon(
+                        Icons.share,
+                        color: Colors.black87,
+                      ),
+                      title: Text(
+                        'Share this app',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
                       onTap: () {},
                     ),
                     ListTile(
-                      leading: Icon(Icons.note_alt_rounded),
-                      title: Text('Privacy Policy'),
+                      leading: Icon(
+                        Icons.person_add_alt_1,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        'Share My Profile',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {
+                        createDynamicLink();
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.star_border,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        'Rate this app',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
                       onTap: () {},
                     ),
                     ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text('Log Out'),
+                      leading: Icon(
+                        Icons.note_alt_rounded,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        'Log Out',
+                        style: TextStyle(fontSize: 20),
+                      ),
                       onTap: () {
                         Constants.myName = '';
                         FirebaseAuth.instance.signOut();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AuthScreen()));
+                        Get.off(AuthScreen());
+                        
+                        removeAllSharedPreferences();
                       },
                     ),
                   ],

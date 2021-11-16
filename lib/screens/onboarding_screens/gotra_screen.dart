@@ -29,6 +29,8 @@ class _GotraScreenState extends State<GotraScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -98,6 +100,7 @@ class _GotraScreenState extends State<GotraScreen> {
               onPressed: () {
                 String gotra = gotraController.text;
                 if (widget.fromProfile) {
+                  final globalController = Get.put(GlobalController());
                   Get.find<GlobalController>().currentAppuser.value.gotra =
                       gotra;
                 }

@@ -1,3 +1,4 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/subscription_controller.dart';
 import 'package:chat/widgets/purchase_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,12 +34,23 @@ class BuyMessageScreen extends StatelessWidget {
                           .weekDiscountedPrice
                           .value,
                     };
+
+                    Timestamp messageOpenTill =
+                        Get.find<FeedScreenController>().messageOpenTill.value;
+                   
+                    DateTime pastDate = messageOpenTill.toDate();
+                   
+                    DateTime newDate = pastDate.add(Duration(days: 7));
+                   
+                    Timestamp newTimestamp = Timestamp.fromDate(newDate);
+
                     Get.find<SubscriptionController>().messageUpload.value = {
-                      "timestamp": Timestamp.now(),
+                      "newTimestamp": newTimestamp,
+                      "timestamp": DateTime.now(),
                       "timePeriod": "1 Week",
                       "messageCost": int.parse(
                           Get.find<SubscriptionController>()
-                              .monthDiscountedPrice
+                              .weekDiscountedPrice
                               .value),
                     };
                   },
@@ -90,7 +102,15 @@ class BuyMessageScreen extends StatelessWidget {
                           .monthDiscountedPrice
                           .value,
                     };
+                    Timestamp messageOpenTill =
+                        Get.find<FeedScreenController>().messageOpenTill.value;
+                    DateTime pastDate = messageOpenTill.toDate();
+
+                    DateTime newDate = pastDate.add(Duration(days: 30));
+
+                    Timestamp newTimestamp = Timestamp.fromDate(newDate);
                     Get.find<SubscriptionController>().messageUpload.value = {
+                      "newTimestamp": newTimestamp,
                       "timestamp": Timestamp.now(),
                       "timePeriod": "1 Month",
                       "messageCost": int.parse(
@@ -148,7 +168,15 @@ class BuyMessageScreen extends StatelessWidget {
                           .yearDiscountedPrice
                           .value,
                     };
+                    Timestamp messageOpenTill =
+                        Get.find<FeedScreenController>().messageOpenTill.value;
+                    DateTime pastDate = messageOpenTill.toDate();
+
+                    DateTime newDate = pastDate.add(Duration(days: 365));
+
+                    Timestamp newTimestamp = Timestamp.fromDate(newDate);
                     Get.find<SubscriptionController>().messageUpload.value = {
+                      "newTimestamp": newTimestamp,
                       "timestamp": Timestamp.now(),
                       "timePeriod": "1 Year",
                       "messageCost": int.parse(
@@ -219,7 +247,7 @@ class BuyMessageScreen extends StatelessWidget {
                                   .isMessageSelected
                                   .value
                               ? Color.fromRGBO(255, 85, 115, 0.89)
-                              : Color.fromRGBO(255, 85, 115, 0.4),
+                              : Color.fromRGBO(255, 85, 115, 0.5),
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(25)))),

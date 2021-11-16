@@ -47,6 +47,8 @@ class _NRIScreenState extends State<NRIScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -119,16 +121,19 @@ class _NRIScreenState extends State<NRIScreen> {
               onPressed: () {
                 if (_reply == YesNo.No) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.userNRI =
                         "No";
                   }
                   DataBaseMethods().addUserNRI("No");
                 } else {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.userNRI =
                         "Yes";
                   }
-                  DataBaseMethods().addUserHandicapped("Yes");
+                  DataBaseMethods().addUserNRI("Yes");
+                  
                 }
 
                 if (widget.fromProfile) {

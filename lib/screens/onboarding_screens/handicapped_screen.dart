@@ -47,6 +47,8 @@ class _HandicappedScreenState extends State<HandicappedScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
+        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
+          centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -119,6 +121,7 @@ class _HandicappedScreenState extends State<HandicappedScreen> {
               onPressed: () {
                 if (_reply == YesNo.No) {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value
@@ -127,6 +130,7 @@ class _HandicappedScreenState extends State<HandicappedScreen> {
                   DataBaseMethods().addUserHandicapped("No");
                 } else {
                   if (widget.fromProfile) {
+                    final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
                         .currentAppuser
                         .value

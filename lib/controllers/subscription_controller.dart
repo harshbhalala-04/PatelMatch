@@ -49,6 +49,8 @@ class SubscriptionController extends GetxController {
   final bouqueUpload = {}.obs;
   final messageUpload = {}.obs;
 
+  
+
   final currentItemMessage = true.obs;
 
   fetchPrices() async {
@@ -178,6 +180,7 @@ class SubscriptionController extends GetxController {
       oneMonthSelected.value = false;
       oneYearSelected.value = false;
       isMessageSelected.value = false;
+      
       DataBaseMethods().addMessaging(messageUpload.value);
     } else {
       bouqueUpload['payment_id'] = response.paymentId;
@@ -201,9 +204,6 @@ class SubscriptionController extends GetxController {
   }
 
   void handlerExternalWallet(ExternalWalletResponse response) {
-    print("____________________)))");
-    print("External wallet");
-    print(response.walletName);
-    print("____________________________________");
+   
   }
 }

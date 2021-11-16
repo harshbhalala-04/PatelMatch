@@ -171,6 +171,7 @@ class BookayDialogue extends StatelessWidget {
                                 feedScreenController.usersList.length) {
                               feedScreenController.endUser.value = true;
                             }
+                            Get.find<FeedScreenController>().currentIndex.value += 1;
                             Get.find<FeedScreenController>()
                                 .scrollController
                                 .scrollToIndex(index + 1,
@@ -180,10 +181,7 @@ class BookayDialogue extends StatelessWidget {
                                 .value
                                 .excludedUsers!
                                 .add(otherUserId);
-                            // Get.find<FeedScreenController>()
-                            //     .usersList
-                            //     .removeWhere(
-                            //         (element) => element.uid == otherUserId);
+                            
                             DateTime time = DateTime.now(); //DateTime
                             Timestamp myTimeStamp =
                                 Timestamp.fromDate(time); //To TimeStamp
