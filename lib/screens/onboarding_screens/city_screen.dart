@@ -1,5 +1,7 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/helper/services.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/native_screen.dart';
 import 'package:chat/screens/onboarding_screens/star_screen.dart';
 import 'package:chat/widgets/request_assistant.dart';
@@ -7,13 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CityScreen extends StatefulWidget {
-  const CityScreen({Key? key}) : super(key: key);
+  final bool fromProfile;
+  CityScreen({required this.fromProfile});
 
   @override
   _CityScreenState createState() => _CityScreenState();
 }
 
 class _CityScreenState extends State<CityScreen> {
+  TextEditingController _cityController = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.fromProfile) {
+      _cityController.text =
+          Get.find<GlobalController>().currentAppuser.value.currentCity == null
+              ? ''
+              : Get.find<GlobalController>().currentAppuser.value.currentCity!;
+    }
+    super.initState();
+  }
+
   void showDialog() {
     Get.defaultDialog(
       middleText: "Plese Select Your Current Residance",
@@ -43,10 +60,16 @@ class _CityScreenState extends State<CityScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         actions: [
-          TextButton(
+          widget.fromProfile
+              ? Container()
+              : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -56,7 +79,10 @@ class _CityScreenState extends State<CityScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserCity('');
-                    Get.to(NativeScreen(fromProfile: false, relation: ' ',));
+                    Get.to(NativeScreen(
+                      fromProfile: false,
+                      relation: ' ',
+                    ));
                   },
                 )
         ],
@@ -82,9 +108,7 @@ class _CityScreenState extends State<CityScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                onChanged: (val) {
-                  // findPlace(val);
-                },
+                controller: _cityController,
                 decoration: InputDecoration(
                   hintText: 'Start Typing...',
                   border: OutlineInputBorder(
@@ -110,10 +134,27 @@ class _CityScreenState extends State<CityScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(NativeScreen(fromProfile: false, relation: ' ',));
+                if (widget.fromProfile) {
+                  Get.find<GlobalController>()
+                      .currentAppuser
+                      .value
+                      .currentCity = _cityController.text;
+                  Get.off(EditProfileScreen());
+                } else {
+                  Get.to(NativeScreen(
+                    fromProfile: false,
+                    relation: ' ',
+                  ));
+                }
+                DataBaseMethods().addUserCity(_cityController.text);
               },
-              child: Text('Continue',
-                  style: TextStyle(fontSize: 17), textAlign: TextAlign.center),
+              child: widget.fromProfile
+                  ? Text('Submit',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center)
+                  : Text('Continue',
+                      style: TextStyle(fontSize: 17),
+                      textAlign: TextAlign.center),
               style: ButtonStyle(),
             ),
           ),

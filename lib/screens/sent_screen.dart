@@ -7,21 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-
 class SentScreen extends StatelessWidget {
   final sentScreenController = Get.put(SentScreenController());
 
   @override
   Widget build(BuildContext context) {
-     print("This is sent profile screen__________________");
+   
     return Scaffold(
-      body: sentScreenController.isLoading.value
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleUserSent(
-              sentProfiles: sentScreenController.sentProfiles,
-            ),
-    );
+              body: sentScreenController.isLoading.value
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleUserSent(
+                      sentProfiles: sentScreenController.sentProfiles,
+                    ),
+            );
   }
 }

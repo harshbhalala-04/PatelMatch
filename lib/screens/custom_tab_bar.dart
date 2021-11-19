@@ -13,7 +13,8 @@ import 'feed_screen.dart';
 import 'nested_tab/request_tab.dart';
 
 class CustomTabBar extends StatefulWidget {
-  const CustomTabBar({Key? key}) : super(key: key);
+  String fromNotification;
+  CustomTabBar({this.fromNotification = ''});
 
   @override
   _CustomTabBarState createState() => _CustomTabBarState();
@@ -27,6 +28,10 @@ class _CustomTabBarState extends State<CustomTabBar> {
 
   void initState() {
     // TODO: implement initState
+    // Get.find<GlobalController>().isMessage.value =
+    //     widget.fromNotification == "message" ? true : false;
+    // Get.find<GlobalController>().isRequest.value =
+    //     widget.fromNotification == "request" ? true : false;
     pageController = PageController();
 
     super.initState();
@@ -34,6 +39,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -48,7 +54,14 @@ class _CustomTabBarState extends State<CustomTabBar> {
                   Container(
                     margin: EdgeInsets.all(4),
                     child: Obx(() => globalController.isLoading.value
-                        ? Container()
+                        ? InkWell(
+                            onTap: () {
+                              Get.to(ProfileScreen());
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Colors.grey,
+                            ),
+                          )
                         : InkWell(
                             onTap: () {
                               Get.to(ProfileScreen());
@@ -66,6 +79,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                       Obx(
                         () => TabButton(
                           text: "  Feed  ",
+                          // pending: false,
                           pageNumber: 0,
                           selectedPage: screenController.selectedPage.value,
                           onPressed: () {
@@ -78,6 +92,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                       Obx(
                         () => TabButton(
                           text: "  Requests  ",
+                          // pending: Get.find<GlobalController>().isRequest.value,
                           pageNumber: 1,
                           selectedPage: screenController.selectedPage.value,
                           onPressed: () {
@@ -126,6 +141,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                   InkWell(
                     key: Key("Message"),
                     onTap: () {
+                      Get.find<GlobalController>().isMessage.value = false;
                       Get.to(MessageScreen());
                     },
                     child: Container(
@@ -135,10 +151,26 @@ class _CustomTabBarState extends State<CustomTabBar> {
                           SizedBox(
                             height: 10,
                           ),
-                          SvgPicture.asset(
-                            'assets/iPhone 11 Pro 2/Vector.svg',
-                            height: 31.04,
-                            width: 36.54,
+                          Stack(
+                            children: [
+                              // Obx(() => Get.find<GlobalController>()
+                              //         .isMessage
+                              //         .value
+                              //     ? Positioned(
+                              //         right: MediaQuery.of(context).size.width /
+                              //             60,
+                              //         child: Icon(
+                              //           Icons.circle,
+                              //           size: 10,
+                              //           color: Color.fromRGBO(255, 85, 115, 1),
+                              //         ))
+                              //     : Container()),
+                              SvgPicture.asset(
+                                'assets/iPhone 11 Pro 2/Vector.svg',
+                                height: 31.04,
+                                width: 36.54,
+                              )
+                            ],
                           ),
                         ],
                       ),
@@ -161,7 +193,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
           RequestTabScreen(),
         ],
       ),
-     
     );
   }
 }
@@ -170,8 +201,14 @@ class TabButton extends StatelessWidget {
   final String? text;
   final int? selectedPage;
   final int? pageNumber;
+  // final bool? pending;
   final onPressed;
-  TabButton({this.text, this.selectedPage, this.pageNumber, this.onPressed});
+  TabButton(
+      {this.text,
+      // this.pending,
+      this.selectedPage,
+      this.pageNumber,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -190,12 +227,17 @@ class TabButton extends StatelessWidget {
                       topRight: Radius.circular(50),
                       bottomRight: Radius.circular(50))),
         ),
-        child: Text(
-          text!,
-          style: TextStyle(
-              color: selectedPage == pageNumber
-                  ? Colors.white
-                  : Color.fromRGBO(150, 150, 150, 1)),
+        child: Row(
+          children: [
+            Text(
+              text!,
+              style: TextStyle(
+                  color: selectedPage == pageNumber
+                      ? Colors.white
+                      : Color.fromRGBO(150, 150, 150, 1)),
+            ),
+           
+          ],
         ));
   }
 }

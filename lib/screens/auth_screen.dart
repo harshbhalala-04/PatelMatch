@@ -7,12 +7,17 @@ class AuthScreen extends GetWidget<AuthController> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController reEnterPassword = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
-
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text('PM', style: TextStyle(color: Colors.white, fontSize: 36),),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -21,10 +26,11 @@ class AuthScreen extends GetWidget<AuthController> {
           ),
         ),
         child: Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 12),
+          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 44),
           child: Center(
-            child: SingleChildScrollView(
-              child: Column(children: [
+            // child: SingleChildScrollView(
+            child: ListView(children: [
+              Column(children: [
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -139,7 +145,6 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       .sendPasswordRequest(
                                                           _emailController
                                                               .text);
-                                                  
                                                 },
                                                 child: Text(
                                                   'Send Request',
@@ -203,7 +208,7 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       _emailController.text
                                                           .trim(),
                                                       _passwordController.text
-                                                          .trim());
+                                                          .trim(), phoneController.text.trim());
                                                 },
                                                 child: Text(
                                                   'Sign Up',
@@ -263,7 +268,8 @@ class AuthScreen extends GetWidget<AuthController> {
                             ),
                           ))
               ]),
-            ),
+            ]),
+            // ),
           ),
         ),
       ),

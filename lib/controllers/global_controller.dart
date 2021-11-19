@@ -14,10 +14,13 @@ class GlobalController extends GetxController {
   String newNotificationToken = '';
   final User? _user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
-  late final List<String>? notificationTokens;
+  List<String>? notificationTokens;
+  final isRequest = false.obs;
+  final isMessage = false.obs;
 
   getCurrentUser() async {
     isLoading.toggle();
+
     Get.find<AuthController>().firebaseUser.value =
         FirebaseAuth.instance.currentUser;
     UserModel? user = await DataBaseMethods().getCurrentLoggedInUser(
@@ -25,8 +28,9 @@ class GlobalController extends GetxController {
     currentAppuser.value = user ?? UserModel();
     gender.value = currentAppuser.value.gender!;
     profileUrl.value = currentAppuser.value.imgUrl!;
-    print("Here profile url before loading false: ${profileUrl.value}");
+    
     isLoading.toggle();
+
     await FirebaseMessaging.instance.getToken().then((token) {
       newNotificationToken = token!;
     });
@@ -54,6 +58,7 @@ class GlobalController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
+    
     getCurrentUser();
     super.onInit();
   }

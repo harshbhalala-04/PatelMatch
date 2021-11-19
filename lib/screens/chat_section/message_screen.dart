@@ -30,9 +30,6 @@ class _MessageScreenState extends State<MessageScreen> {
   bool isLoading = true;
   int? chatList;
 
-
- 
-
   @override
   Widget build(BuildContext context) {
     DateTime time = DateTime.now();
@@ -48,8 +45,14 @@ class _MessageScreenState extends State<MessageScreen> {
       }
     }
 
+    firestore.collection("users").doc(userId).get().then((value) {
+      Get.find<FeedScreenController>().freeTrial.value =
+          value.data()!['freeTrial'];
+    });
+
     print(
         "This is free trial from build: ${Get.find<FeedScreenController>().freeTrial.value}");
+    print("This is message open tilll value: $messageOpenTill");
     // print("This is loading = $isLoading");
     return Scaffold(
         appBar: AppBar(
@@ -75,11 +78,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> snapshot) {
-                      // print("This is stream builder");
-                      // print("___________________________");
-                      // // chatList = snapshot.data.docs?.length;
-                      // print(chatList == 0);
-                      // print("This is chatlist : $chatList");
+                      
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
                           child: CircularProgressIndicator(),

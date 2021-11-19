@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
-import 'package:chat/helper/constants.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';

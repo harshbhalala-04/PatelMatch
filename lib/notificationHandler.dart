@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/screens/chat_section/message_screen.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -56,14 +57,18 @@ dynamic initializeLocalNotification() {
 
 dynamic handleNotificationRouting(
     {required Map<String, dynamic> message}) async {
+  // final globalController = Get.put(GlobalController());
   switch (message['screen']) {
     case 'custom_tab_bar':
-      Get.to(CustomTabBar());
+      Get.to(CustomTabBar(
+        fromNotification: "request",
+      ));
       break;
     case 'message_screen':
-      Get.to(MessageScreen());
+      Get.to(CustomTabBar(
+        fromNotification: "message",
+      ));
       break;
     default:
-    
   }
 }

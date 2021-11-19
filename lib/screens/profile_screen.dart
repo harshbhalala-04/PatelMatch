@@ -1,14 +1,18 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
-import 'package:chat/helper/constants.dart';
+import 'package:chat/global.dart';
 import 'package:chat/helper/services.dart';
+import 'package:chat/helper/user_modal.dart';
 import 'package:chat/screens/SubscriptionScreen.dart';
 import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -18,33 +22,31 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String profileImg =
-      'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
-  fetchUserImg() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-    print('Init State');
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((val) {
-      setState(() {
-        Constants.userImage = val['imgUrls'][0];
-        Constants.myName = val['username'];
-        print(Constants.userImage);
-        print('User Image');
-      });
-    });
-  }
+  // String profileImg =
+  //     'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+  // fetchUserImg() {
+  //   final FirebaseAuth auth = FirebaseAuth.instance;
+  //   final User? user = auth.currentUser;
+  //   print('Init State');
+  //   FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(user!.uid)
+  //       .get()
+  //       .then((val) {
+  //     setState(() {
+  //       Constants.userImage = val['imgUrls'][0];
+  //       Constants.myName = val['username'];
+  //       print(Constants.userImage);
+  //       print('User Image');
+  //     });
+  //   });
+  // }
 
   removeAllSharedPreferences() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    
     sharedPreferences.setBool('login', false);
     sharedPreferences.setBool('answers', false);
-
     sharedPreferences.remove('profileCreatedBy');
     sharedPreferences.remove('samaj');
     sharedPreferences.remove('marryToSamaj');
@@ -61,12 +63,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    fetchUserImg();
+    // fetchUserImg();
     super.initState();
   }
 
+  String privacyPolicyUrl = "https://patelmatch.in/#/privacy-policy/";
+  void _launchURL() async => await canLaunch(privacyPolicyUrl)
+      ? await launch(privacyPolicyUrl)
+      : throw 'Could not launch $privacyPolicyUrl';
+
   @override
   Widget build(BuildContext context) {
+    // Get.find<GlobalController>().currentAppuser.value.imgUrl = imgUrls[0];
+    print(
+        "This is imgUrl in profile screen: ${Get.find<GlobalController>().currentAppuser.value.imgUrl}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -74,10 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          Constants.myName,
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Obx(() => Text(
+              Get.find<GlobalController>().currentAppuser.value.username!,
+              style: TextStyle(color: Colors.black),
+            )),
       ),
       body: SafeArea(
         child: ListView(
@@ -91,16 +101,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: 50,
                     ),
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: NetworkImage(
-                        Get.find<GlobalController>()
-                            .currentAppuser
-                            .value
-                            .imgUrl!,
-                      ),
-                      radius: 60,
-                    ),
+                    Obx(() => CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(
+                            Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .imgUrl!,
+                          ),
+                          radius: 60,
+                        )),
                     SizedBox(
                       height: 20,
                     ),
@@ -129,9 +139,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfileScreen()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfileScreen()))
+                            .then((value) {
+                          setState(() {
+                            print(Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .imgUrl);
+                            print(Get.find<GlobalController>()
+                                .currentAppuser
+                                .value
+                                .username);
+                          });
+                        });
                       },
                     ),
                     ListTile(
@@ -177,19 +199,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         createDynamicLink();
                       },
                     ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.star_border,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        'Rate this app',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
+                    // ListTile(
+                    //   leading: Icon(
+                    //     Icons.star_border,
+                    //     color: Colors.black,
+                    //   ),
+                    //   title: Text(
+                    //     'Rate this app',
+                    //     style: TextStyle(
+                    //       fontSize: 20,
+                    //     ),
+                    //   ),
+                    //   onTap: () {},
+                    // ),
                     ListTile(
                       leading: Icon(
                         Icons.note_alt_rounded,
@@ -201,7 +223,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 20,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        _launchURL();
+                      },
                     ),
                     ListTile(
                       leading: Icon(
@@ -213,10 +237,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: TextStyle(fontSize: 20),
                       ),
                       onTap: () {
-                        Constants.myName = '';
+                        // Constants.myName = '';
+                        // Get.find<GlobalController>().currentAppuser.value =
+                        //     new UserModel();
+                        fromLogout = true;
+                        isSignup = false;
+                        isLoginVal = false;
                         FirebaseAuth.instance.signOut();
-                        Get.off(AuthScreen());
-                        
+                        SystemNavigator.pop();
+                        // Get.find<FeedScreenController>().usersList = [];
+                        // Get.find<FeedScreenController>().userListLength.value =
+                        //     0;
+                        // Get.find<FeedScreenController>()
+                        //     .friendRequestList
+                        //     .value = [];
+                        // Get.find<FeedScreenController>().tmpUsersUid = [];
+                        // Get.find<FeedScreenController>().endUser.value = false;
+                        // Get.find<FeedScreenController>().messageOpenTill.value =
+                        //     Timestamp.now();
+                        // Get.find<FeedScreenController>().freeTrial.value =
+                        //     false;
+                        // Get.find<FeedScreenController>().fnTerminate = 0;
+                        // Get.find<FeedScreenController>().currentIndex.value = 0;
+                        // Get.find<FeedScreenController>().currentItemLength = 0;
+                        // Get.find<FeedScreenController>().previousItemLength = 0;
+                        // Get.find<FeedScreenController>().hasMoreData = true;
+                        // Get.find<FeedScreenController>().lastUser = null;
+                        // Get.find<FeedScreenController>().gender = '';
+
+                        // Get.off(AuthScreen());
+
                         removeAllSharedPreferences();
                       },
                     ),

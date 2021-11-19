@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class FeedButton extends StatelessWidget {
-  final int index;
+  int index;
   final String otherUsername;
   final String otherImageUrl;
   final String otherUserId;
@@ -85,7 +85,9 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+                 
                   Get.find<FeedScreenController>().currentIndex.value += 1;
+                  
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(
@@ -95,7 +97,6 @@ class FeedButton extends StatelessWidget {
                   if (fromDynamicLink) {
                     Get.offAll(CustomTabBar());
                   }
-                 
                   Get.find<GlobalController>()
                       .currentAppuser
                       .value
@@ -125,17 +126,19 @@ class FeedButton extends StatelessWidget {
                   if (index + 1 == feedScreenController.usersList.length) {
                     feedScreenController.endUser.value = true;
                   }
+                  
                   Get.find<FeedScreenController>().currentIndex.value += 1;
+
                   Get.find<FeedScreenController>()
                       .scrollController
                       .scrollToIndex(index + 1,
-                          preferPosition: AutoScrollPosition.end);
+                          preferPosition: AutoScrollPosition.begin);
                   Get.find<GlobalController>()
                       .currentAppuser
                       .value
                       .excludedUsers!
                       .add(otherUserId);
-                  
+
                   DateTime time = DateTime.now(); //DateTime
                   Timestamp myTimeStamp =
                       Timestamp.fromDate(time); //To TimeStamp

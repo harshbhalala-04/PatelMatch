@@ -27,7 +27,10 @@ class _FeedScreenState extends State<FeedScreen> {
         },
         builder: (controller) => Obx(() => feedScreenController.endUser.value
             ? Center(
-                child: Text('No users Found'),
+                child: Text(
+                  'No users Found',
+                  style: TextStyle(fontSize: 20),
+                ),
               )
             : ListView.builder(
                 controller: feedScreenController.scrollController,
@@ -35,6 +38,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 scrollDirection: Axis.horizontal,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  
                   index = feedScreenController.currentIndex.value;
                   return Stack(
                     children: [

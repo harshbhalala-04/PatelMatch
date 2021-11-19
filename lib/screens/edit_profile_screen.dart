@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat/controllers/authController.dart';
 import 'package:chat/controllers/global_controller.dart';
-import 'package:chat/helper/constants.dart';
+import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/onboarding_screens/NRI_screen.dart';
 import 'package:chat/screens/onboarding_screens/birth_date_screen.dart';
+import 'package:chat/screens/onboarding_screens/city_screen.dart';
 import 'package:chat/screens/onboarding_screens/gotra_screen.dart';
 import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
@@ -28,7 +30,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -42,14 +46,58 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   List<dynamic> tempImage = [];
 
+  TextEditingController _passwordController = new TextEditingController();
+
   int? imgCount;
   var imgUrls = ['', '', '', '', '', ''];
 
   bool isLoading = false;
   String? imgUrl;
 
+  String? profileUrl = '';
   File? _pickedImageVar;
   var newIndex;
+
+  /// Crop Image
+  Future cropImage(File pickedImage) async {
+    try {
+      File? croppedFile = await ImageCropper.cropImage(
+          sourcePath: pickedImage.path,
+          aspectRatioPresets: Platform.isAndroid
+              ? [
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9
+                ]
+              : [
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.square,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio5x3,
+                  CropAspectRatioPreset.ratio5x4,
+                  CropAspectRatioPreset.ratio7x5,
+                  CropAspectRatioPreset.ratio16x9
+                ],
+          androidUiSettings: AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              lockAspectRatio: false),
+          compressQuality: 50,
+          iosUiSettings: IOSUiSettings(
+            title: 'Crop Image',
+          ));
+      if (croppedFile != null) {
+        pickedImage = croppedFile;
+      }
+      return pickedImage;
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _pickImage(int index, String cntInfo) async {
     ImageSource? imageSource = await showDialog<ImageSource>(
@@ -71,81 +119,83 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
 
-    setState(() {
-      isLoading = true;
-    });
-
-    final _picker = ImagePicker();
-
-    final PickedFile? pickedImageFile = await _picker.getImage(
-      source: imageSource!,
-      imageQuality: 25,
-    );
-
-    if (pickedImageFile == null) {
+    if (imageSource != null) {
       setState(() {
-        isLoading = false;
+        isLoading = true;
       });
-    } else {
-      final File file = File(pickedImageFile.path);
+      final _picker = ImagePicker();
 
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final User? user = auth.currentUser;
+      final PickedFile? pickedImageFile = await _picker.getImage(
+        source: imageSource,
+        imageQuality: 25,
+      );
+      if (pickedImageFile == null) {
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        File file = File(pickedImageFile.path);
+        file = await cropImage(file);
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        final User? user = auth.currentUser;
 
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('user_image')
-          .child(user!.uid + 'folder')
-          .child(user.uid + index.toString() + '.jpg');
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child(user!.uid + 'folder')
+            .child(user.uid + index.toString() + '.jpg');
 
-      await ref.putFile(file).whenComplete(() => print('Image Upload'));
+        await ref.putFile(file).whenComplete(() => print('Image Upload'));
 
-      final url = await ref.getDownloadURL();
+        final url = await ref.getDownloadURL();
 
-      if (index == 0) {
-        Constants.userImage = url;
-      }
-      List<String> listUrl = [];
-      listUrl.add(url);
-      int flag = 0;
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((value) {
-        int prevImgCount = value['imgCount'];
-        for (int i = 0; i < prevImgCount; i++) {
-          if (index == i) {
-            value['imgUrls'][index] = url;
-
-            flag = 1;
-          }
+        if (index == 0) {
+          Get.find<GlobalController>().currentAppuser.value.imgUrl = url;
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(user.uid)
+              .update({"imgUrl": url});
         }
-      });
+        List<String> listUrl = [];
+        List<dynamic> prevImags = [];
+        listUrl.add(url);
+        int flag = 0;
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((value) {
+          prevImags = value.data()!['imgUrls'];
+        });
 
-      if (flag == 0) {
+        if (cntInfo == "NotIncCount") {
+          prevImags[index] = url;
+        } else {
+          prevImags.add(url);
+        }
+
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .update({'imgUrls': prevImags});
+
+        if (cntInfo == "IncCount") {
+          imgCount = (imgCount!) + 1;
+        }
+
         FirebaseFirestore.instance
             .collection("users")
             .doc(user.uid)
-            .update({'imgUrls': FieldValue.arrayUnion(listUrl)});
+            .update({'imgCount': imgCount});
+
+        setState(() {
+          _pickedImageVar = file;
+          print(_pickedImageVar);
+          imgUrls[index] = url;
+          // newIndex = index;
+          isLoading = false;
+        });
       }
-
-      if (cntInfo == "IncCount") {
-        imgCount = (imgCount!) + 1;
-      }
-
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(user.uid)
-          .update({'imgCount': imgCount});
-
-      setState(() {
-        _pickedImageVar = file;
-        print(_pickedImageVar);
-        imgUrls[index] = url;
-        newIndex = index;
-        isLoading = false;
-      });
     }
   }
 
@@ -169,8 +219,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .then((val) {
       setState(() {
         int i;
-        print('This is total image');
-        print(imgCount);
+        // profileUrl = val['imgUrl'];
         for (i = 0; i < imgCount!; i++) {
           imgUrls[i] = val['imgUrls'][i];
           print(imgUrls[i]);
@@ -184,100 +233,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .get();
 
-  fetchUserDetails() {
-    firebase.then((val) {
-      final map = val.data();
-
-      setState(() {
-        Constants.myName = val['username'];
-        if (map!.containsKey('birthDate')) {
-          Constants.birthdate = val['birthDate'];
-        }
-
-        if (map.containsKey('gender')) {
-          Constants.gender = val['gender'];
-        }
-
-        if (map.containsKey('community')) {
-          Constants.community = val['community'];
-        }
-
-        if (map.containsKey('height')) {
-          Constants.height = val['height'];
-        }
-
-        if (map.containsKey('workout')) {
-          Constants.workout = val['workout'];
-        }
-
-        if (map.containsKey('salary')) {
-          Constants.salary = val['salary'];
-        }
-
-        if (map.containsKey('drink')) {
-          Constants.drink = val['drink'];
-        }
-
-        if (map.containsKey('smoke')) {
-          Constants.smoke = val['smoke'];
-        }
-
-        if (map.containsKey('zodiacSign')) {
-          Constants.zodiacSign = val['zodiacSign'];
-        }
-
-        if (map.containsKey('movie')) {
-          Constants.movies = val['movie'];
-        }
-
-        if (map.containsKey('politics')) {
-          Constants.politics = val['politics'];
-        }
-        if (map.containsKey('education')) {
-          Constants.education = val['education'];
-        }
-
-        if (map.containsKey('worklife')) {
-          Constants.worklife = val['worklife'];
-        }
-      });
-
-      // print(Constants.myName);
-      // print(Constants.birthdate);
-      // print(Constants.gender);
-      // print(Constants.community);
-      // print(Constants.height);
-      // print(Constants.workout);
-      // print(Constants.salary);
-      // print(Constants.drink);
-      // print(Constants.smoke);
-      // print(Constants.zodiacSign);
-      //print(Constants.politics);
-      //print(Constants.movies);
-    });
-  }
-
-  fetchUserName() {
-    print('This is username by updating!');
-    firebase.then((val) {
-      setState(() {
-        Constants.myName = val['username'];
-        print(Constants.myName);
-      });
-    });
-  }
-
   @override
   void initState() {
     fetchUserImage();
-    fetchUserDetails();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    print("This is profile url: ${imgUrls[0]}");
+    print("This is 2nd img:  ${imgUrls[1]}");
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -580,7 +546,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                       subtitle: Text(
-                        Constants.gender,
+                        Get.find<GlobalController>()
+                            .currentAppuser
+                            .value
+                            .gender!,
                         style: TextStyle(fontSize: 18, color: Colors.black87),
                       ),
                       trailing: Icon(
@@ -602,10 +571,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         'Birthdate',
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
-                      subtitle: Constants.birthdate == "--"
+                      subtitle: Get.find<GlobalController>()
+                                  .currentAppuser
+                                  .value
+                                  .birthDate ==
+                              "--"
                           ? Text('')
                           : Text(
-                              Constants.birthdate,
+                              Get.find<GlobalController>()
+                                  .currentAppuser
+                                  .value
+                                  .birthDate!,
                               style: TextStyle(
                                   fontSize: 18, color: Colors.black87),
                             ),
@@ -742,9 +718,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               InkWell(
                 child: FilterScreenCard(
                   title: 'Current City of Residence',
-                  subtitle: ' ',
+                  subtitle: Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .currentCity ==
+                          null
+                      ? ' '
+                      : Get.find<GlobalController>()
+                          .currentAppuser
+                          .value
+                          .currentCity!,
                 ),
-                onTap: () {},
+                onTap: () {
+                  Get.off(CityScreen(fromProfile: true));
+                },
               ),
               InkWell(
                 child: FilterScreenCard(
@@ -1208,6 +1195,115 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             .motherAvgAnnualIncome!,
                   ));
                 },
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.dialog(
+                    AlertDialog(
+                      content: Text(
+                          "Do you want to delete your profile permanently?",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          )),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            'No',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                            Get.dialog(AlertDialog(
+                              content:
+                                  // Text('Please Enter Your password'),
+                                  TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Password',
+                                ),
+                                controller: _passwordController,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      if (_passwordController.text.isEmpty) {
+                                        Get.snackbar(
+                                            "Please Enter password", "",
+                                            backgroundColor:
+                                                Color.fromRGBO(255, 85, 115, 1),
+                                            colorText: Colors.white);
+                                        return;
+                                      }
+                                      Get.find<AuthController>().deleteUser(
+                                          Get.find<GlobalController>()
+                                              .currentAppuser
+                                              .value
+                                              .email!,
+                                          _passwordController.text);
+                                      // Get.off(AuthScreen());
+                                    },
+                                    child: Text(
+                                      'Submit',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ))
+                              ],
+                            ));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              primary: Color.fromRGBO(255, 85, 115, 1)),
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/delete.svg'),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Delete my profile',
+                        style: TextStyle(
+                            color: Color.fromRGBO(255, 85, 115, 1),
+                            fontSize: 16),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

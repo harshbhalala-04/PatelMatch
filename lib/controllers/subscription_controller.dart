@@ -49,8 +49,6 @@ class SubscriptionController extends GetxController {
   final bouqueUpload = {}.obs;
   final messageUpload = {}.obs;
 
-  
-
   final currentItemMessage = true.obs;
 
   fetchPrices() async {
@@ -126,8 +124,8 @@ class SubscriptionController extends GetxController {
       "name": "Messaging",
       "description": purchaseItem["messageDuration"],
       "prefill": {
-        "contact": "6354969597",
-        "email": "harsh@gmail.com",
+        "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
+        "email": Get.find<GlobalController>().currentAppuser.value.email,
       },
       "external": {
         "wallets": ["paytm"]
@@ -150,9 +148,6 @@ class SubscriptionController extends GetxController {
       "prefill": {
         "contact": "",
         "email": "",
-      },
-      "external": {
-        "wallets": ["paytm"]
       },
       "theme": {"color": "#FF5573"}
     };
@@ -180,7 +175,7 @@ class SubscriptionController extends GetxController {
       oneMonthSelected.value = false;
       oneYearSelected.value = false;
       isMessageSelected.value = false;
-      
+
       DataBaseMethods().addMessaging(messageUpload.value);
     } else {
       bouqueUpload['payment_id'] = response.paymentId;
@@ -203,7 +198,5 @@ class SubscriptionController extends GetxController {
         fontSize: 16.0);
   }
 
-  void handlerExternalWallet(ExternalWalletResponse response) {
-   
-  }
+  void handlerExternalWallet(ExternalWalletResponse response) {}
 }

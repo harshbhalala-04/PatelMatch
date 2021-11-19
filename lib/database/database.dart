@@ -6,7 +6,6 @@ import 'package:chat/helper/user_modal.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,6 +39,12 @@ class DataBaseMethods {
     }
 
     return username;
+  }
+
+  ///Delete User Data
+
+  deleteuser() async {
+    await firestore.collection("users").doc(user!.uid).delete();
   }
 
   ///Create Chat room if not exists.
@@ -177,6 +182,15 @@ class DataBaseMethods {
     }
   }
 
+  /// Add Report
+  addReport(String otherUid, String reportReason) {
+    firestore.collection("REPORT_USERS").doc().set({
+      "reportBy": otherUid,
+      "reportTo": user!.uid,
+      "reportReason": reportReason,
+    });
+  }
+
   removeExcludeUser(String otherUid) async {
     List<String> otherUidList = [];
     otherUidList.add(otherUid);
@@ -200,7 +214,7 @@ class DataBaseMethods {
       await firestore.collection("users").doc(user!.uid).get().then((val) {
         Map<String, dynamic> tmpMap = val.data()!;
         bookayAvailable = tmpMap['bookayAvailable'];
-        print('In try : $bookayAvailable');
+
         if (val.data()!.containsKey('declineUsers')) {
           List<dynamic> declineUsers = val['declineUsers'];
           for (int i = 0; i < declineUsers.length; i++) {
@@ -215,14 +229,19 @@ class DataBaseMethods {
 
       int remaningBookay = bookayAvailable - bookay;
 
-      print('This is remaining bookay : $remaningBookay');
-
       if (remaningBookay < 0) {
         remaningBookay = 0;
       }
 
+      List<dynamic> myFriendList = [];
+      List<dynamic> otherFriendList = [];
+
       await firestore.collection("users").doc(user!.uid).get().then((val) {
         myName = val['username'];
+        myFriendList = val.data()!['friendRequest'];
+      });
+      await firestore.collection("users").doc(otherUserId).get().then((val) {
+        otherFriendList = val.data()!['friendRequest'];
       });
 
       String? myUid = user!.uid;
@@ -244,24 +263,43 @@ class DataBaseMethods {
           'recieved': myName,
           'sent': '',
           'bookay': bookay,
-          'image': Constants.userImage,
+          'image': Get.find<GlobalController>().currentAppuser.value.imgUrl,
           'id': myUid,
         }
       ];
 
-      Constants.userProfileUrls.add(otherUserImageUrl);
-      // Constants.userProfileEmails.add(otherEmail);
+      int flag1 = 0;
+      int flag2 = 0;
 
-      await firestore.collection("users").doc(myUid).update({
-        'friendRequest': FieldValue.arrayUnion(myMap),
-        'latestConnectionSentUid': otherUserId,
-        'bookayAvailable': remaningBookay,
-      });
+      if (myFriendList.length != 0) {
+        for (int i = 0; i < myFriendList.length; i++) {
+          if (myFriendList[i]['id'] == otherUserId) {
+            flag1 = 1;
+          }
+        }
+      }
 
-      await firestore
-          .collection("users")
-          .doc(otherUserId)
-          .update({'friendRequest': FieldValue.arrayUnion(otherMap)});
+      if (otherFriendList.length != 0) {
+        for (int i = 0; i < otherFriendList.length; i++) {
+          if (otherFriendList[i]['id'] == myUid) {
+            flag2 = 1;
+          }
+        }
+      }
+
+      if (flag1 == 0) {
+        await firestore.collection("users").doc(myUid).update({
+          'friendRequest': FieldValue.arrayUnion(myMap),
+          'latestConnectionSentUid': otherUserId,
+          'bookayAvailable': remaningBookay,
+        });
+      }
+      if (flag2 == 0) {
+        firestore
+            .collection("users")
+            .doc(otherUserId)
+            .update({'friendRequest': FieldValue.arrayUnion(otherMap)});
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -373,7 +411,7 @@ class DataBaseMethods {
   }
 
   addUsername(String username) async {
-    Constants.myName = username;
+    // Constants.myName = username;
     try {
       firestore
           .collection("users")
@@ -808,7 +846,8 @@ class DataBaseMethods {
   }
 
   getChatRooms() async {
-    String myName = Constants.username;
+    // String myName = Constants.username;
+    String myName = Get.find<GlobalController>().currentAppuser.value.username!;
     try {
       return firestore
           .collection("chatroom")
@@ -841,20 +880,20 @@ class DataBaseMethods {
     }
   }
 
-  getUserAllImages() {
-    try {
-      firestore.collection("users").doc(user!.uid).get().then((val) {
-        List<dynamic> imgUrls = val['imgUrls'];
-        for (int i = 0; i < imgCount; i++) {
-          print('This is' + i.toString() + 'time loop running!');
-          Constants.userAllImage.add(imgUrls[i]);
-          print(val[i].toString());
-        }
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // getUserAllImages() {
+  //   try {
+  //     firestore.collection("users").doc(user!.uid).get().then((val) {
+  //       List<dynamic> imgUrls = val['imgUrls'];
+  //       for (int i = 0; i < imgCount; i++) {
+  //         print('This is' + i.toString() + 'time loop running!');
+  //         // Constants.userAllImage.add(imgUrls[i]);
+  //         print(val[i].toString());
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   updateUserName(String name) {
     try {
@@ -880,12 +919,12 @@ class DataBaseMethods {
     }
   }
 
-  getUserByEmailId() async {
-    Constants.myName =
-        Get.find<GlobalController>().currentAppuser.value.username!;
-    Constants.userImage =
-        Get.find<GlobalController>().currentAppuser.value.imgUrl!;
-  }
+  // getUserByEmailId() async {
+  //   Constants.myName =
+  //       Get.find<GlobalController>().currentAppuser.value.username!;
+  //   Constants.userImage =
+  //       Get.find<GlobalController>().currentAppuser.value.imgUrl!;
+  // }
 
   getUserInfo(String uid) async {
     try {
@@ -932,7 +971,7 @@ class DataBaseMethods {
               .collection("users")
               .doc(user!.uid)
               .update({"imgUrl": url});
-          Constants.userImage = url;
+          // Constants.userImage = url;
         }
         final SharedPreferences sharedPreferences =
             await SharedPreferences.getInstance();

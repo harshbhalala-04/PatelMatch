@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat/controllers/authController.dart';
-import 'package:chat/helper/constants.dart';
+import 'package:chat/global.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 
@@ -78,6 +78,7 @@ String? nri;
 bool? answer;
 bool? loginState;
 int flag = 0;
+int fnWorks = 0;
 
 class _MyAppState extends State<MyApp> {
   String path = '';
@@ -89,7 +90,7 @@ class _MyAppState extends State<MyApp> {
     AwesomeNotifications().actionStream.listen((receivedNotification) async {
       await handleNotificationRouting(message: receivedNotification.payload!);
     });
-    getValidationData();
+    // getValidationData();
 
     super.initState();
   }
@@ -97,7 +98,7 @@ class _MyAppState extends State<MyApp> {
   Future getValidationData() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    print("Future : ${sharedPreferences.getBool('answers')}");
+    // print("Future : ${sharedPreferences.getBool('answers')}");
 
     setState(() {
       loginState = sharedPreferences.getBool('login');
@@ -127,7 +128,7 @@ class _MyAppState extends State<MyApp> {
     if (deepLink != null) {
       uid = deepLink.path.substring(1);
 
-      Get.to(SingleUserProfile(uid: uid));
+      Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
     }
 
     FirebaseDynamicLinks.instance.onLink(
@@ -137,7 +138,10 @@ class _MyAppState extends State<MyApp> {
       if (deepLink != null) {
         uid = deepLink.path.substring(1);
 
-        Get.to(SingleUserProfile(uid: uid));
+        Get.to(SingleUserProfile(
+          uid: uid,
+          fromDynamic: true,
+        ));
       }
     }, onError: (OnLinkErrorException e) async {
       print(e.message);
@@ -167,51 +171,40 @@ class _MyAppState extends State<MyApp> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, userSnapshot) {
           if (userSnapshot.hasData) {
-            if (flag == 0) {
-              return CircularProgressIndicator();
+            if (isSignup) {
+              return ProfileCreatedByScreen(fromProfile: false,);
             } else {
-              if (loginState == null) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (loginState!) {
-                if (Get.find<AuthController>().userNri == null) {
-                  return ProfileCreatedByScreen(fromProfile: false);
-                } else {
-                  return CustomTabBar();
-                }
-              } else if (answer == null || answer == false) {
-                if (profileCreatedBy == null) {
-                  return ProfileCreatedByScreen(fromProfile: false);
-                } else if (samaj == null) {
-                  return SamajScreen(fromProfile: false);
-                } else if (willingToMarryFrom == null) {
-                  return WillingToMarryScreen();
-                } else if (fullName == null) {
-                  return UserNameScreen(
-                    relation: '',
-                    fromProfile: false,
-                  );
-                } else if (photo == null) {
-                  return ImagePickerScreen();
-                } else if (dob == null) {
-                  return BirthDateScreen(fromProfile: false);
-                } else if (gender == null) {
-                  return GenderScreen(fromProfile: false);
-                } else if (weight == null) {
-                  return WeightScreen(fromProfile: false);
-                } else if (height == null) {
-                  return HeightScreen(fromProfile: false);
-                } else if (handicapped == null) {
-                  return HandicappedScreen(fromProfile: false);
-                } else if (maritalStatus == null) {
-                  return MaritalScreen(fromProfile: false);
-                } else {
-                  return NRIScreen(fromProfile: false);
-                }
-              } else {
-                return CustomTabBar();
-              }
+              return CustomTabBar();
+              // if (answer == null || answer == false) {
+              //   print("On boarding screens");
+              //   if (profileCreatedBy == null) {
+              //     return ProfileCreatedByScreen(fromProfile: false);
+              //   } else if (samaj == null) {
+              //     return SamajScreen(fromProfile: false);
+              //   } else if (willingToMarryFrom == null) {
+              //     return WillingToMarryScreen();
+              //   } else if (fullName == null) {
+              //     return UserNameScreen(relation: '', fromProfile: false);
+              //   } else if (photo == null) {
+              //     return ImagePickerScreen();
+              //   } else if (dob == null) {
+              //     return BirthDateScreen(fromProfile: false);
+              //   } else if (gender == null) {
+              //     return GenderScreen(fromProfile: false);
+              //   } else if (weight == null) {
+              //     return WeightScreen(fromProfile: false);
+              //   } else if (height == null) {
+              //     return HeightScreen(fromProfile: false);
+              //   } else if (handicapped == null) {
+              //     return HandicappedScreen(fromProfile: false);
+              //   } else if (maritalStatus == null) {
+              //     return MaritalScreen(fromProfile: false);
+              //   } else {
+              //     return NRIScreen(fromProfile: false);
+              //   }
+              // } else {
+              //   return CustomTabBar();
+              // }
             }
           } else {
             return AuthScreen();

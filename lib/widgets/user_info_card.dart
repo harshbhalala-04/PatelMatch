@@ -18,11 +18,11 @@ class UserInfoCard extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   title,
-                  style: TextStyle(color: Colors.black54, fontSize: 10),
+                  style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text(
                   subTitle,
-                  style: TextStyle(color: Colors.black87, fontSize: 14),
+                  style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
             ),

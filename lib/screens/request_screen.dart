@@ -28,15 +28,14 @@ class _RequestScreenState extends State<RequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-        body: Obx(() => requestScreenController.isLoading.value
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Obx(() => SingleUserRequest(
-                profiles: requestScreenController.profiles.value,
-                specialProfiles:
-                    requestScreenController.specialProfiles.value))));
+    return  Scaffold(
+            body: Obx(() => requestScreenController.isLoading.value
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Obx(() => SingleUserRequest(
+                    profiles: requestScreenController.profiles.value,
+                    specialProfiles:
+                        requestScreenController.specialProfiles.value))));
   }
 }

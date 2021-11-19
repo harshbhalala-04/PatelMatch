@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:chat/controllers/filter_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/global.dart';
-import 'package:chat/helper/constants.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +13,6 @@ import 'package:quiver/iterables.dart';
 
 class FeedScreenController extends GetxController {
   final globalController = Get.put(GlobalController());
-  final temp = 0.obs;
 
   final userListLength = 0.obs;
   int currentPageIndex = 0;
@@ -72,10 +70,12 @@ class FeedScreenController extends GetxController {
     }
   }
 
-  int itemLimit = 5;
+  int itemLimit = 10;
   bool hasMoreData = true;
+  final count = 0.obs;
 
   getUsers() async {
+    
     final stopwatch = Stopwatch()..start();
     List<UserModel> tmpUsersList = <UserModel>[];
 
@@ -84,8 +84,6 @@ class FeedScreenController extends GetxController {
       gender = tmpMap['gender'];
       messageOpenTill.value = tmpMap['messageOpenTill'];
       freeTrial.value = tmpMap['freeTrial'];
-
-      // isFilterApplied.value = tmpMap['isFilterApplied'];
     });
     Query<Map<String, dynamic>> query;
 
@@ -127,10 +125,14 @@ class FeedScreenController extends GetxController {
           if (snapshot.docs.length < itemLimit) {
             hasMoreData = false;
           }
+        } else {
+          hasMoreData = false;
         }
       });
     }
+
     usersList.addAll(tmpUsersList);
+    
     if (usersList.length < 5 && hasMoreData) {
       getUsers();
     }
@@ -139,6 +141,14 @@ class FeedScreenController extends GetxController {
       return;
     }
 
+    if (usersList.length == 0 && fnTerminate == 0 && !hasMoreData) {
+      endUser.value = true;
+      return;
+    }
+
+    for (int i = 0; i < usersList.length; i++) {
+      print(usersList[i].username);
+    }
     isLoadingMoreData = false;
     fnTerminate = 1;
     update();

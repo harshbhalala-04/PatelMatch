@@ -57,6 +57,7 @@ dependencies:
   firebase_dynamic_links: ^3.0.1
   flutter_share: ^2.0.0
   quiver: ^3.0.1+1
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,7 @@ flutter:
       - assets/bokay.png
       - assets/₹.svg
       - assets/clock asset.svg
+      - assets/delete.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

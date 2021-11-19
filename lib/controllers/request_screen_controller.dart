@@ -57,20 +57,17 @@ class RequestScreenController extends GetxController {
       }
     });
 
-    print('Here I fetch special Profiles from controller');
-    print(specialProfiles);
     profiles.sort((a, b) => b["time"].compareTo(a["time"]));
     specialProfiles.sort((a, b) => b["bookay"].compareTo(a["bookay"]));
+
     isLoading.toggle();
   }
-
-  
 
   @override
   void onInit() {
     // TODO: implement onInit
     fetchUserRequest();
-    
+
     super.onInit();
   }
 }

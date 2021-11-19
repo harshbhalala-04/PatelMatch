@@ -1,7 +1,6 @@
 import 'package:chat/controllers/global_controller.dart';
 import 'package:get/get.dart';
 
-import '../../helper/constants.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/new_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -141,8 +141,7 @@ class ImagePickerController extends GetxController {
         maxHeight: 1400,
       );
 
-      print(pickedImageFile.toString());
-      print('This is picked image file');
+      
 
       if (pickedImageFile == null) {
         isLoading.toggle();

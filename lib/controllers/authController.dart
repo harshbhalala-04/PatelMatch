@@ -1,10 +1,14 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
-import 'package:chat/helper/constants.dart';
+import 'package:chat/global.dart';
+import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/onboarding_screens/profile_createdBy_screen.dart';
 import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,14 +43,16 @@ class AuthController extends GetxController {
     isLogin.toggle();
   }
 
-  void createUser(String? email, String? password) async {
+  void createUser(String? email, String? password, String? phoneNo) async {
     print('This is create user function of getx');
     UserCredential userCredential;
     isLoading.toggle();
     try {
-      Constants.signUpState = true;
+      // Constants.signUpState = true;
+      isSignup = true;
       userCredential = await _auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
+      
       // final SharedPreferences sharedPreferences =
       //     await SharedPreferences.getInstance();
       // sharedPreferences.setString('email', email);
@@ -64,6 +70,7 @@ class AuthController extends GetxController {
           .set({
         'email': email,
         'freeTrial': false,
+        'phoneNo': phoneNo,
         'createdAt': Timestamp.now(),
         'uid': userCredential.user!.uid,
         'bookayAvailable': 5,
@@ -100,27 +107,31 @@ class AuthController extends GetxController {
   }
 
   void login(String? email, String? password) async {
-    print('This is login function of getx');
     isLoading.toggle();
     try {
       await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
+      // isLoginVal = true;
       userEmailId.value = email;
-      DataBaseMethods().getUserByEmailId();
+      // DataBaseMethods().getUserByEmailId();
       loginState.value = true;
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(Get.find<AuthController>().firebaseUser.value!.uid)
-          .get()
-          .then((val) {
-        userNri.value = val.data()!['userNRI'];
-        print("______________");
-        print(userNri);
-      });
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      sharedPreferences.setBool('login', true);
-      Get.off(CustomTabBar());
+      // await FirebaseFirestore.instance
+      //     .collection("users")
+      //     .doc(Get.find<AuthController>().firebaseUser.value!.uid)
+      //     .get()
+      //     .then((val) {
+      //   userNri.value = val.data()!['userNRI'];
+      //   if (userNri.value != null) {
+      //     sharedPreferences.setBool('answer', true);
+      //   }
+      // });
+
+      // sharedPreferences.setBool('login', true);
+
+      
+      // Get.off(CustomTabBar());
     } on FirebaseAuthException catch (error) {
       print(error);
       Get.snackbar("Error Logging in ", error.message!,
@@ -128,4 +139,29 @@ class AuthController extends GetxController {
     }
     isLoading.toggle();
   }
+
+  Future deleteUser(String email, String password) async {
+    try {
+      User user = await _auth.currentUser!;
+      AuthCredential credentials =
+          EmailAuthProvider.credential(email: email, password: password);
+      print(user);
+      var result = await user.reauthenticateWithCredential(credentials);
+      await DataBaseMethods().deleteuser(); // called from database class
+      await result.user!.delete();
+      Get.snackbar("Profile Deleted Successfully", "",
+          backgroundColor: Color.fromRGBO(255, 85, 115, 1),
+          colorText: Colors.white);
+      Get.off(AuthScreen());
+      return true;
+    } catch (e) {
+      Get.snackbar("Profile Couldn't Delete", e.toString(),
+          backgroundColor: Color.fromRGBO(255, 85, 115, 1),
+          colorText: Colors.white);
+      print(e.toString());
+      return null;
+    }
+  }
 }
+
+mixin FirebaseUser {}

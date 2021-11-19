@@ -139,7 +139,7 @@ class _NRIScreenState extends State<NRIScreen> {
                 if (widget.fromProfile) {
                   Get.off(EditProfileScreen());
                 } else {
-                  Get.to(CityScreen());
+                  Get.to(CityScreen(fromProfile: false,));
                 }
               },
               child: widget.fromProfile

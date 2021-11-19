@@ -1,3 +1,4 @@
+import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/user_modal.dart';
 import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/single_user_feed.dart';
@@ -5,10 +6,12 @@ import 'package:chat/widgets/feed_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SingleUserProfile extends StatefulWidget {
   final String uid;
-  SingleUserProfile({required this.uid});
+  final bool fromDynamic;
+  SingleUserProfile({required this.uid, required this.fromDynamic});
 
   @override
   _SingleUserProfileState createState() => _SingleUserProfileState();
@@ -17,6 +20,7 @@ class SingleUserProfile extends StatefulWidget {
 class _SingleUserProfileState extends State<SingleUserProfile> {
   bool isLoading = false;
   UserModel user = new UserModel();
+  final GlobalController globalController = Get.put(GlobalController());
 
   fetchUser(String uid) async {
     setState(() {
@@ -41,8 +45,14 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
     super.initState();
   }
 
+  bool buttonVisible = true;
+
   @override
   Widget build(BuildContext context) {
+    if (globalController.currentAppuser.value.uid == widget.uid) {
+      buttonVisible = false;
+    }
+
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, userSnapshot) {
@@ -66,17 +76,20 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
                             currentUser: user,
                             userImagesLength: user.imgCount!,
                             index: 0),
-                        Positioned(
-                            top: MediaQuery.of(context).size.height - 250,
-                            left: 0,
-                            right: MediaQuery.of(context).size.width - 350,
-                            child: FeedButton(
-                              fromDynamicLink: true,
-                              index: 0,
-                              otherImageUrl: user.imgUrl!,
-                              otherUserId: user.uid!,
-                              otherUsername: user.username!,
-                            ))
+                        buttonVisible
+                            ? Positioned(
+                                top: MediaQuery.of(context).size.height - 250,
+                                left: 0,
+                                right: MediaQuery.of(context).size.width - 350,
+                                child: FeedButton(
+                                  fromDynamicLink: true,
+                                  index: 0,
+                                  otherImageUrl: user.imgUrl!,
+                                  otherUserId: user.uid!,
+                                  otherUsername: user.username!,
+                                ),
+                              )
+                            : Container(),
                       ],
                     ));
         } else {

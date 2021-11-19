@@ -1,4 +1,3 @@
-import 'package:chat/helper/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class ScreenController extends GetxController {
     final firestore = FirebaseFirestore.instance;
     print('Init State');
     firestore.collection("users").doc(user!.uid).get().then((val) {
-      Constants.userImage = val['imgUrls'][0];
+      // Constants.userImage = val['imgUrls'][0];
       userProfileUrl.value = val['imgUrls'][0];
     });
   }
