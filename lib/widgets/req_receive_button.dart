@@ -1,0 +1,110 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
+import 'package:chat/controllers/global_controller.dart';
+import 'package:chat/controllers/request_screen_controller.dart';
+import 'package:chat/controllers/show_profile_controller.dart';
+import 'package:chat/database/database.dart';
+import 'package:chat/helper/user_modal.dart';
+import 'package:chat/screens/feed_screen.dart';
+import 'package:chat/widgets/accept_dialogue.dart';
+import 'package:chat/widgets/accept_dialogue_from_feed.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ReqRecieveButton extends StatelessWidget {
+  final String uid;
+  final String userProfileUrl;
+  final int profileType;
+  final UserModel user;
+
+  ReqRecieveButton(
+      {required this.uid,
+      required this.userProfileUrl,
+      required this.profileType,
+      required this.user});
+
+  final requestScreenController = Get.put(RequestScreenController());
+  final showProfileController = Get.put(ShowProfileController());
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 70,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 15,
+            ),
+            Container(
+              width: 130,
+              height: 45,
+              child: FloatingActionButton(
+                heroTag: 'DeclineButton2',
+                onPressed: () {
+                  DataBaseMethods().removeExcludeUser(uid);
+                  // requestScreenController.removeUser(uid, profileType);
+                  Get.find<FeedScreenController>().removeUserFromFeed(uid);
+                  Get.back();
+                  DataBaseMethods().removeUserFromFriendRequest(uid,
+                      Get.find<GlobalController>().currentAppuser.value.uid!);
+                },
+                child: Text(
+                  'Decline',
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromRGBO(184, 184, 184, 1)),
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                backgroundColor: Colors.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              width: 130,
+              height: 45,
+              child: FloatingActionButton(
+                heroTag: 'ConnectButton2',
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AcceptDialogeFromFeed(
+                        otherUser: user,
+                      );
+                    },
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                child: Ink(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(255, 71, 104, 1),
+                        Color.fromRGBO(255, 115, 140, 1)
+                      ]),
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Container(
+                    width: 130,
+                    height: 45,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Accept',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}

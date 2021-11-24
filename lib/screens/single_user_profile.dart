@@ -52,7 +52,6 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
     if (globalController.currentAppuser.value.uid == widget.uid) {
       buttonVisible = false;
     }
-
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, userSnapshot) {
@@ -65,6 +64,13 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
                 ),
                 centerTitle: true,
                 backgroundColor: Colors.white,
+                leading: widget.fromDynamic
+                    ? Container()
+                    : IconButton(
+                        icon:
+                            Icon(Icons.arrow_back_ios_new, color: Colors.black),
+                        onPressed: () => Get.back(),
+                      ),
               ),
               body: isLoading
                   ? Center(

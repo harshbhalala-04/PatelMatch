@@ -167,21 +167,14 @@ class BookayDialogue extends StatelessWidget {
                                 "Buy More Bouquets",
                                 snackPosition: SnackPosition.TOP);
                           } else {
-                            if (index + 1 ==
-                                feedScreenController.usersList.length) {
-                              feedScreenController.endUser.value = true;
-                            }
-                            Get.find<FeedScreenController>().currentIndex.value += 1;
                             Get.find<FeedScreenController>()
-                                .scrollController
-                                .scrollToIndex(index + 1,
-                                    preferPosition: AutoScrollPosition.begin);
+                                .removeUserFromFeed(otherUserId);
                             Get.find<GlobalController>()
                                 .currentAppuser
                                 .value
                                 .excludedUsers!
                                 .add(otherUserId);
-                            
+
                             DateTime time = DateTime.now(); //DateTime
                             Timestamp myTimeStamp =
                                 Timestamp.fromDate(time); //To TimeStamp
@@ -194,6 +187,7 @@ class BookayDialogue extends StatelessWidget {
                             Get.find<SentScreenController>()
                                 .sentProfiles
                                 .sort((a, b) => b["time"].compareTo(a["time"]));
+
                             DataBaseMethods().addExcludeUser(otherUserId, true);
                             print("Here exclue method complete");
                             DataBaseMethods().addRequestMethod(
@@ -206,6 +200,7 @@ class BookayDialogue extends StatelessWidget {
                               Get.offAll(CustomTabBar());
                             } else {
                               Navigator.of(context).pop();
+                              Get.back();
                             }
                           }
                         },

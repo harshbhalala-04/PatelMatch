@@ -18,7 +18,7 @@ class FeedScreenController extends GetxController {
   int currentPageIndex = 0;
   String gender = '';
   int tmp = 0;
-  List<UserModel> usersList = <UserModel>[];
+  List<UserModel> usersList = <UserModel>[].obs;
   final AutoScrollController scrollController = AutoScrollController();
 
   final isFilterApplied = false.obs;
@@ -44,21 +44,6 @@ class FeedScreenController extends GetxController {
 
   final currentIndex = 0.obs;
 
-  List<String> rashi = [
-    "Aries",
-    "Taurus",
-    "Gemini",
-    "Cancer",
-    "Leo",
-    "Virgo",
-    "Libra",
-    "Scorpio",
-    "Saggitarius",
-    "Capricorn",
-    "Aquarius",
-    "Pisces"
-  ];
-
   void scrollListener() {
     if (scrollController.offset >=
             scrollController.position.maxScrollExtent - 100 &&
@@ -70,16 +55,20 @@ class FeedScreenController extends GetxController {
     }
   }
 
+  void removeUserFromFeed(String uid) {
+    usersList.removeWhere((profile) => profile.uid == uid);
+  }
+
   int itemLimit = 10;
   bool hasMoreData = true;
   final count = 0.obs;
 
   getUsers() async {
-    
     final stopwatch = Stopwatch()..start();
     List<UserModel> tmpUsersList = <UserModel>[];
 
     await firestore.collection("users").doc(user!.uid).get().then((val) {
+      print(val.data());
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
       messageOpenTill.value = tmpMap['messageOpenTill'];
@@ -132,7 +121,7 @@ class FeedScreenController extends GetxController {
     }
 
     usersList.addAll(tmpUsersList);
-    
+
     if (usersList.length < 5 && hasMoreData) {
       getUsers();
     }
@@ -158,6 +147,7 @@ class FeedScreenController extends GetxController {
   @override
   void onInit() {
     scrollController.addListener(scrollListener);
+    // getUsers();
     super.onInit();
   }
 

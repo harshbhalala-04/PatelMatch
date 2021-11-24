@@ -1,29 +1,19 @@
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
-import 'package:chat/controllers/request_screen_controller.dart';
-import 'package:chat/controllers/show_profile_controller.dart';
+import 'package:chat/controllers/req_receive_controller.dart';
 import 'package:chat/database/database.dart';
+import 'package:chat/helper/user_modal.dart';
 import 'package:chat/widgets/build_stacked_images.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AcceptDialogue extends StatelessWidget {
-  final String userProfile;
-  final String otherUserProfile;
-  final String uid;
-  final int profileType;
+class AcceptDialogeFromFeed extends StatelessWidget {
+  final UserModel otherUser;
+  AcceptDialogeFromFeed({required this.otherUser});
 
-  AcceptDialogue({
-    required this.userProfile,
-    required this.otherUserProfile,
-    required this.uid,
-    required this.profileType,
-  });
+  TextEditingController textEditingController = TextEditingController();
+  final reqReceieveController = Get.put(ReqReceiveController());
 
-  TextEditingController textEditingController = new TextEditingController();
-  final requestScreenController = Get.put(RequestScreenController());
-  final showProfileScreenController = Get.put(ShowProfileController());
-  String myUsername =
-      Get.find<GlobalController>().currentAppuser.value.username!;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,22 +74,32 @@ class AcceptDialogue extends StatelessWidget {
                       // requestScreenController.removeUser(uid, profileType);
                       Get.back();
                       Get.back();
-                      showProfileScreenController.createChatRoom();
-                      showProfileScreenController
-                          .addMessage(textEditingController.text);
+                      reqReceieveController.createChatRoom(otherUser);
+                      reqReceieveController
+                          .addMessage(textEditingController.text, otherUser);
+                      // showProfileScreenController.createChatRoom();
+                      // showProfileScreenController
+                      //     .addMessage(textEditingController.text);
                       DataBaseMethods().removeUserFromFriendRequest(
-                          showProfileScreenController.currentUser.value.uid!,
+                          otherUser.uid!,
                           Get.find<GlobalController>()
                               .currentAppuser
                               .value
                               .uid!);
+                      Get.find<FeedScreenController>()
+                          .removeUserFromFeed(otherUser.uid!);
                       DataBaseMethods().addUserToMatch(
-                          myUsername,
-                          userProfile,
-                          showProfileScreenController
-                              .currentUser.value.username!,
-                          otherUserProfile,
-                          showProfileScreenController.currentUser.value.uid!);
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .username!,
+                          Get.find<GlobalController>()
+                              .currentAppuser
+                              .value
+                              .imgUrl!,
+                          otherUser.username!,
+                          otherUser.imgUrl!,
+                          otherUser.uid!);
                     }
                   },
                   child: Text(
@@ -132,9 +132,12 @@ class AcceptDialogue extends StatelessWidget {
   }) {
     final double size = 70;
     final double xShift = 20;
-    final urlImages = [userProfile, otherUserProfile];
+    final urlImages = [
+      Get.find<GlobalController>().currentAppuser.value.imgUrl,
+      otherUser.imgUrl
+    ];
 
-    final items = urlImages.map((urlImage) => buildImage(urlImage)).toList();
+    final items = urlImages.map((urlImage) => buildImage(urlImage!)).toList();
 
     return StackedProfiles(
       direction: direction,

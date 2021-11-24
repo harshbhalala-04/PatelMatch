@@ -82,21 +82,12 @@ class FeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'DeclineButton1',
                 onPressed: () {
-                  if (index + 1 == feedScreenController.usersList.length) {
-                    feedScreenController.endUser.value = true;
-                  }
-                 
-                  Get.find<FeedScreenController>().currentIndex.value += 1;
-                  
                   Get.find<FeedScreenController>()
-                      .scrollController
-                      .scrollToIndex(
-                        index + 1,
-                        preferPosition: AutoScrollPosition.begin,
-                      );
+                      .removeUserFromFeed(otherUserId);
                   if (fromDynamicLink) {
                     Get.offAll(CustomTabBar());
                   }
+                  Get.back();
                   Get.find<GlobalController>()
                       .currentAppuser
                       .value
@@ -123,16 +114,8 @@ class FeedButton extends StatelessWidget {
               child: FloatingActionButton(
                 heroTag: 'ConnectButton1',
                 onPressed: () {
-                  if (index + 1 == feedScreenController.usersList.length) {
-                    feedScreenController.endUser.value = true;
-                  }
-                  
-                  Get.find<FeedScreenController>().currentIndex.value += 1;
-
                   Get.find<FeedScreenController>()
-                      .scrollController
-                      .scrollToIndex(index + 1,
-                          preferPosition: AutoScrollPosition.begin);
+                      .removeUserFromFeed(otherUserId);
                   Get.find<GlobalController>()
                       .currentAppuser
                       .value
@@ -152,6 +135,7 @@ class FeedButton extends StatelessWidget {
                   Get.find<SentScreenController>()
                       .sentProfiles
                       .sort((a, b) => b["time"].compareTo(a["time"]));
+                  Get.back();
                   DataBaseMethods().addExcludeUser(otherUserId, true);
                   DataBaseMethods().addRequestMethod(
                       globalController.currentAppuser.value.username!,

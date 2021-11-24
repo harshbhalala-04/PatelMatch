@@ -119,6 +119,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
 
+    print("Image source: $imageSource");
+
     if (imageSource != null) {
       setState(() {
         isLoading = true;
@@ -244,6 +246,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     print("This is profile url: ${imgUrls[0]}");
     print("This is 2nd img:  ${imgUrls[1]}");
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(

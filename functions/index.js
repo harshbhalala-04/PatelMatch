@@ -67,7 +67,7 @@ exports.onUserUpdate = functions.firestore
   .document("/users/{userId}")
   .onUpdate(async (snapshot, context) => {
     try {
-      // const oldUserData = snapshot.before.data();
+      const oldUserData = snapshot.before.data();
       const newUserData = snapshot.after.data();
       const newUserGender = newUserData["gender"];
       const newUserWeight = newUserData["weight"];
@@ -84,39 +84,39 @@ exports.onUserUpdate = functions.firestore
         await statsRef.update(newUserStats);
       }
 
-      // if (oldUserData["latestConnectionSentUid"]!=
-      // newUserData["latestConnectionSentUid"]) {
-      //   const userRef = db.collection("users")
-      //     .doc(newUserData["latestConnectionSentUid"]);
-      //   const userData = await userRef.get();
+      if (oldUserData["latestConnectionSentUid"]!=
+      newUserData["latestConnectionSentUid"]) {
+        const userRef = db.collection("users")
+          .doc(newUserData["latestConnectionSentUid"]);
+        const userData = await userRef.get();
 
-      //   const tokens = [];
-      //   if (userData.data()["notificationTokens"] != undefined &&
-      //   userData.data()["notificationTokens"].length != 0) {
-      //     userData.data()["notificationTokens"]
-      //       .forEach((token) => {
-      //         tokens.push(token);
-      //       });
-      //   }
-      //   const payLoadData = {
-      //     click_action: "FLUTTER_NOTIFICATION_CLICK",
-      //     title: "You Have Recieved a Request",
-      //     message: "Tap To View",
-      //     screen: "custom_tab_bar",
-      //   };
-      //   const payload = {
-      //     data: payLoadData,
-      //   };
+        const tokens = [];
+        if (userData.data()["notificationTokens"] != undefined &&
+        userData.data()["notificationTokens"].length != 0) {
+          userData.data()["notificationTokens"]
+            .forEach((token) => {
+              tokens.push(token);
+            });
+        }
+        const payLoadData = {
+          click_action: "FLUTTER_NOTIFICATION_CLICK",
+          title: "You Have Recieved a Request",
+          message: "Tap To View",
+          screen: "custom_tab_bar",
+        };
+        const payload = {
+          data: payLoadData,
+        };
 
-      //   await admin.messaging()
-      //     .sendToDevice(tokens, payload)
-      //     .then((response) => {
-      //       console.log("push user request notification");
-      //     })
-      //     .catch((err)=>{
-      //       console.log(err);
-      //     });
-      // }
+        await admin.messaging()
+          .sendToDevice(tokens, payload)
+          .then((response) => {
+            console.log("push user request notification");
+          })
+          .catch((err)=>{
+            console.log(err);
+          });
+      }
       return "User Updated Successfully";
     } catch (e) {
       console.log(e);

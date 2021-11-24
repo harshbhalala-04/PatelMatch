@@ -17,10 +17,12 @@ class SingleUserFeed extends StatelessWidget {
   final UserModel currentUser;
   final int userImagesLength;
   final int index;
+  bool reqRecieve;
   SingleUserFeed(
       {required this.currentUser,
       required this.userImagesLength,
-      required this.index});
+      required this.index,
+      this.reqRecieve = false});
 
   final reportController = Get.put(ReportController());
   final feedScreenController = Get.put(FeedScreenController());
@@ -28,6 +30,9 @@ class SingleUserFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    if (reqRecieve) {
+      Get.find<FeedScreenController>().removeUserFromFeed(currentUser.uid!);
+    }
     return AutoScrollTag(
       key: ValueKey(index),
       controller: Get.find<FeedScreenController>().scrollController,
@@ -677,12 +682,12 @@ class SingleUserFeed extends StatelessWidget {
                                       width: 175,
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          if (index + 1 ==
-                                              feedScreenController
-                                                  .usersList.length) {
-                                            feedScreenController.endUser.value =
-                                                true;
-                                          }
+                                          // if (index + 1 ==
+                                          //     feedScreenController
+                                          //         .usersList.length) {
+                                          //   feedScreenController.endUser.value =
+                                          //       true;
+                                          // }
                                           Get.back();
                                           Get.find<ReportController>()
                                               .option1
@@ -700,15 +705,13 @@ class SingleUserFeed extends StatelessWidget {
                                               .option5
                                               .value = false;
 
+                                          // Get.find<FeedScreenController>()
+                                          //     .currentIndex
+                                          //     .value += 1;
                                           Get.find<FeedScreenController>()
-                                              .currentIndex
-                                              .value += 1;
-
-                                          Get.find<FeedScreenController>()
-                                              .scrollController
-                                              .scrollToIndex(index + 1,
-                                                  preferPosition:
-                                                      AutoScrollPosition.end);
+                                              .removeUserFromFeed(
+                                                  currentUser.uid!);
+                                          Get.back();
                                           Get.find<GlobalController>()
                                               .currentAppuser
                                               .value

@@ -83,24 +83,32 @@ class _WeightScreenState extends State<WeightScreen> {
             SizedBox(
               height: 5,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: _weightController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Start Typing...',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    borderSide: BorderSide(width: 2),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _weightController,
+                      keyboardType: TextInputType.number,
+                      
+                      decoration: InputDecoration(
+                        hintText: 'Start Typing...',
+                        border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          borderSide: BorderSide(width: 2),
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please Enter Your Weight';
+                        }
+                      },
+                    ),
                   ),
                 ),
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return 'Please Enter Your Weight';
-                  }
-                },
-              ),
+                Text("KG", style: TextStyle(fontSize: 20, ),),
+              ],
             ),
           ],
         ),

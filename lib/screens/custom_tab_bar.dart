@@ -39,7 +39,8 @@ class _CustomTabBarState extends State<CustomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    
+    print("Here cutom tab bar build");
+    print("Image: ${globalController.currentAppuser.value.imgUrl} ");
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -236,7 +237,6 @@ class TabButton extends StatelessWidget {
                       ? Colors.white
                       : Color.fromRGBO(150, 150, 150, 1)),
             ),
-           
           ],
         ));
   }
