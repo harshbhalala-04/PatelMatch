@@ -139,7 +139,8 @@ class _CityScreenState extends State<CityScreen> {
                       .currentAppuser
                       .value
                       .currentCity = _cityController.text;
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(NativeScreen(
                     fromProfile: false,

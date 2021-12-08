@@ -13,8 +13,11 @@ class UserNameScreen extends StatefulWidget {
   late final fromProfile;
   String response;
 
-  UserNameScreen(
-      {required this.relation, this.fromProfile, this.response = ''});
+  UserNameScreen({
+    required this.relation,
+    this.fromProfile,
+    this.response = '',
+  });
 
   @override
   _UserNameScreenState createState() => _UserNameScreenState();
@@ -133,8 +136,9 @@ class _UserNameScreenState extends State<UserNameScreen> {
                             "Here username updated: ${Get.find<GlobalController>().currentAppuser.value.username}");
                       }
                       // Constants.username = username;
-                     
+
                       DataBaseMethods().updateUserName(username);
+                      // DataBaseMethods().updateUserNameInChat(username);
                     } else if (widget.relation == " Father") {
                       if (widget.fromProfile) {
                         final globalController = Get.put(GlobalController());
@@ -153,6 +157,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
                       }
                       DataBaseMethods().updateMotherName(username);
                     }
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {

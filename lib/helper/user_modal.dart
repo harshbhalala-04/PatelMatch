@@ -92,7 +92,7 @@ class UserModel {
   String? rashi;
   String? manglik;
   String? gotra;
-  String? siblings;
+  bool? siblings;
   String? fatherName;
   String? fatherNativePlace;
   String? fatherOccupation;

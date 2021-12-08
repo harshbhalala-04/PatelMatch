@@ -24,6 +24,9 @@ class AuthController extends GetxController {
 
   String? get user => firebaseUser.value?.email;
 
+  final isPassVisible = true.obs;
+  final isRePassVisible = true.obs;
+
   @override
   void onInit() {
     firebaseUser.bindStream(_auth.authStateChanges());
@@ -43,6 +46,14 @@ class AuthController extends GetxController {
     isLogin.toggle();
   }
 
+  void toggolePasswordVisibility() {
+    isPassVisible.toggle();
+  }
+
+  void toggoleRePasswordVisibility() {
+    isRePassVisible.toggle();
+  }
+
   void createUser(String? email, String? password, String? phoneNo) async {
     print('This is create user function of getx');
     UserCredential userCredential;
@@ -52,7 +63,7 @@ class AuthController extends GetxController {
       isSignup = true;
       userCredential = await _auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
-      
+
       // final SharedPreferences sharedPreferences =
       //     await SharedPreferences.getInstance();
       // sharedPreferences.setString('email', email);
@@ -73,7 +84,7 @@ class AuthController extends GetxController {
         'phoneNo': phoneNo,
         'createdAt': Timestamp.now(),
         'uid': userCredential.user!.uid,
-        'bookayAvailable': 5,
+        'bookayAvailable': 0,
         'isFieldAnswered': false,
         'isFilterApplied': false,
         'drink': '',
@@ -109,14 +120,16 @@ class AuthController extends GetxController {
   void login(String? email, String? password) async {
     isLoading.toggle();
     try {
+      isLoginVal = true;
       await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
-      // isLoginVal = true;
+
       userEmailId.value = email;
       // DataBaseMethods().getUserByEmailId();
       loginState.value = true;
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
+      sharedPreferences.setBool('answers', true);
       // await FirebaseFirestore.instance
       //     .collection("users")
       //     .doc(Get.find<AuthController>().firebaseUser.value!.uid)
@@ -130,7 +143,6 @@ class AuthController extends GetxController {
 
       // sharedPreferences.setBool('login', true);
 
-      
       // Get.off(CustomTabBar());
     } on FirebaseAuthException catch (error) {
       print(error);

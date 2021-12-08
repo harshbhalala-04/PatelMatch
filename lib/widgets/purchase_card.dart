@@ -23,33 +23,45 @@ class PurchaseCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Card(
+          elevation: 2.5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             title: Row(
               children: [
-                fromBouquets ? Row(
-                  children: [
-                    Text(timePeriod),
-                    SizedBox(width: 5,),
-                    Transform.rotate(
-                          angle: 0.2,
-                          child: Image.asset(
-                            'assets/bokay.png',
-                            color: Colors.pink,
-                            width: 15,
-                            height: 20,
+                fromBouquets
+                    ? Row(
+                        children: [
+                          Text(
+                            timePeriod,
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 18,
+                              color: Color.fromRGBO(255, 85, 115, 1),
+                            ),
                           ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Transform.rotate(
+                            angle: 0.2,
+                            child: Image.asset(
+                              'assets/bokay.png',
+                              color: Colors.pink,
+                              width: 15,
+                              height: 20,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        timePeriod,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 18,
+                          color: Color.fromRGBO(255, 85, 115, 1),
                         ),
-                  ],
-                ) : Text(
-                  timePeriod,
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 18,
-                    color: Color.fromRGBO(255, 85, 115, 1),
-                  ),
-                ),
+                      ),
                 SizedBox(
                   width: 10,
                 ),
@@ -78,7 +90,7 @@ class PurchaseCard extends StatelessWidget {
                 Text(
                   "₹$currentPrice",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Color.fromRGBO(51, 51, 51, 1),
                     fontSize: 22,
                   ),
                 ),

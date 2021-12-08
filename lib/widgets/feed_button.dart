@@ -85,7 +85,7 @@ class FeedButton extends StatelessWidget {
                   Get.find<FeedScreenController>()
                       .removeUserFromFeed(otherUserId);
                   if (fromDynamicLink) {
-                    Get.offAll(CustomTabBar());
+                    Get.back();
                   }
                   Get.back();
                   Get.find<GlobalController>()
@@ -106,7 +106,7 @@ class FeedButton extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 20,
             ),
             Container(
               width: 130,
@@ -144,7 +144,7 @@ class FeedButton extends StatelessWidget {
                       otherUserId,
                       0);
                   if (fromDynamicLink) {
-                    Get.offAll(CustomTabBar());
+                    Get.back();
                   }
                 },
                 shape: RoundedRectangleBorder(

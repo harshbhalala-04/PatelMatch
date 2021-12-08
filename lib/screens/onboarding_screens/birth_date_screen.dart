@@ -148,6 +148,7 @@ class BirthDateScreen extends StatelessWidget {
                     // Navigator.pop(context);
                     // Navigator.popAndPushNamed(
                     //     context, EditProfileScreen.routeName);
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {

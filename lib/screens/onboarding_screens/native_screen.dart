@@ -8,11 +8,9 @@ import 'package:get/get.dart';
 class NativeScreen extends StatefulWidget {
   final String relation;
   final bool fromProfile;
-   String response;
+  String response;
   NativeScreen(
-      {required this.relation,
-      required this.fromProfile,
-      this.response = ''});
+      {required this.relation, required this.fromProfile, this.response = ''});
 
   @override
   _NativeScreenState createState() => _NativeScreenState();
@@ -27,8 +25,12 @@ class _NativeScreenState extends State<NativeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -97,6 +99,14 @@ class _NativeScreenState extends State<NativeScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (widget.fromProfile) {
+                  if (widget.relation == "") {
+                    final globalController = Get.put(GlobalController());
+                    Get.find<GlobalController>()
+                        .currentAppuser
+                        .value
+                        .nativeCity = _nativeController.text;
+                    DataBaseMethods().addUserNative(_nativeController.text);
+                  }
                   if (widget.relation == " Father's") {
                     final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>()
@@ -112,6 +122,7 @@ class _NativeScreenState extends State<NativeScreen> {
                         .motherNativePlace = _nativeController.text;
                     DataBaseMethods().addMotherNative(_nativeController.text);
                   }
+                  // Navigator.pop(context);
                   Get.off(EditProfileScreen());
                 } else {
                   DataBaseMethods().addUserNative(_nativeController.text);

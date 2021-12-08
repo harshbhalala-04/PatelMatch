@@ -29,6 +29,13 @@ class _MessageScreenState extends State<MessageScreen> {
   bool messageOpenTill = false;
   bool isLoading = true;
   int? chatList;
+  String? otherUserId;
+  String? otherUserName;
+  String? otherUserImgUrl;
+
+  openDialogue() {
+    Get.defaultDialog(barrierDismissible: false, content: AlertDialog());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +60,13 @@ class _MessageScreenState extends State<MessageScreen> {
     print(
         "This is free trial from build: ${Get.find<FeedScreenController>().freeTrial.value}");
     print("This is message open tilll value: $messageOpenTill");
+    print(Get.find<FeedScreenController>().freeTrial.value);
+    print((Get.find<FeedScreenController>().messageOpenTill.value != null &&
+        Get.find<FeedScreenController>()
+                .messageOpenTill
+                .value
+                .compareTo(myTimeStamp) <
+            0));
     // print("This is loading = $isLoading");
     return Scaffold(
         appBar: AppBar(
@@ -78,7 +92,6 @@ class _MessageScreenState extends State<MessageScreen> {
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> snapshot) {
-                      
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
                           child: CircularProgressIndicator(),
@@ -97,39 +110,49 @@ class _MessageScreenState extends State<MessageScreen> {
                         );
                       }
                       final chatRoomDocs = snapshot.data!.docs;
-                      // chatList = chatRoomDocs.length;
-                      // print("This is chatlist : $chatList");
                       return ListView.builder(
                           itemCount: chatRoomDocs.length,
                           shrinkWrap: true,
                           itemBuilder: (_, index) {
                             DocumentSnapshot ds = snapshot.data.docs[index];
+
                             return ChatRoomListTile(
-                              chatRoomId: ds['chatRoomId'],
-                              lastMessage: ds['lastMessage'],
-                              lastMessageTs: ds['lastMessageTs'],
-                              otherUserName: ds['firstUserName'] ==
-                                      Get.find<GlobalController>()
-                                          .currentAppuser
-                                          .value
-                                          .username
-                                  ? ds['secondUserName']
-                                  : ds['firstUserName'],
-                              otherUserImg: ds['firstUserImg'] ==
-                                      Get.find<GlobalController>()
-                                          .currentAppuser
-                                          .value
-                                          .imgUrl
-                                  ? ds['secondUserImg']
-                                  : ds['firstUserImg'],
-                              otherUserUid: ds['firstUserUid'] ==
-                                      Get.find<GlobalController>()
-                                          .currentAppuser
-                                          .value
-                                          .uid
-                                  ? ds['secondUserUid']
-                                  : ds['firstUserUid'],
-                            );
+                                chatRoomId: ds['chatRoomId'],
+                                lastMessage: ds['lastMessage'],
+                                lastMessageTs: ds['lastMessageTs'],
+                                otherUserName: ds['firstUserUid'] ==
+                                        Get.find<GlobalController>()
+                                            .currentAppuser
+                                            .value
+                                            .uid
+                                    ? ds['secondUserName']
+                                    : ds['firstUserName'],
+                                otherUserImg: ds['firstUserUid'] ==
+                                        Get.find<GlobalController>()
+                                            .currentAppuser
+                                            .value
+                                            .uid
+                                    ? ds['secondUserImg']
+                                    : ds['firstUserImg'],
+                                otherUserUid: ds['firstUserUid'] ==
+                                        Get.find<GlobalController>()
+                                            .currentAppuser
+                                            .value
+                                            .uid
+                                    ? ds['secondUserUid']
+                                    : ds['firstUserUid'],
+                                isClickable:
+                                    (Get.find<FeedScreenController>().freeTrial.value &&
+                                            Get.find<FeedScreenController>()
+                                                    .messageOpenTill
+                                                    .value !=
+                                                null) ||
+                                        (Get.find<FeedScreenController>().messageOpenTill.value != null &&
+                                            Get.find<FeedScreenController>()
+                                                    .messageOpenTill
+                                                    .value
+                                                    .compareTo(myTimeStamp) >
+                                                0));
                           });
                     }),
               ),
@@ -212,7 +235,9 @@ class _MessageScreenState extends State<MessageScreen> {
                                       Timestamp myTimeStamp =
                                           Timestamp.fromDate(
                                               time); //To TimeStamp
-
+                                      Get.find<FeedScreenController>()
+                                          .messageOpenTill
+                                          .value = myTimeStamp;
                                       firestore
                                           .collection("users")
                                           .doc(myUid)

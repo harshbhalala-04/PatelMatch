@@ -204,7 +204,8 @@ class _MaritalScreenState extends State<MaritalScreen> {
                   DataBaseMethods().addUserMaritalStatus("Seperated");
                 }
                 if (widget.fromProfile) {
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(NRIScreen(
                     fromProfile: false,

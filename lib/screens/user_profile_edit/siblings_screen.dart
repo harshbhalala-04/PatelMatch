@@ -5,11 +5,55 @@ import 'package:get/get.dart';
 
 import '../edit_profile_screen.dart';
 
-class SiblingScreen extends StatelessWidget {
+class SiblingScreen extends StatefulWidget {
+  @override
+  _SiblingScreenState createState() => _SiblingScreenState();
+}
+
+class _SiblingScreenState extends State<SiblingScreen> {
   TextEditingController totalBrothers = new TextEditingController();
+
   TextEditingController marriedBrothers = new TextEditingController();
+
   TextEditingController totalSisters = new TextEditingController();
+
   TextEditingController marriedSisters = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print(
+        "Here in init state : ${Get.find<GlobalController>().currentAppuser.value.totalSisters}");
+    print(Get.find<GlobalController>().currentAppuser.value.totalSisters);
+    if (Get.find<GlobalController>().currentAppuser.value.totalSisters != "" &&
+        Get.find<GlobalController>().currentAppuser.value.totalSisters !=
+            null) {
+      totalSisters.text =
+          Get.find<GlobalController>().currentAppuser.value.totalSisters!;
+    }
+    if (Get.find<GlobalController>().currentAppuser.value.totalBrothers != "" &&
+        Get.find<GlobalController>().currentAppuser.value.totalBrothers !=
+            null) {
+      totalBrothers.text =
+          Get.find<GlobalController>().currentAppuser.value.totalBrothers!;
+    }
+    if (Get.find<GlobalController>().currentAppuser.value.marriedBrothers !=
+            "" &&
+        Get.find<GlobalController>().currentAppuser.value.marriedBrothers !=
+            null) {
+      marriedBrothers.text =
+          Get.find<GlobalController>().currentAppuser.value.marriedBrothers!;
+    }
+    if (Get.find<GlobalController>().currentAppuser.value.marriedSisters !=
+            "" &&
+        Get.find<GlobalController>().currentAppuser.value.marriedSisters !=
+            null) {
+      marriedSisters.text =
+          Get.find<GlobalController>().currentAppuser.value.marriedSisters!;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +88,6 @@ class SiblingScreen extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            
             Row(
               children: [
                 Padding(
@@ -245,6 +288,7 @@ class SiblingScreen extends StatelessWidget {
                 print("Total sis: ${totalSisters.text}");
                 print("married bro: ${marriedBrothers.text}");
                 print("married sis: ${marriedSisters.text}");
+
                 Get.find<GlobalController>()
                     .currentAppuser
                     .value
@@ -259,11 +303,13 @@ class SiblingScreen extends StatelessWidget {
                     .currentAppuser
                     .value
                     .marriedSisters = marriedSisters.text;
+                print(totalBrothers.text.isEmpty);
                 DataBaseMethods().addUserSiblings(
                     totalBrothers.text,
                     totalSisters.text,
                     marriedBrothers.text,
                     marriedSisters.text);
+                //  Navigator.pop(context);
                 Get.off(EditProfileScreen());
               },
               child: Text(

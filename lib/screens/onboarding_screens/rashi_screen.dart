@@ -1,6 +1,7 @@
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
-import 'package:chat/screens/onboarding_screens/gotra_screen.dart';
+
+import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
@@ -103,7 +104,7 @@ class _RashiScreenState extends State<RashiScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserRashi('');
-                    Get.to(GotraScreen(fromProfile: false,));
+                    Get.to(ManglicScreen(fromProfile: false,));
                   },
                 )
         ],
@@ -183,11 +184,14 @@ class _RashiScreenState extends State<RashiScreen> {
                     Get.find<GlobalController>().currentAppuser.value.rashi =
                         rashiAns;
                     DataBaseMethods().addUserRashi(rashiAns!);
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {
                   DataBaseMethods().addUserRashi(rashiAns!);
-                  Get.to(GotraScreen(fromProfile: false,));
+                  Get.to(ManglicScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile ?  Text(

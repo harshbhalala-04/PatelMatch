@@ -1,3 +1,6 @@
+import 'package:chat/controllers/global_controller.dart';
+import 'package:get/get.dart';
+
 import '../database/database.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -40,7 +43,7 @@ class _NewMessageState extends State<NewMessage> {
 
     Map<String, dynamic> messageInfoMap = {
       "message": message,
-      "sendBy": widget.myUsername,
+      "sendBy": Get.find<GlobalController>().currentAppuser.value.uid,
       "ts": lastMessageTs,
       "otherUserUid": widget.otherUserUid
     };

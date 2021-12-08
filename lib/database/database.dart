@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat/controllers/bookay_controller.dart';
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/helper/user_modal.dart';
@@ -567,11 +568,20 @@ class DataBaseMethods {
   addUserSiblings(String totalBrothers, String totalSisters,
       String marriedBrothers, String marriedSisters) {
     try {
+      bool sibling = false;
+      if (totalBrothers.isNotEmpty ||
+          totalSisters.isNotEmpty ||
+          marriedBrothers.isNotEmpty ||
+          marriedSisters.isNotEmpty) {
+        sibling = true;
+      }
+      Get.find<GlobalController>().currentAppuser.value.siblings = sibling;
       firestore.collection("users").doc(user!.uid).update({
         "totalBrothers": totalBrothers,
         "totalSisters": totalSisters,
         "marriedBrothers": marriedBrothers,
-        "marriedSisters": marriedSisters
+        "marriedSisters": marriedSisters,
+        "siblings": sibling,
       });
     } catch (e) {
       print(e.toString());
@@ -903,6 +913,17 @@ class DataBaseMethods {
     }
   }
 
+  updateUserNameInChat(String name) {
+    try {
+      var query = firestore
+          .collection("chatroom")
+          .where("userIds", arrayContains: user!.uid)
+          .get();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   updateFatherName(String name) {
     try {
       firestore.collection("users").doc(user!.uid).update({'fatherName': name});
@@ -926,12 +947,9 @@ class DataBaseMethods {
   //       Get.find<GlobalController>().currentAppuser.value.imgUrl!;
   // }
 
-  getUserInfo(String uid) async {
+  getUserInfo(String uid) {
     try {
-      return await firestore
-          .collection("users")
-          .where("uid", isEqualTo: uid)
-          .get();
+      return firestore.collection("users").where("uid", isEqualTo: uid).get();
     } catch (e) {
       print(e.toString());
     }
@@ -1134,10 +1152,9 @@ class DataBaseMethods {
   addMessaging(Map<dynamic, dynamic> messagePurchase) async {
     List<Map<dynamic, dynamic>> messagePurchaseList = [];
     messagePurchaseList.add(messagePurchase);
-    Get.find<FeedScreenController>().messageOpenTill.value =
-        messagePurchase['newTimestamp'];
-    print(
-        "New Time stamp: ${Get.find<FeedScreenController>().messageOpenTill}");
+    // Get.find<FeedScreenController>().messageOpenTill.value =
+    //     messagePurchase['newTimestamp'];
+
     try {
       await firestore.collection("users").doc(user!.uid).update({
         'message': FieldValue.arrayUnion(messagePurchaseList),
@@ -1153,7 +1170,7 @@ class DataBaseMethods {
     bouquePurchaseList.add(bouquePurchase);
     int bookayAvailable = 0;
     int newBookay = bouquePurchase['bookayCount'];
-    print(bouquePurchase);
+    // print(bouquePurchase);
     try {
       await firestore.collection("users").doc(user!.uid).get().then((value) {
         Map<String, dynamic> tmp = value.data()!;
@@ -1164,6 +1181,9 @@ class DataBaseMethods {
         'bookayAvailable': bookayAvailable,
         'bouquets': FieldValue.arrayUnion(bouquePurchaseList)
       });
+      // Get.find<GlobalController>().currentAppuser.value.bookayAvailable =
+      //     bookayAvailable;
+      // Get.find<BookayController>().bookayCount.value = bookayAvailable;
     } catch (e) {
       print(e.toString());
     }

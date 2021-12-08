@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class BookayDialogue extends StatelessWidget {
   TextEditingController textEditingController = new TextEditingController();
@@ -30,6 +31,7 @@ class BookayDialogue extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    int currentBookayVal = 1;
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("users")
@@ -135,25 +137,44 @@ class BookayDialogue extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      width: 45,
-                      child: TextFormField(
-                        controller: textEditingController,
-                        textAlign: TextAlign.center,
-                        cursorHeight: 30,
-                        cursorColor: Colors.grey,
-                        style: TextStyle(
-                          fontSize: 24,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: "00",
-                          hintStyle: TextStyle(fontSize: 24),
-                        ),
-                        onSaved: (value) {
-                          textEditingController.text = value!;
-                        },
-                      ),
-                    ),
+                    Obx(() => NumberPicker(
+                          value: feedScreenController.selectedBookayVal.value,
+                          minValue: 0,
+                          maxValue: 1000,
+                          step: 1,
+                          itemHeight: 50,
+                          axis: Axis.horizontal,
+                          onChanged: (value) {
+                            feedScreenController.selectedBookayVal.value =
+                                value;
+                            print(
+                                "Here selected value: ${feedScreenController.selectedBookayVal.value}");
+                          },
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.black26),
+                          ),
+                        )),
+                    // Container(
+                    //   width: 45,
+                    //   child: TextFormField(
+                    //     controller: textEditingController,
+                    //     textAlign: TextAlign.center,
+                    //     cursorHeight: 30,
+                    //     keyboardType: TextInputType.number,
+                    //     cursorColor: Colors.grey,
+                    //     style: TextStyle(
+                    //       fontSize: 24,
+                    //     ),
+                    //     decoration: InputDecoration(
+                    //       hintText: "00",
+                    //       hintStyle: TextStyle(fontSize: 24),
+                    //     ),
+                    //     onSaved: (value) {
+                    //       textEditingController.text = value!;
+                    //     },
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -161,7 +182,7 @@ class BookayDialogue extends StatelessWidget {
                       width: 175,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (int.parse(textEditingController.text) >
+                          if ((feedScreenController.selectedBookayVal.value) >
                               myMap['bookayAvailable']) {
                             Get.snackbar("You Haven't Enough Bouquets",
                                 "Buy More Bouquets",
@@ -182,7 +203,7 @@ class BookayDialogue extends StatelessWidget {
                               'sent': otherUsername,
                               'image': otherImageUrl,
                               'time': myTimeStamp,
-                              'bookay': int.parse(textEditingController.text)
+                              'bookay': feedScreenController.selectedBookayVal.value,
                             });
                             Get.find<SentScreenController>()
                                 .sentProfiles
@@ -195,9 +216,10 @@ class BookayDialogue extends StatelessWidget {
                                 otherUsername,
                                 otherImageUrl,
                                 otherUserId,
-                                int.parse(textEditingController.text));
+                                feedScreenController.selectedBookayVal.value);
                             if (fromDynamicLink) {
-                              Get.offAll(CustomTabBar());
+                              Navigator.of(context).pop();
+                              Get.back();
                             } else {
                               Navigator.of(context).pop();
                               Get.back();

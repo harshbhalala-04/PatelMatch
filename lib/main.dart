@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:chat/controllers/authController.dart';
 import 'package:chat/global.dart';
@@ -11,6 +13,7 @@ import 'package:chat/screens/single_user_profile.dart';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -90,7 +93,7 @@ class _MyAppState extends State<MyApp> {
     AwesomeNotifications().actionStream.listen((receivedNotification) async {
       await handleNotificationRouting(message: receivedNotification.payload!);
     });
-    // getValidationData();
+    getValidationData();
 
     super.initState();
   }
@@ -103,6 +106,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       loginState = sharedPreferences.getBool('login');
       answer = sharedPreferences.getBool('answers');
+      print("Here answer value: $answer");
       findEmail = sharedPreferences.getString('email');
       profileCreatedBy = sharedPreferences.getString('profileCreatedBy');
       samaj = sharedPreferences.getString('samaj');
@@ -127,8 +131,9 @@ class _MyAppState extends State<MyApp> {
 
     if (deepLink != null) {
       uid = deepLink.path.substring(1);
-
-      Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
+      if (FirebaseAuth.instance.currentUser != null) {
+        Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
+      }
     }
 
     FirebaseDynamicLinks.instance.onLink(
@@ -137,11 +142,12 @@ class _MyAppState extends State<MyApp> {
 
       if (deepLink != null) {
         uid = deepLink.path.substring(1);
-
-        Get.to(SingleUserProfile(
-          uid: uid,
-          fromDynamic: true,
-        ));
+        if (FirebaseAuth.instance.currentUser != null) {
+          Get.to(SingleUserProfile(
+            uid: uid,
+            fromDynamic: true,
+          ));
+        }
       }
     }, onError: (OnLinkErrorException e) async {
       print(e.message);
@@ -171,40 +177,44 @@ class _MyAppState extends State<MyApp> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, userSnapshot) {
           if (userSnapshot.hasData) {
-            if (isSignup) {
-              return ProfileCreatedByScreen(fromProfile: false,);
+            if (flag == 0) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (isSignup) {
+              return ProfileCreatedByScreen(
+                fromProfile: false,
+              );
+            } else if (isLoginVal) {
+              return CustomTabBar();
+            } else if (answer == null || answer == false) {
+              if (profileCreatedBy == null) {
+                return ProfileCreatedByScreen(fromProfile: false);
+              } else if (samaj == null) {
+                return SamajScreen(fromProfile: false);
+              } else if (willingToMarryFrom == null) {
+                return WillingToMarryScreen();
+              } else if (fullName == null) {
+                return UserNameScreen(relation: '', fromProfile: false);
+              } else if (photo == null) {
+                return ImagePickerScreen();
+              } else if (dob == null) {
+                return BirthDateScreen(fromProfile: false);
+              } else if (gender == null) {
+                return GenderScreen(fromProfile: false);
+              } else if (weight == null) {
+                return WeightScreen(fromProfile: false);
+              } else if (height == null) {
+                return HeightScreen(fromProfile: false);
+              } else if (handicapped == null) {
+                return HandicappedScreen(fromProfile: false);
+              } else if (maritalStatus == null) {
+                return MaritalScreen(fromProfile: false);
+              } else {
+                return NRIScreen(fromProfile: false);
+              }
             } else {
               return CustomTabBar();
-              // if (answer == null || answer == false) {
-              //   print("On boarding screens");
-              //   if (profileCreatedBy == null) {
-              //     return ProfileCreatedByScreen(fromProfile: false);
-              //   } else if (samaj == null) {
-              //     return SamajScreen(fromProfile: false);
-              //   } else if (willingToMarryFrom == null) {
-              //     return WillingToMarryScreen();
-              //   } else if (fullName == null) {
-              //     return UserNameScreen(relation: '', fromProfile: false);
-              //   } else if (photo == null) {
-              //     return ImagePickerScreen();
-              //   } else if (dob == null) {
-              //     return BirthDateScreen(fromProfile: false);
-              //   } else if (gender == null) {
-              //     return GenderScreen(fromProfile: false);
-              //   } else if (weight == null) {
-              //     return WeightScreen(fromProfile: false);
-              //   } else if (height == null) {
-              //     return HeightScreen(fromProfile: false);
-              //   } else if (handicapped == null) {
-              //     return HandicappedScreen(fromProfile: false);
-              //   } else if (maritalStatus == null) {
-              //     return MaritalScreen(fromProfile: false);
-              //   } else {
-              //     return NRIScreen(fromProfile: false);
-              //   }
-              // } else {
-              //   return CustomTabBar();
-              // }
             }
           } else {
             return AuthScreen();

@@ -1,6 +1,11 @@
 // import 'dart:html';
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:chat/controllers/authController.dart';
+import 'package:chat/controllers/bookay_controller.dart';
+import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,6 +55,8 @@ class SubscriptionController extends GetxController {
   final messageUpload = {}.obs;
 
   final currentItemMessage = true.obs;
+
+  final feedScreenController = Get.put(FeedScreenController());
 
   fetchPrices() async {
     isLoading.toggle();
@@ -116,46 +123,95 @@ class SubscriptionController extends GetxController {
     super.dispose();
   }
 
-  void openCheckoutforMessage(Map<dynamic, dynamic> purchaseItem) {
+  openCheckoutforMessage(Map<dynamic, dynamic> purchaseItem) async {
     int amountToPay = int.parse(purchaseItem["messagePrice"]) * 100;
-    var options = {
-      "key": "rzp_test_il0OViv0cegj1c",
-      "amount": "$amountToPay",
-      "name": "Messaging",
-      "description": purchaseItem["messageDuration"],
-      "prefill": {
-        "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
-        "email": Get.find<GlobalController>().currentAppuser.value.email,
-      },
-      "external": {
-        "wallets": ["paytm"]
-      },
-      "theme": {"color": "#FF5573"}
-    };
-    try {
-      razorpay.open(options);
-    } catch (e) {
-      print(e.toString());
-    }
+    final client = HttpClient();
+    final request =
+        await client.postUrl(Uri.parse('https://api.razorpay.com/v1/orders'));
+    request.headers
+        .set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+    String basicAuth = 'Basic ' +
+        base64Encode(
+            utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
+    request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
+    request.add(
+        utf8.encode(json.encode({"amount": amountToPay, "currency": "INR",  'receipt': "order_rcptid_11"})));
+    final response = await request.close();
+
+    response.transform(utf8.decoder).listen((contents) {
+      print('ORDERID' + contents);
+      String orderId = contents.split(',')[0].split(":")[1];
+      orderId = orderId.substring(1, orderId.length - 1);
+      print("Here is the orderId: $orderId");
+      // int amountToPay = 1 * 100;
+      var options = {
+        "key": "rzp_live_BsJlfNy4KTNyHA",
+        "amount": amountToPay,
+        "currency": "INR",
+        "name": "Messaging",
+        'order_id': orderId,
+        'timeout': 60,
+        "description": purchaseItem["messageDuration"],
+        "prefill": {
+          "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
+          "email": Get.find<GlobalController>().currentAppuser.value.email,
+        },
+        "external": {
+          "wallets": ["paytm"]
+        },
+        "theme": {"color": "#FF5573"}
+      };
+      try {
+        razorpay.open(options);
+      } catch (e) {
+        print(e.toString());
+      }
+    });
   }
 
-  void openCheckoutforBouquets(Map<dynamic, dynamic> purchaseItem) {
-    var options = {
-      "key": "rzp_test_il0OViv0cegj1c",
-      "amount": num.parse(purchaseItem["bookayPrice"]) * 100,
-      "name": purchaseItem["bookayCount"],
-      "description": "",
-      "prefill": {
-        "contact": "",
-        "email": "",
-      },
-      "theme": {"color": "#FF5573"}
-    };
-    try {
-      razorpay.open(options);
-    } catch (e) {
-      print(e.toString());
-    }
+  openCheckoutforBouquets(Map<dynamic, dynamic> purchaseItem) async {
+    int amountToPay = int.parse(purchaseItem["bookayPrice"]) * 100;
+    final client = HttpClient();
+    final request =
+        await client.postUrl(Uri.parse('https://api.razorpay.com/v1/orders'));
+    request.headers
+        .set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+    String basicAuth = 'Basic ' +
+        base64Encode(
+            utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
+    request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
+    request.add(
+        utf8.encode(json.encode({"amount": amountToPay, "currency": "INR", 'receipt': "order_rcptid_11"})));
+    final response = await request.close();
+
+    response.transform(utf8.decoder).listen((contents) {
+      print('ORDERID' + contents);
+      String orderId = contents.split(',')[0].split(":")[1];
+      orderId = orderId.substring(1, orderId.length - 1);
+      print("____________________________");
+      print("Here orderId: $orderId");
+
+      // int amountToPay = 1 * 100;
+      var options = {
+        "key": "rzp_live_BsJlfNy4KTNyHA",
+        "amount": amountToPay,
+        "name": purchaseItem["bookayCount"],
+        "description": "",
+        "currency": "INR",
+        'timeout': 60,
+        "order_id": orderId,
+        "prefill": {
+          "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
+          "email": Get.find<GlobalController>().currentAppuser.value.email,
+        },
+        "theme": {"color": "#FF5573"}
+      };
+      try {
+        razorpay.open(options);
+      } catch (e) {
+        print(e.toString());
+      }
+    });
   }
 
   void handlerPaymentSuccess(PaymentSuccessResponse response) {
@@ -167,6 +223,8 @@ class SubscriptionController extends GetxController {
         backgroundColor: Color.fromRGBO(255, 85, 115, 1),
         textColor: Color.fromRGBO(255, 255, 255, 1),
         fontSize: 16.0);
+    print("___________________________");
+    print("Here is the order id: ${response.orderId}");
 
     if (currentItemMessage.value) {
       messageUpload['payment_id'] = response.paymentId;
@@ -175,7 +233,10 @@ class SubscriptionController extends GetxController {
       oneMonthSelected.value = false;
       oneYearSelected.value = false;
       isMessageSelected.value = false;
-
+      Get.find<FeedScreenController>().messageOpenTill.value =
+          messageUpload['newTimestamp'];
+      print(
+          "New Time stamp: ${Get.find<FeedScreenController>().messageOpenTill}");
       DataBaseMethods().addMessaging(messageUpload.value);
     } else {
       bouqueUpload['payment_id'] = response.paymentId;
@@ -183,11 +244,25 @@ class SubscriptionController extends GetxController {
       fiveBouquetSelected.value = false;
       tenBouquetSelected.value = false;
       isBouqueSelected.value = false;
+      int bookay = bouqueUpload['bookayCount'];
+      int pastBookay =
+          Get.find<GlobalController>().currentAppuser.value.bookayAvailable!;
+      Get.find<GlobalController>().currentAppuser.value.bookayAvailable =
+          bookay + pastBookay;
+      Get.find<BookayController>().bookayCount.value = bookay + pastBookay;
+      print(
+          "New Bookay available are : ${Get.find<GlobalController>().currentAppuser.value.bookayAvailable}");
+
       DataBaseMethods().addBouquts(bouqueUpload.value);
     }
   }
 
   void handlerErrorFailure(PaymentFailureResponse response) {
+    print("Here is payment failure response");
+    print("_____________________________");
+    print(response.code);
+    print(response.message);
+
     Fluttertoast.showToast(
         msg: "ERROR: Payment Unsuccessful.",
         toastLength: Toast.LENGTH_LONG,

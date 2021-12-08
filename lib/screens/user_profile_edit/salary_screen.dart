@@ -273,7 +273,8 @@ class _SalaryScreenState extends State<SalaryScreen> {
                     DataBaseMethods().addMotherSalary("Above 10 Lpa");
                   }
                 }
-                Get.off(EditProfileScreen());
+              //  Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 // Navigator.pop(context);
                 // Navigator.popAndPushNamed(context, EditProfileScreen.routeName);
               },

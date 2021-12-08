@@ -153,7 +153,8 @@ class _ManglicScreenState extends State<ManglicScreen> {
                   DataBaseMethods().addUserManglik("Yes");
                 }
                 if (widget.fromProfile) {
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.offAll(CustomTabBar(), );
                 }

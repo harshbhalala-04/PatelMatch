@@ -137,7 +137,8 @@ class _NRIScreenState extends State<NRIScreen> {
                 }
 
                 if (widget.fromProfile) {
-                  Get.off(EditProfileScreen());
+                //  Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(CityScreen(fromProfile: false,));
                 }

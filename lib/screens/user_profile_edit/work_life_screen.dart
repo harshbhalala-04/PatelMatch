@@ -271,7 +271,8 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
 
                 // Navigator.pop(context);
                 // Navigator.popAndPushNamed(context, EditProfileScreen.routeName);
-                Get.off(EditProfileScreen());
+                // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
               },
               child: Text(
                 'Submit',

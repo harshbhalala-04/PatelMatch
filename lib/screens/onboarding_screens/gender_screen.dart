@@ -139,7 +139,8 @@ class _GenderScreenState extends State<GenderScreen> {
 
                 if (widget.fromProfile) {
                   
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(WeightScreen(fromProfile: false,));
                 }

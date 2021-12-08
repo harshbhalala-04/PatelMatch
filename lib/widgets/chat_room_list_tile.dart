@@ -15,6 +15,7 @@ class ChatRoomListTile extends StatefulWidget {
   final String otherUserName;
   final String otherUserImg;
   final String otherUserUid;
+  final bool isClickable;
 
   ChatRoomListTile(
       {required this.chatRoomId,
@@ -22,7 +23,8 @@ class ChatRoomListTile extends StatefulWidget {
       required this.lastMessageTs,
       required this.otherUserName,
       required this.otherUserImg,
-      required this.otherUserUid});
+      required this.otherUserUid,
+      required this.isClickable});
 
   @override
   _ChatRoomListTileState createState() => _ChatRoomListTileState();
@@ -47,6 +49,9 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
         await DataBaseMethods().getUserInfo(otherUserUid);
     name = querySnapshot.docs[0]['username'];
     imageUrl = querySnapshot.docs[0]['imgUrl'];
+    print("This is information");
+    print(name);
+    print(imageUrl);
     setState(() {
       isLoading = false;
     });
@@ -54,7 +59,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
 
   @override
   void initState() {
-    //getThisUserInfo();
+    // getThisUserInfo();
 
     super.initState();
   }
@@ -67,20 +72,20 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
       count = 1;
     }
     String? time = DateFormat('hh:mm a').format(widget.lastMessageTs.toDate());
-    print("User Image : ${widget.otherUserImg}");
-    print("User Name: ${widget.otherUserName}");
-    print("UID: ${widget.otherUserUid}");
+
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                      username: widget.otherUserName,
-                      imageUrl: widget.otherUserImg,
-                      chatRoomId: widget.chatRoomId,
-                      otherUserUid: widget.otherUserUid,
-                    )));
+        if (widget.isClickable) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                        username: widget.otherUserName,
+                        imageUrl: widget.otherUserImg,
+                        chatRoomId: widget.chatRoomId,
+                        otherUserUid: widget.otherUserUid,
+                      )));
+        } else {}
       },
       child: Container(
         margin: EdgeInsets.only(top: 10, right: 10, left: 10),
@@ -117,7 +122,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                             : Text(
                                 widget.otherUserName,
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
+                                    fontSize: 18, fontWeight: FontWeight.w500, color: Color.fromRGBO(51, 51, 51, 1),),
                               ),
                         SizedBox(
                           height: 5,
@@ -129,6 +134,7 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.clip,
+                                style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),
                               ),
                       ],
                     ),

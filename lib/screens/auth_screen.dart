@@ -1,6 +1,8 @@
 import 'package:chat/controllers/authController.dart';
+import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreen extends GetWidget<AuthController> {
   final TextEditingController _emailController = TextEditingController();
@@ -12,12 +14,14 @@ class AuthScreen extends GetWidget<AuthController> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('PM', style: TextStyle(color: Colors.white, fontSize: 36),),
+        title: Text(
+          'PM',
+          style: TextStyle(color: Colors.white, fontSize: 36),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -66,9 +70,15 @@ class AuthScreen extends GetWidget<AuthController> {
                             Obx(() => controller.resetPass.value
                                 ? Container()
                                 : TextFormField(
-                                    obscureText: true,
+                                    obscureText: controller.isPassVisible.value,
                                     decoration: InputDecoration(
                                       labelText: 'Password',
+                                      suffixIcon: InkWell(
+                                          onTap: () {
+                                            controller
+                                                .toggolePasswordVisibility();
+                                          },
+                                          child: Icon(Icons.visibility)),
                                     ),
                                     controller: _passwordController,
                                   )),
@@ -77,10 +87,17 @@ class AuthScreen extends GetWidget<AuthController> {
                                 : controller.resetPass.value
                                     ? Container()
                                     : TextFormField(
-                                        obscureText: true,
+                                        obscureText:
+                                            controller.isRePassVisible.value,
                                         decoration: InputDecoration(
-                                          labelText: 'Re-enter Password',
-                                        ),
+                                            labelText: 'Re-enter Password',
+                                            suffixIcon: InkWell(
+                                              child: Icon(Icons.visibility),
+                                              onTap: () {
+                                                controller
+                                                    .toggoleRePasswordVisibility();
+                                              },
+                                            )),
                                         controller: reEnterPassword,
                                       )),
                             Obx(() => controller.isLogin.value
@@ -208,7 +225,9 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       _emailController.text
                                                           .trim(),
                                                       _passwordController.text
-                                                          .trim(), phoneController.text.trim());
+                                                          .trim(),
+                                                      phoneController.text
+                                                          .trim());
                                                 },
                                                 child: Text(
                                                   'Sign Up',
@@ -258,8 +277,38 @@ class AuthScreen extends GetWidget<AuthController> {
                         : Container(
                             padding: EdgeInsets.symmetric(horizontal: 50),
                             child: Center(
-                              child: Text(
-                                "By signing up for PatelMatch, you agree to our Terms of service and Privacy Policy.",
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          "By signing up for PatelMatch, you agree to our ",
+                                    ),
+                                    TextSpan(
+                                        text: "Terms of service",
+                                        recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launch(
+                                                'https://patelmatch.in/#/terms/');
+                                          },
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationThickness: 5)),
+                                    TextSpan(text: " and "),
+                                    TextSpan(
+                                        text: "Privacy Policy",
+                                         recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launch(
+                                                'https://patelmatch.in/#/privacy-policy/');
+                                          },
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationThickness: 5))
+                                  ],
+                                ),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,

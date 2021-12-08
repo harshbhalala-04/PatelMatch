@@ -16,6 +16,7 @@ class FilterScreenCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(5),
       child: Card(
+        elevation: 2.5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: ListTile(
           title: Text(
@@ -24,7 +25,7 @@ class FilterScreenCard extends StatelessWidget {
           ),
           subtitle: Text(
             subtitle,
-            style: TextStyle(fontSize: 18, color: Colors.black87),
+            style: TextStyle(fontSize: 18, color: Color.fromRGBO(51, 51, 51, 1),),
           ),
           trailing: Icon(
             Icons.arrow_right,

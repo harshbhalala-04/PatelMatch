@@ -245,6 +245,7 @@ class _ProfileCreatedByScreenState extends State<ProfileCreatedByScreen> {
                   }
     
                   if (widget.fromProfile) {
+                   
                     // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   } else {

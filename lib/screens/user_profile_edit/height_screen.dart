@@ -270,6 +270,7 @@ class _HeightScreenState extends State<HeightScreen> {
                         heightAns;
                     DataBaseMethods().addUserHeight(heightAns!);
                     
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {

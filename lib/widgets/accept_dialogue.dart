@@ -81,7 +81,7 @@ class AcceptDialogue extends StatelessWidget {
                       Get.snackbar("Please Enter Some Message", "",
                           snackPosition: SnackPosition.BOTTOM);
                     } else {
-                      // requestScreenController.removeUser(uid, profileType);
+                      requestScreenController.removeUser(uid, profileType);
                       Get.back();
                       Get.back();
                       showProfileScreenController.createChatRoom();

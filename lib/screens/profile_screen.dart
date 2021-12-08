@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,25 +24,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // String profileImg =
-  //     'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
-  // fetchUserImg() {
-  //   final FirebaseAuth auth = FirebaseAuth.instance;
-  //   final User? user = auth.currentUser;
-  //   print('Init State');
-  //   FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(user!.uid)
-  //       .get()
-  //       .then((val) {
-  //     setState(() {
-  //       Constants.userImage = val['imgUrls'][0];
-  //       Constants.myName = val['username'];
-  //       print(Constants.userImage);
-  //       print('User Image');
-  //     });
-  //   });
-  // }
+  String? appUrl;
+  final globalController = Get.put(GlobalController());
 
   removeAllSharedPreferences() async {
     final SharedPreferences sharedPreferences =
@@ -61,13 +46,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     sharedPreferences.remove('NRI');
   }
 
+  fetchLink() async {
+    await FirebaseFirestore.instance
+        .collection("Links")
+        .doc("PlayStoreLink")
+        .get()
+        .then((val) {
+      Map<String, dynamic> linkdata = val.data()!;
+      appUrl = linkdata['PlayStore'];
+      print(appUrl);
+    });
+  }
+
   @override
   void initState() {
-    // fetchUserImg();
+    fetchLink();
     super.initState();
   }
 
   String privacyPolicyUrl = "https://patelmatch.in/#/privacy-policy/";
+
+  // void _launchAppURL() async {
+  //   await canLaunch(appUrl!)
+  //       ? await launch(appUrl!)
+  //       : throw 'Could not launch $appUrl';
+  // }
+  void shareUrl() async {
+    await FlutterShare.share(
+      title: 'Patel Match',
+      linkUrl: appUrl,
+      text: "Download App",
+      chooserTitle: 'Where You Want to Share',
+    );
+  }
+
   void _launchURL() async => await canLaunch(privacyPolicyUrl)
       ? await launch(privacyPolicyUrl)
       : throw 'Could not launch $privacyPolicyUrl';
@@ -77,203 +89,244 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Get.find<GlobalController>().currentAppuser.value.imgUrl = imgUrls[0];
     print(
         "This is imgUrl in profile screen: ${Get.find<GlobalController>().currentAppuser.value.imgUrl}");
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+    return WillPopScope(
+      onWillPop: () async {
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: Obx(() => Text(
+                Get.find<GlobalController>().currentAppuser.value.username!,
+                style: TextStyle(color: Colors.black),
+              )),
         ),
-        title: Obx(() => Text(
-              Get.find<GlobalController>().currentAppuser.value.username!,
-              style: TextStyle(color: Colors.black),
-            )),
-      ),
-      body: SafeArea(
-        child: ListView(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Obx(() => CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(
+        body: SafeArea(
+          child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Obx(() => CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              Get.find<GlobalController>()
+                                  .currentAppuser
+                                  .value
+                                  .imgUrl!,
+                            ),
+                            radius: 60,
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Obx(() => Text(
                             Get.find<GlobalController>()
                                 .currentAppuser
                                 .value
-                                .imgUrl!,
+                                .username!,
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: 275,
+                        height: 45,
+                        child: FloatingActionButton(
+                          heroTag: 'ShareProfile',
+                          onPressed: () {
+                            createDynamicLink();
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(255, 85, 115, 1),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Container(
+                              width: 275,
+                              height: 45,
+                              alignment: Alignment.center,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset('assets/Biodata.svg'),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Share My Biodata',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          radius: 60,
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Obx(() => Text(
-                          Get.find<GlobalController>()
-                              .currentAppuser
-                              .value
-                              .username!,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.edit,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          'Edit Profile',
                           style: TextStyle(
                             fontSize: 20,
+                            color: Color.fromRGBO(51, 51, 51, 1),
                           ),
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.edit,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        'Edit Profile',
-                        style: TextStyle(
-                          fontSize: 20,
                         ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfileScreen()))
-                            .then((value) {
-                          setState(() {
-                            print(Get.find<GlobalController>()
-                                .currentAppuser
-                                .value
-                                .imgUrl);
-                            print(Get.find<GlobalController>()
-                                .currentAppuser
-                                .value
-                                .username);
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditProfileScreen())).then((val) {
+                            print("This val from future");
+                            print(val);
+                            setState(() {});
                           });
-                        });
-                      },
-                    ),
-                    ListTile(
-                      leading: Text(
-                        '\u{20B9}',
-                        style: TextStyle(fontSize: 24, color: Colors.black87),
+                        },
                       ),
-                      title: Text(
-                        'Plans',
-                        style: TextStyle(
-                          fontSize: 20,
+                      ListTile(
+                        leading: Text(
+                          '\u{20B9}',
+                          style: TextStyle(fontSize: 24, color: Colors.black87),
                         ),
-                      ),
-                      onTap: () {
-                        Get.to(SubscriptionScreen());
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.share,
-                        color: Colors.black87,
-                      ),
-                      title: Text(
-                        'Share this app',
-                        style: TextStyle(
-                          fontSize: 20,
+                        title: Text(
+                          'Plans',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(51, 51, 51, 1),
+                          ),
                         ),
+                        onTap: () {
+                          Get.to(SubscriptionScreen());
+                        },
                       ),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.person_add_alt_1,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        'Share My Profile',
-                        style: TextStyle(
-                          fontSize: 20,
+                      ListTile(
+                        leading: Icon(
+                          Icons.share,
+                          color: Colors.black87,
                         ),
-                      ),
-                      onTap: () {
-                        createDynamicLink();
-                      },
-                    ),
-                    // ListTile(
-                    //   leading: Icon(
-                    //     Icons.star_border,
-                    //     color: Colors.black,
-                    //   ),
-                    //   title: Text(
-                    //     'Rate this app',
-                    //     style: TextStyle(
-                    //       fontSize: 20,
-                    //     ),
-                    //   ),
-                    //   onTap: () {},
-                    // ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.note_alt_rounded,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          fontSize: 20,
+                        title: Text(
+                          'Share this app',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(51, 51, 51, 1),
+                          ),
                         ),
+                        onTap: () {
+                          shareUrl();
+                        },
                       ),
-                      onTap: () {
-                        _launchURL();
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.logout,
-                        color: Colors.black,
+                      ListTile(
+                        leading: Icon(
+                          Icons.note_alt_rounded,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          'Privacy Policy',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(51, 51, 51, 1),
+                          ),
+                        ),
+                        onTap: () {
+                          _launchURL();
+                        },
                       ),
-                      title: Text(
-                        'Log Out',
-                        style: TextStyle(fontSize: 20),
+                      ListTile(
+                        leading: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          'Log Out',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(51, 51, 51, 1),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.dialog(
+                            AlertDialog(
+                              title: Text(
+                                'Log Out?',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 18),
+                              ),
+                              content: Text(
+                                "Are you sure you want to log out and exit the app?",
+                                style: TextStyle(
+                                  color: Color.fromRGBO(122, 122, 122, 1),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'No',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Get.back();
+                                    fromLogout = true;
+                                    isSignup = false;
+                                    isLoginVal = false;
+                                    removeAllSharedPreferences();
+                                    FirebaseAuth.instance.signOut();
+                                    SystemNavigator.pop();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Color.fromRGBO(255, 85, 115, 1)),
+                                  child: Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        // Constants.myName = '';
-                        // Get.find<GlobalController>().currentAppuser.value =
-                        //     new UserModel();
-                        fromLogout = true;
-                        isSignup = false;
-                        isLoginVal = false;
-                        FirebaseAuth.instance.signOut();
-                        SystemNavigator.pop();
-                        // Get.find<FeedScreenController>().usersList = [];
-                        // Get.find<FeedScreenController>().userListLength.value =
-                        //     0;
-                        // Get.find<FeedScreenController>()
-                        //     .friendRequestList
-                        //     .value = [];
-                        // Get.find<FeedScreenController>().tmpUsersUid = [];
-                        // Get.find<FeedScreenController>().endUser.value = false;
-                        // Get.find<FeedScreenController>().messageOpenTill.value =
-                        //     Timestamp.now();
-                        // Get.find<FeedScreenController>().freeTrial.value =
-                        //     false;
-                        // Get.find<FeedScreenController>().fnTerminate = 0;
-                        // Get.find<FeedScreenController>().currentIndex.value = 0;
-                        // Get.find<FeedScreenController>().currentItemLength = 0;
-                        // Get.find<FeedScreenController>().previousItemLength = 0;
-                        // Get.find<FeedScreenController>().hasMoreData = true;
-                        // Get.find<FeedScreenController>().lastUser = null;
-                        // Get.find<FeedScreenController>().gender = '';
-
-                        // Get.off(AuthScreen());
-
-                        removeAllSharedPreferences();
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ]),
+              ]),
+        ),
       ),
     );
   }

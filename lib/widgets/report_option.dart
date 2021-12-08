@@ -7,6 +7,7 @@ class ReportOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2.5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),

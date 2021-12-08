@@ -82,7 +82,7 @@ class ShowProfileController extends GetxController {
 
     Map<String, dynamic> messageInfoMap = {
       "message": message,
-      "sendBy": myUserName,
+      "sendBy": myUserId,
       "ts": lastMessageTs,
       "otherUserUid": currentUser.value.uid,
     };

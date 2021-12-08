@@ -64,7 +64,7 @@ class ReqReceiveController extends GetxController {
 
     Map<String, dynamic> messageInfoMap = {
       "message": message,
-      "sendBy": Get.find<GlobalController>().currentAppuser.value.username,
+      "sendBy": Get.find<GlobalController>().currentAppuser.value.uid,
       "ts": lastMessageTs,
       "otherUserUid": currentUser.uid,
     };

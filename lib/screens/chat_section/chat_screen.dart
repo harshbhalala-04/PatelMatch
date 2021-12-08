@@ -130,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   return chatMessageTile(
                     ds["message"],
-                    ds["sendBy"] == Get.find<GlobalController>().currentAppuser.value.username,
+                    ds["sendBy"] == Get.find<GlobalController>().currentAppuser.value.uid,
                     time,
                   );
                 }),

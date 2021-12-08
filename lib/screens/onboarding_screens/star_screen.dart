@@ -244,6 +244,7 @@ class _StarScreenState extends State<StarScreen> {
                     Get.find<GlobalController>().currentAppuser.value.star =
                         starAns;
                     DataBaseMethods().addUserStar(starAns!);
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {

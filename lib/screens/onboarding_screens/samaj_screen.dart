@@ -125,7 +125,8 @@ class _SamajScreenState extends State<SamajScreen> {
                   DataBaseMethods().addUserSamaj("Leva Patel");
                 }
                 if (widget.fromProfile) {
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(WillingToMarryScreen());
                 }

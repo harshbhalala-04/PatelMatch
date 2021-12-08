@@ -140,7 +140,8 @@ class _HandicappedScreenState extends State<HandicappedScreen> {
                 }
 
                 if (widget.fromProfile) {
-                  Get.off(EditProfileScreen());
+                  // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 } else {
                   Get.to(MaritalScreen(
                     fromProfile: false,

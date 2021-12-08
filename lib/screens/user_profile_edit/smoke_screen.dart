@@ -184,7 +184,8 @@ class _SmokeScreenState extends State<SmokeScreen> {
                       "Planning to quit";
                   DataBaseMethods().addUserSmoke("Planning to quit");
                 }
-                Get.off(EditProfileScreen());
+                // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
                 // Navigator.pop(context);
                 // Navigator.popAndPushNamed(context, EditProfileScreen.routeName);
               },

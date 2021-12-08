@@ -20,6 +20,7 @@ class SingleUserSent extends StatelessWidget {
                   'Sent ',
                   style: TextStyle(
                     fontSize: 18,
+                    color: Color.fromRGBO(51, 51, 51, 1),
                   ),
                 ),
               ),
@@ -29,6 +30,7 @@ class SingleUserSent extends StatelessWidget {
               Text('(' + sentProfiles.length.toString() + ')',
                   style: TextStyle(
                     fontSize: 18,
+                    color: Color.fromRGBO(51, 51, 51, 1),
                   )),
             ],
           ),
@@ -47,9 +49,9 @@ class SingleUserSent extends StatelessWidget {
                   ),
                   title: Row(
                     children: [
-                      Text("${sentProfiles[index]['sent']}  "),
+                      Text("${sentProfiles[index]['sent']}  ", style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),),
                       sentProfiles[index]['bookay'] > 0
-                          ? Text("${sentProfiles[index]['bookay'].toString()} ")
+                          ? Text("${sentProfiles[index]['bookay'].toString()} ", style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),)
                           : Container(),
                       sentProfiles[index]['bookay'] > 0
                           ? Transform.rotate(

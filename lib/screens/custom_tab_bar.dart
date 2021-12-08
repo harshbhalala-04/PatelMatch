@@ -39,161 +39,169 @@ class _CustomTabBarState extends State<CustomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    print("Here cutom tab bar build");
-    print("Image: ${globalController.currentAppuser.value.imgUrl} ");
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    screenController.checkInternetConnectivity();
+    return GetBuilder<ScreenController>(
+      initState: (state) {
+        print("Here inside get builder");
+        // screenController.checkInternetConnectivity();
+      },
+      builder: (controller) => Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(80),
+            child: Container(
+              margin: EdgeInsets.only(top: 10, right: 15, left: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(4),
-                    child: Obx(() => globalController.isLoading.value
-                        ? InkWell(
-                            onTap: () {
-                              Get.to(ProfileScreen());
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey,
-                            ),
-                          )
-                        : InkWell(
-                            onTap: () {
-                              Get.to(ProfileScreen());
-                            },
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(globalController
-                                  .currentAppuser.value.imgUrl!),
-                              backgroundColor: Colors.grey,
-                            ),
-                          )),
-                  ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(
-                        () => TabButton(
-                          text: "  Feed  ",
-                          // pending: false,
-                          pageNumber: 0,
-                          selectedPage: screenController.selectedPage.value,
-                          onPressed: () {
-                            pageController!.animateToPage(0,
-                                duration: Duration(milliseconds: 200),
-                                curve: Curves.fastLinearToSlowEaseIn);
-                          },
+                      Container(
+                        margin: EdgeInsets.all(4),
+                        child: Obx(() => globalController.isLoading.value
+                            ? InkWell(
+                                onTap: () {
+                                  Get.to(ProfileScreen());
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                ),
+                              )
+                            : InkWell(
+                                onTap: () {
+                                  Get.to(ProfileScreen());
+                                },
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(globalController
+                                      .currentAppuser.value.imgUrl!),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              )),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Obx(
+                            () => TabButton(
+                              text: "  Feed  ",
+                              // pending: false,
+                              pageNumber: 0,
+                              selectedPage: screenController.selectedPage.value,
+                              onPressed: () {
+                                pageController!.animateToPage(0,
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.fastLinearToSlowEaseIn);
+                              },
+                            ),
+                          ),
+                          Obx(
+                            () => TabButton(
+                              text: "  Requests  ",
+                              // pending: Get.find<GlobalController>().isRequest.value,
+                              pageNumber: 1,
+                              selectedPage: screenController.selectedPage.value,
+                              onPressed: () {
+                                pageController!.animateToPage(1,
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.fastLinearToSlowEaseIn);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 30,
+                        child: Container(
+                          // margin: EdgeInsets.only(top: 5),
+                          child: InkWell(
+                            key: Key("Filter"),
+                            onTap: () {
+                              Get.to(FilterScreen());
+                            },
+                            child: SvgPicture.asset('assets/Group.svg'),
+                          ),
                         ),
                       ),
-                      Obx(
-                        () => TabButton(
-                          text: "  Requests  ",
-                          // pending: Get.find<GlobalController>().isRequest.value,
-                          pageNumber: 1,
-                          selectedPage: screenController.selectedPage.value,
-                          onPressed: () {
-                            pageController!.animateToPage(1,
-                                duration: Duration(milliseconds: 200),
-                                curve: Curves.fastLinearToSlowEaseIn);
-                          },
+                      InkWell(
+                        key: Key("Message"),
+                        onTap: () {
+                          Get.find<GlobalController>().isMessage.value = false;
+                          Get.to(MessageScreen());
+                        },
+                        child: Container(
+                          // margin: EdgeInsets.only(right: 3),
+                          child: Column(
+                            children: [
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
+                              Stack(
+                                children: [
+                                  
+                                  SvgPicture.asset(
+                                    'assets/iPhone 11 Pro 2/Vector.svg',
+                                    // height: 31.04,
+                                    // width: 36.54,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    width: 30,
-                    child: Container(
-                      margin: EdgeInsets.only(top: 5),
-                      child: InkWell(
-                        key: Key("Filter"),
-                        onTap: () {
-                          Get.to(FilterScreen());
+                ],
+              ),
+            ),
+          ),
+          body: Obx(
+            () => screenController.isLoading.value
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : screenController.isInternet.value
+                    ? PageView(
+                        physics: new NeverScrollableScrollPhysics(),
+                        onPageChanged: (int page) {
+                          screenController.selectedPage.value = page;
                         },
+                        controller: pageController,
+                        children: [
+                          FeedScreen(),
+                          RequestTabScreen(),
+                        ],
+                      )
+                    : Center(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(
-                              'iPhone 11 Pro/Vector.svg',
-                              fit: BoxFit.cover,
-                              height: 6.94,
-                              width: 27.69,
+                            SvgPicture.asset('assets/Internet.svg'),
+                            Text(
+                              'You seem to be offline',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1),
                             ),
-                            SvgPicture.asset(
-                              'iPhone 11 Pro/Vector-1.svg',
-                              fit: BoxFit.cover,
-                              height: 6.94,
-                              width: 27.69,
-                            ),
-                            SvgPicture.asset(
-                              'iPhone 11 Pro/Vector-2.svg',
-                              fit: BoxFit.cover,
-                              height: 6.94,
-                              width: 27.69,
-                            ),
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Please check your internet connection and try again.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(122, 122, 122, 1),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  InkWell(
-                    key: Key("Message"),
-                    onTap: () {
-                      Get.find<GlobalController>().isMessage.value = false;
-                      Get.to(MessageScreen());
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 3),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Stack(
-                            children: [
-                              // Obx(() => Get.find<GlobalController>()
-                              //         .isMessage
-                              //         .value
-                              //     ? Positioned(
-                              //         right: MediaQuery.of(context).size.width /
-                              //             60,
-                              //         child: Icon(
-                              //           Icons.circle,
-                              //           size: 10,
-                              //           color: Color.fromRGBO(255, 85, 115, 1),
-                              //         ))
-                              //     : Container()),
-                              SvgPicture.asset(
-                                'assets/iPhone 11 Pro 2/Vector.svg',
-                                height: 31.04,
-                                width: 36.54,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: PageView(
-        physics: new NeverScrollableScrollPhysics(),
-        onPageChanged: (int page) {
-          screenController.selectedPage.value = page;
-        },
-        controller: pageController,
-        children: [
-          FeedScreen(),
-          RequestTabScreen(),
-        ],
-      ),
+          )),
     );
   }
 }

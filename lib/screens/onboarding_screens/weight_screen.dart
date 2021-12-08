@@ -131,6 +131,7 @@ class _WeightScreenState extends State<WeightScreen> {
                         weight;
 
                     DataBaseMethods().addUserWeight(weight);
+                    // Navigator.pop(context);
                     Get.off(EditProfileScreen());
                   }
                 } else {

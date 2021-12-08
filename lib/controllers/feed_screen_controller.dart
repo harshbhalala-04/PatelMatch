@@ -73,8 +73,11 @@ class FeedScreenController extends GetxController {
       gender = tmpMap['gender'];
       messageOpenTill.value = tmpMap['messageOpenTill'];
       freeTrial.value = tmpMap['freeTrial'];
+      // globalController.currentAppuser.value.filters.samaj = tmpMap['filters'] 
     });
     Query<Map<String, dynamic>> query;
+
+
 
     if (globalController.currentAppuser.value.excludedUsers?.length == 0) {
       query = firebaseFirestore
@@ -144,6 +147,11 @@ class FeedScreenController extends GetxController {
     stopwatch.stop();
   }
 
+  final selectedBookayVal = 1.obs;
+  // changeVal() {
+
+  // }
+
   @override
   void onInit() {
     scrollController.addListener(scrollListener);
@@ -153,7 +161,7 @@ class FeedScreenController extends GetxController {
 
   @override
   void onClose() {
-    scrollController.dispose();
+    // scrollController.dispose();
     super.onClose();
   }
 }

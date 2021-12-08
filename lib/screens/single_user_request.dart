@@ -27,6 +27,7 @@ class SingleUserRequest extends StatelessWidget {
                         'Special requests',
                         style: TextStyle(
                           fontSize: 18,
+                          color: Color.fromRGBO(51, 51, 51, 1),
                         ),
                       ),
                       SizedBox(
@@ -35,6 +36,7 @@ class SingleUserRequest extends StatelessWidget {
                       Text('(' + specialProfiles.length.toString() + ')',
                           style: TextStyle(
                             fontSize: 18,
+                            color: Color.fromRGBO(51, 51, 51, 1),
                           )),
                     ],
                   ),
@@ -57,6 +59,7 @@ class SingleUserRequest extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
                             child: Card(
+                              elevation: 2.5,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               child: ListTile(
@@ -65,13 +68,13 @@ class SingleUserRequest extends StatelessWidget {
                                     backgroundImage: CachedNetworkImageProvider(
                                         specialProfiles[index]['image'])),
                                 title: Text(specialProfiles[index]['recieve'],
-                                    style: TextStyle(fontSize: 18)),
+                                    style: TextStyle(fontSize: 18, color: Color.fromRGBO(51, 51, 51, 1),)),
                                 subtitle: Row(
                                   children: [
                                     Text(
                                       "${specialProfiles[index]['recieve']} has sent you",
                                       style: TextStyle(
-                                        color: Colors.black45,
+                                        color: Color.fromRGBO(51, 51, 51, 1),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -79,7 +82,7 @@ class SingleUserRequest extends StatelessWidget {
                                       width: 2,
                                     ),
                                     Text(specialProfiles[index]['bookay']
-                                        .toString()),
+                                        .toString(), style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),),
                                     Transform.rotate(
                                       angle: 0.2,
                                       child: Image.asset(
@@ -112,6 +115,7 @@ class SingleUserRequest extends StatelessWidget {
                   'Pending ',
                   style: TextStyle(
                     fontSize: 18,
+                    color: Color.fromRGBO(51, 51, 51, 1),
                   ),
                 ),
                 SizedBox(
@@ -120,6 +124,7 @@ class SingleUserRequest extends StatelessWidget {
                 Text('(' + profiles.length.toString() + ')',
                     style: TextStyle(
                       fontSize: 18,
+                      color: Color.fromRGBO(51, 51, 51, 1),
                     )),
               ],
             ),
@@ -139,7 +144,7 @@ class SingleUserRequest extends StatelessWidget {
                           CachedNetworkImageProvider(profiles[index]['image']),
                       backgroundColor: Colors.grey,
                     ),
-                    title: Text(profiles[index]['recieve']),
+                    title: Text(profiles[index]['recieve'], style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),),
                     trailing: TextButton(
                         child: Text(
                           'View',

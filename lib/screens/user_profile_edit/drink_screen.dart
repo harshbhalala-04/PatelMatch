@@ -188,7 +188,8 @@ class _DrinkScreenState extends State<DrinkScreen> {
                   DataBaseMethods().addUserDrink("Planning to quit");
                 }
 
-                Get.off(EditProfileScreen());
+                // Navigator.pop(context);
+                    Get.off(EditProfileScreen());
               },
               child: Text(
                 'Submit',
