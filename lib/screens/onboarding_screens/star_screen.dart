@@ -5,7 +5,8 @@ import 'package:chat/screens/onboarding_screens/handicapped_screen.dart';
 import 'package:chat/screens/onboarding_screens/rashi_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
+// import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class StarScreen extends StatefulWidget {
   late final fromProfile;
@@ -18,115 +19,33 @@ class StarScreen extends StatefulWidget {
 
 class _StarScreenState extends State<StarScreen> {
   String? starAns = '';
-  List<DropdownMenuItem<String>> stars = [
-    DropdownMenuItem(
-      value: "Ashwini",
-      child: Text('Ashwini'),
-    ),
-    DropdownMenuItem(
-      value: "Bharani",
-      child: Text('Bharani'),
-    ),
-    DropdownMenuItem(
-      value: "Krittika",
-      child: Text('Krittika'),
-    ),
-    DropdownMenuItem(
-      value: "Rohini",
-      child: Text('Rohini'),
-    ),
-    DropdownMenuItem(
-      value: "Mrigashirsha",
-      child: Text('Mrigashīrsha'),
-    ),
-    DropdownMenuItem(
-      value: "Ardra",
-      child: Text('Ārdrā'),
-    ),
-    DropdownMenuItem(
-      value: "Punarvasu",
-      child: Text('Punarvasu'),
-    ),
-    DropdownMenuItem(
-      value: "Pushya",
-      child: Text('Pushya'),
-    ),
-    DropdownMenuItem(
-      value: "Āshleshā",
-      child: Text('Āshleshā'),
-    ),
-    DropdownMenuItem(
-      value: "Magha",
-      child: Text('Magha'),
-    ),
-    DropdownMenuItem(
-      value: "Purva or Purva Phalguni",
-      child: Text('Purva or Purva Phalguni'),
-    ),
-    DropdownMenuItem(
-      value: "Uttara or Uttara Phalguni",
-      child: Text('Uttara or Uttara Phalguni'),
-    ),
-    DropdownMenuItem(
-      value: "Hasta",
-      child: Text('Hasta'),
-    ),
-    DropdownMenuItem(
-      value: "Chitra",
-      child: Text('Chitra'),
-    ),
-    DropdownMenuItem(
-      value: "Svati",
-      child: Text('Svati'),
-    ),
-    DropdownMenuItem(
-      value: "Visakha",
-      child: Text('Visakha'),
-    ),
-    DropdownMenuItem(
-      value: "Anuradha",
-      child: Text('Anuradha'),
-    ),
-    DropdownMenuItem(
-      value: "Jyeshtha",
-      child: Text('Jyeshtha'),
-    ),
-    DropdownMenuItem(
-      value: "Mula",
-      child: Text('Mula'),
-    ),
-    DropdownMenuItem(
-      value: "Purva Ashadha",
-      child: Text('Purva Ashadha'),
-    ),
-    DropdownMenuItem(
-      value: "Uttara Asadha",
-      child: Text('Uttara Asadha'),
-    ),
-    DropdownMenuItem(
-      value: "Sravana",
-      child: Text('Sravana'),
-    ),
-    DropdownMenuItem(
-      value: "Sravistha or Dhanishta",
-      child: Text('Sravistha or Dhanishta'),
-    ),
-    DropdownMenuItem(
-      value: "Shatabhisha or Satataraka",
-      child: Text('Shatabhisha or Satataraka'),
-    ),
-    DropdownMenuItem(
-      value: "Purva Bhadrapada",
-      child: Text('Purva Bhadrapada'),
-    ),
-    DropdownMenuItem(
-      value: "Uttara Bhadrapada",
-      child: Text('Uttara Bhadrapada'),
-    ),
-    DropdownMenuItem(
-      value: "Revati",
-      child: Text('Revati'),
-    ),
+  List<String> stars = [
+   'Ashwini','Bharani',
+    'Krittika',
+    'Rohini',
+    'Mrigashīrsha',
+    'Ārdrā',
+    'Punarvasu',
+   'Pushya',
+   'Āshleshā',
+   'Magha',
+    'Purva or Purva Phalguni',
+    'Uttara or Uttara Phalguni',
+   'Hasta',
+    'Chitra',
+    'Svati',
+    'Visakha',
+    'Anuradha',
+    'Jyeshtha',
+    'Mula',
+   'Purva Ashadha',
+    'Uttara Asadha',
+    'Sravana',
+    'Sravistha or Dhanishta',
+    'Shatabhisha or Satataraka',
+    'Purva Bhadrapada',
+   'Uttara Bhadrapada',
+    'Revati',
   ];
 
   @override
@@ -189,30 +108,19 @@ class _StarScreenState extends State<StarScreen> {
             ),
             Container(
               width: double.infinity,
-              child: SearchableDropdown.single(
-                displayClearIcon: false,
-                hint: starAns == ''
-                    ? Text(
-                        'Select',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      )
-                    : Text(
-                        starAns!,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                isExpanded: true,
-                items: stars,
-                //value: heightAns == '' ? Text('') : Text(heightAns!),
-                onChanged: (val) {
-                  starAns = val;
-                  print(starAns);
-                },
-              ),
+              child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItems: true,
+                            items: stars,
+                            // ignore: deprecated_member_use
+                            label: "Select",
+                            // popupItemDisabled: (String s) =>
+                            //     s.startsWith('I'),
+                            onChanged: (val) {
+                              starAns = val!;
+                            },
+                            // selectedItem: "Brazil"
+                          ),
             ),
           ],
         ),

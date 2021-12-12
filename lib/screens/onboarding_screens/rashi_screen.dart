@@ -4,15 +4,15 @@ import 'package:chat/database/database.dart';
 import 'package:chat/screens/onboarding_screens/manglic_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
+// import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import '../edit_profile_screen.dart';
 
 class RashiScreen extends StatefulWidget {
-   late final fromProfile;
+  late final fromProfile;
   String response;
   RashiScreen({required this.fromProfile, this.response = ''});
-
 
   @override
   _RashiScreenState createState() => _RashiScreenState();
@@ -20,56 +20,19 @@ class RashiScreen extends StatefulWidget {
 
 class _RashiScreenState extends State<RashiScreen> {
   String? rashiAns = '';
-  List<DropdownMenuItem<String>> rashis = [
-    DropdownMenuItem(
-      value: "Aries",
-      child: Text('Aries'),
-    ),
-    DropdownMenuItem(
-      value: "Taurus",
-      child: Text('Taurus'),
-    ),
-    DropdownMenuItem(
-      value: "Gemini",
-      child: Text('Gemini'),
-    ),
-    DropdownMenuItem(
-      value: "Cancer",
-      child: Text('Cancer'),
-    ),
-    DropdownMenuItem(
-      value: "Leo",
-      child: Text('Leo'),
-    ),
-    DropdownMenuItem(
-      value: "Virgo",
-      child: Text('Virgo'),
-    ),
-    DropdownMenuItem(
-      value: "Libra",
-      child: Text('Libra'),
-    ),
-    DropdownMenuItem(
-      value: "Scorpio",
-      child: Text('Scorpio'),
-    ),
-    DropdownMenuItem(
-      value: "Saggitarius",
-      child: Text('Saggitarius'),
-    ),
-    DropdownMenuItem(
-      value: "Capricorn",
-      child: Text('Capricorn'),
-    ),
-    DropdownMenuItem(
-      value: "Aquarius",
-      child: Text('Aquarius'),
-    ),
-    DropdownMenuItem(
-      value: "Pisces",
-      child: Text('Pisces'),
-    ),
-
+  List<String> rashis = [
+    'Aries',
+    'Taurus',
+    'Gemini',
+    'Cancer',
+    'Leo',
+    'Virgo',
+    'Libra',
+    'Scorpio',
+    'Saggitarius',
+    'Capricorn',
+    'Aquarius',
+    'Pisces'
   ];
 
   @override
@@ -82,6 +45,7 @@ class _RashiScreenState extends State<RashiScreen> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,10 +55,16 @@ class _RashiScreenState extends State<RashiScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         actions: [
-          widget.fromProfile ? Container() : TextButton(
+          widget.fromProfile
+              ? Container()
+              : TextButton(
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -104,7 +74,9 @@ class _RashiScreenState extends State<RashiScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserRashi('');
-                    Get.to(ManglicScreen(fromProfile: false,));
+                    Get.to(ManglicScreen(
+                      fromProfile: false,
+                    ));
                   },
                 )
         ],
@@ -129,29 +101,19 @@ class _RashiScreenState extends State<RashiScreen> {
             ),
             Container(
               width: double.infinity,
-              child: SearchableDropdown.single(
-                displayClearIcon: false,
-                hint: rashiAns == ''
-                    ? Text(
-                        'Select',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      )
-                    : Text(
-                        rashiAns!,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                isExpanded: true,
-                items: rashis,
-                onChanged: (val) {
-                  rashiAns = val;
-                  print(rashiAns);
-                },
-              ),
+              child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItems: true,
+                            items: rashis,
+                            // ignore: deprecated_member_use
+                            label: "Select",
+                            // popupItemDisabled: (String s) =>
+                            //     s.startsWith('I'),
+                            onChanged: (val) {
+                              rashiAns = val!;
+                            },
+                            // selectedItem: "Brazil"
+                          ),
             ),
           ],
         ),
@@ -162,8 +124,7 @@ class _RashiScreenState extends State<RashiScreen> {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                
-                  if (widget.fromProfile) {
+                if (widget.fromProfile) {
                   if (rashiAns == null) {
                     showDialog(
                         context: context,
@@ -194,13 +155,15 @@ class _RashiScreenState extends State<RashiScreen> {
                   ));
                 }
               },
-              child: widget.fromProfile ?  Text(
-                'Submit',
-                style: TextStyle(fontSize: 17),
-              ):  Text(
-                'Continue',
-                style: TextStyle(fontSize: 17),
-              ),
+              child: widget.fromProfile
+                  ? Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 17),
+                    )
+                  : Text(
+                      'Continue',
+                      style: TextStyle(fontSize: 17),
+                    ),
               style: ButtonStyle(),
             ),
           ),

@@ -213,7 +213,7 @@ class FilterScreen extends StatelessWidget {
                   ),
                 ),
                 Center(
-                    child: Positioned.fill(
+                    // child: Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(
                       sigmaX: 6,
@@ -264,7 +264,7 @@ class FilterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                ))
+                )/*)*/
               ],
             ),
     );

@@ -210,6 +210,9 @@ class DataBaseMethods {
     String? myName;
     String? myEmail;
     int bookayAvailable = 0;
+    final globalController = Get.put(GlobalController());
+    
+
 
     try {
       await firestore.collection("users").doc(user!.uid).get().then((val) {
@@ -244,7 +247,7 @@ class DataBaseMethods {
       await firestore.collection("users").doc(otherUserId).get().then((val) {
         otherFriendList = val.data()!['friendRequest'];
       });
-
+      Get.find<GlobalController>().currentAppuser.value.bookayAvailable = remaningBookay;
       String? myUid = user!.uid;
 
       List<Map<String, dynamic>> myMap = [

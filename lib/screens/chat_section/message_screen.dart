@@ -2,12 +2,11 @@ import 'dart:ui';
 
 import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
-import 'package:chat/database/database.dart';
 import 'package:chat/helper/services.dart';
 import 'package:chat/screens/SubscriptionScreen.dart';
 import 'package:chat/widgets/chat_room_list_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -159,7 +158,7 @@ class _MessageScreenState extends State<MessageScreen> {
               // isLoading ? Center(child: CircularProgressIndicator(),) : (freeTrial! ? AlertDialog() : Container()),
               (Get.find<FeedScreenController>().freeTrial.value
                   ? Center(
-                      child: Positioned.fill(
+                      // child: Positioned.fill(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
                           sigmaX: 6,
@@ -265,7 +264,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           ),
                         ),
                       ),
-                    ))
+                    )/*)*/
                   : Get.find<FeedScreenController>().messageOpenTill.value ==
                           null
                       ? Container()
@@ -275,7 +274,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                   .compareTo(myTimeStamp) <
                               0
                           ? Center(
-                              child: Positioned.fill(
+                              // child: Positioned.fill(
                                 child: BackdropFilter(
                                   filter: ImageFilter.blur(
                                     sigmaX: 6,
@@ -376,7 +375,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                       ),
                                     ),
                                   ),
-                                ),
+                                // ),
                               ),
                             )
                           : Container())),

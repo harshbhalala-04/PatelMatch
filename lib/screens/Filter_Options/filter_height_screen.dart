@@ -4,7 +4,8 @@ import 'package:chat/helper/services.dart';
 import 'package:chat/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
+// import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class FilterHeightScreen extends StatefulWidget {
   const FilterHeightScreen({Key? key}) : super(key: key);
@@ -64,31 +65,43 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           width: 150,
-                          child: SearchableDropdown.single(
-                            displayClearIcon: false,
-                            isExpanded: true,
-                            iconDisabledColor: Color.fromRGBO(255, 85, 115, 1),
-                            hint: minHeight == ''
-                                ? Text(
-                                    'Select',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  )
-                                : Text(
-                                    minHeight,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                    ),
-                                  ),
+                          child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItems: true,
                             items: heights,
+                            // ignore: deprecated_member_use
+                            label: "Select",
+                            // popupItemDisabled: (String s) =>
+                            //     s.startsWith('I'),
                             onChanged: (val) {
-                              minHeight = val;
-
-                              print(minHeight);
+                              minHeight = val!;
                             },
+                            // selectedItem: "Brazil"
                           ),
+                          // child: SearchableDropdown.single(
+                          //   displayClearIcon: false,
+                          //   isExpanded: true,
+                          //   iconDisabledColor: Color.fromRGBO(255, 85, 115, 1),
+                          //   hint: minHeight == ''
+                          //       ? Text(
+                          //           'Select',
+                          //           style: TextStyle(
+                          //             fontSize: 18,
+                          //           ),
+                          //         )
+                          //       : Text(
+                          //           minHeight,
+                          //           style: TextStyle(
+                          //             color: Colors.black,
+                          //             fontSize: 18,
+                          //           ),
+                          //         ),
+                          // items: heights,
+                          // onChanged: (val) {
+                          //   minHeight = val;
+
+                          //   print(minHeight);
+                          // },
                         ),
                       ],
                     ),
@@ -115,28 +128,18 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
                           width: 140,
-                          child: SearchableDropdown.single(
-                            isExpanded: true,
-                            displayClearIcon: false,
-                            hint: minHeight == ''
-                                ? Text(
-                                    'Select',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  )
-                                : Text(
-                                    minHeight,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                    ),
-                                  ),
+                          child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItems: true,
                             items: heights,
+                            // ignore: deprecated_member_use
+                            label: "Select",
+                            // popupItemDisabled: (String s) =>
+                            //     s.startsWith('I'),
                             onChanged: (val) {
-                              maxHeight = val;
-                              print(maxHeight);
+                              maxHeight = val!;
                             },
+                            // selectedItem: "Brazil"
                           ),
                         ),
                       ],

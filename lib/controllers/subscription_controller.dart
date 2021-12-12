@@ -58,6 +58,9 @@ class SubscriptionController extends GetxController {
 
   final feedScreenController = Get.put(FeedScreenController());
 
+  // Live API = rzp_live_BsJlfNy4KTNyHA
+  // Secret Key = JjPK73y2HZGnKGhJCGgfI7gM
+
   fetchPrices() async {
     isLoading.toggle();
     await FirebaseFirestore.instance
@@ -134,8 +137,11 @@ class SubscriptionController extends GetxController {
         base64Encode(
             utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
     request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
-    request.add(
-        utf8.encode(json.encode({"amount": amountToPay, "currency": "INR",  'receipt': "order_rcptid_11"})));
+    request.add(utf8.encode(json.encode({
+      "amount": amountToPay,
+      "currency": "INR",
+      'receipt': "order_rcptid_11"
+    })));
     final response = await request.close();
 
     response.transform(utf8.decoder).listen((contents) {
@@ -150,8 +156,8 @@ class SubscriptionController extends GetxController {
         "currency": "INR",
         "name": "Messaging",
         'order_id': orderId,
-        'timeout': 60,
-        "description": purchaseItem["messageDuration"],
+        // 'timeout': 60,
+        "description": "",
         "prefill": {
           "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
           "email": Get.find<GlobalController>().currentAppuser.value.email,
@@ -180,8 +186,11 @@ class SubscriptionController extends GetxController {
         base64Encode(
             utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
     request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
-    request.add(
-        utf8.encode(json.encode({"amount": amountToPay, "currency": "INR", 'receipt': "order_rcptid_11"})));
+    request.add(utf8.encode(json.encode({
+      "amount": amountToPay,
+      "currency": "INR",
+      'receipt': "order_rcptid_11"
+    })));
     final response = await request.close();
 
     response.transform(utf8.decoder).listen((contents) {
@@ -198,7 +207,7 @@ class SubscriptionController extends GetxController {
         "name": purchaseItem["bookayCount"],
         "description": "",
         "currency": "INR",
-        'timeout': 60,
+        // 'timeout': 60,
         "order_id": orderId,
         "prefill": {
           "contact": Get.find<GlobalController>().currentAppuser.value.phoneNo,
@@ -216,13 +225,21 @@ class SubscriptionController extends GetxController {
 
   void handlerPaymentSuccess(PaymentSuccessResponse response) {
     Fluttertoast.showToast(
-        msg: "Purchase Successfully!",
+        msg: "Purchase Successfully!, pull to refresh the page",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
         backgroundColor: Color.fromRGBO(255, 85, 115, 1),
         textColor: Color.fromRGBO(255, 255, 255, 1),
         fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: "Pull to refresh the page",
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Color.fromRGBO(255, 85, 115, 1),
+    //     textColor: Color.fromRGBO(255, 255, 255, 1),
+    //     fontSize: 16.0);
     print("___________________________");
     print("Here is the order id: ${response.orderId}");
 
@@ -239,6 +256,7 @@ class SubscriptionController extends GetxController {
           "New Time stamp: ${Get.find<FeedScreenController>().messageOpenTill}");
       DataBaseMethods().addMessaging(messageUpload.value);
     } else {
+      final bookayController = Get.put(BookayController());
       bouqueUpload['payment_id'] = response.paymentId;
       oneBouquetSelected.value = false;
       fiveBouquetSelected.value = false;
