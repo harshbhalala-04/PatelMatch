@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1041228216743:android:f8a61ab14da0d168c9de82",
         "android_client_info": {
-          "package_name": "com.example.chat"
+          "package_name": "com.patelMatch.chat"
         }
       },
       "oauth_client": [
