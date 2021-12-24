@@ -21,6 +21,7 @@ class AuthController extends GetxController {
   final loginState = false.obs;
   final userNri = ''.obs;
   final resetPass = false.obs;
+  final isConfirm = false.obs;
 
   String? get user => firebaseUser.value?.email;
 
@@ -52,6 +53,10 @@ class AuthController extends GetxController {
 
   void toggoleRePasswordVisibility() {
     isRePassVisible.toggle();
+  }
+
+  void toggoleConfrimSwitch() {
+    isConfirm.toggle();
   }
 
   void createUser(String? email, String? password, String? phoneNo) async {

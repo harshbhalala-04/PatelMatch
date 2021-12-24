@@ -185,6 +185,16 @@ class AuthScreen extends GetWidget<AuthController> {
                                               width: 150,
                                               child: ElevatedButton(
                                                 onPressed: () {
+                                                  if (controller
+                                                      .isConfirm.value == false) {
+                                                           Get.snackbar(
+                                                        'Please Agree to terms of service and privacy policy',
+                                                        '',
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        colorText:
+                                                            Colors.white);
+                                                      }
                                                   if (phoneController
                                                       .text.isEmpty) {
                                                     Get.snackbar(
@@ -276,45 +286,64 @@ class AuthScreen extends GetWidget<AuthController> {
                         ? Container()
                         : Container(
                             padding: EdgeInsets.symmetric(horizontal: 50),
-                            child: Center(
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "By signing up for PatelMatch, you agree to our ",
+                            child: Wrap(children: [
+                              Row(
+                                children: [
+                                  Obx(() => Checkbox(
+                                        value: controller.isConfirm.value,
+                                        checkColor: Colors.white,
+                                        side: BorderSide(
+                                          color: Colors.white,
+                                          width: 1.5,
+                                        ),
+                                        onChanged: (val) {
+                                          controller.toggoleConfrimSwitch();
+                                        },
+                                      )),
+                                  Expanded(
+                                    child: Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "By signing up for PatelMatch, you agree to our ",
+                                          ),
+                                          TextSpan(
+                                              text: "Terms of service",
+                                              recognizer:
+                                                  new TapGestureRecognizer()
+                                                    ..onTap = () {
+                                                      launch(
+                                                          'https://patelmatch.in/#/terms/');
+                                                    },
+                                              style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  decorationThickness: 5)),
+                                          TextSpan(text: " and "),
+                                          TextSpan(
+                                              text: "Privacy Policy",
+                                              recognizer:
+                                                  new TapGestureRecognizer()
+                                                    ..onTap = () {
+                                                      launch(
+                                                          'https://patelmatch.in/#/privacy-policy/');
+                                                    },
+                                              style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  decorationThickness: 5))
+                                        ],
+                                      ),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontFamily: 'Cabin'),
                                     ),
-                                    TextSpan(
-                                        text: "Terms of service",
-                                        recognizer: new TapGestureRecognizer()
-                                          ..onTap = () {
-                                            launch(
-                                                'https://patelmatch.in/#/terms/');
-                                          },
-                                        style: TextStyle(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationThickness: 5)),
-                                    TextSpan(text: " and "),
-                                    TextSpan(
-                                        text: "Privacy Policy",
-                                         recognizer: new TapGestureRecognizer()
-                                          ..onTap = () {
-                                            launch(
-                                                'https://patelmatch.in/#/privacy-policy/');
-                                          },
-                                        style: TextStyle(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationThickness: 5))
-                                  ],
-                                ),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontFamily: 'Cabin'),
+                                  ),
+                                ],
                               ),
-                            ),
+                            ]),
                           ))
               ]),
             ]),

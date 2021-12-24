@@ -89,6 +89,32 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
                   'User Profile',
                   style: TextStyle(color: Colors.black, fontSize: 24),
                 ),
+                actions: [
+                  DropdownButton(
+                      icon: Icon(Icons.more_vert),
+                      underline: Container(),
+                      items: [
+                        DropdownMenuItem(
+                          child: Container(
+                            child: Text('Report'),
+                          ),
+                          value: 'Report',
+                        ),
+                        DropdownMenuItem(
+                          child: Container(
+                            child: Text('Block'),
+                          ),
+                          value: 'Block',
+                        ),
+                      ],
+                      onChanged: (itemIndentifier) {
+                        if (itemIndentifier == 'Report') {
+                          print('Report');
+                        } else if (itemIndentifier == 'Block') {
+                          print('Block');
+                        }
+                      })
+                ],
                 centerTitle: true,
                 backgroundColor: Colors.white,
                 leading: widget.fromDynamic

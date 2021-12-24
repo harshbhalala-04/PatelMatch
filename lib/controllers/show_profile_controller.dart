@@ -61,6 +61,7 @@ class ShowProfileController extends GetxController {
       "secondUserImg": currentUser.value.imgUrl, 
       "firstUserUid": Get.find<GlobalController>().currentAppuser.value.uid,
       "secondUserUid": currentUser.value.uid,
+      "hidden": false
     };
 
     DataBaseMethods().createChatRoom(chatRoomId!, chatRoomMap);

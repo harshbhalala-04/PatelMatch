@@ -114,7 +114,13 @@ class _MessageScreenState extends State<MessageScreen> {
                           shrinkWrap: true,
                           itemBuilder: (_, index) {
                             DocumentSnapshot ds = snapshot.data.docs[index];
-
+                            print("Here hidden value: ${ds['hidden'].runtimeType}");
+                            if (ds['hidden'] != null) {
+                              if (ds['hidden']) {
+                                print("Here hidden value is true");
+                                return Container();
+                              }
+                            }
                             return ChatRoomListTile(
                                 chatRoomId: ds['chatRoomId'],
                                 lastMessage: ds['lastMessage'],
@@ -264,7 +270,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           ),
                         ),
                       ),
-                    )/*)*/
+                    ) /*)*/
                   : Get.find<FeedScreenController>().messageOpenTill.value ==
                           null
                       ? Container()
@@ -275,106 +281,105 @@ class _MessageScreenState extends State<MessageScreen> {
                               0
                           ? Center(
                               // child: Positioned.fill(
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 6,
-                                    sigmaY: 6,
-                                  ),
-                                  child: Container(
-                                    height: 300,
-                                    child: AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16)),
-                                      ),
-                                      content: Column(
-                                        children: [
-                                          Container(
-                                            width: 65,
-                                            height: 65,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 0.25),
-                                                    blurRadius: 5,
-                                                  ),
-                                                ]),
-                                            child: CircleAvatar(
-                                              radius: 20,
-                                              backgroundColor: Colors.white,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
-                                                  border: Border.all(
-                                                    color: Color.fromRGBO(
-                                                        255, 85, 115, 1),
-                                                    width: 3,
-                                                  ),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 6,
+                                  sigmaY: 6,
+                                ),
+                                child: Container(
+                                  height: 300,
+                                  child: AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(16)),
+                                    ),
+                                    content: Column(
+                                      children: [
+                                        Container(
+                                          width: 65,
+                                          height: 65,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.25),
+                                                  blurRadius: 5,
                                                 ),
-                                                child: Container(
-                                                  margin: EdgeInsets.all(8),
-                                                  child: SvgPicture.asset(
-                                                    'assets/₹.svg',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            "Subscribe to view messages!",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              "Choose a plan and message anyone that you have connected with.",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Get.to(SubscriptionScreen());
-                                              },
-                                              child: Text(
-                                                'View plans',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18),
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Color.fromRGBO(
+                                              ]),
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: Colors.white,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                border: Border.all(
+                                                  color: Color.fromRGBO(
                                                       255, 85, 115, 1),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20)),
-                                                  )),
+                                                  width: 3,
+                                                ),
+                                              ),
+                                              child: Container(
+                                                margin: EdgeInsets.all(8),
+                                                child: SvgPicture.asset(
+                                                  'assets/₹.svg',
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "Subscribe to view messages!",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            "Choose a plan and message anyone that you have connected with.",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Get.to(SubscriptionScreen());
+                                            },
+                                            child: Text(
+                                              'View plans',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Color.fromRGBO(
+                                                    255, 85, 115, 1),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(20)),
+                                                )),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                ),
                                 // ),
                               ),
                             )

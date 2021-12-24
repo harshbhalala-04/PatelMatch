@@ -185,11 +185,41 @@ class DataBaseMethods {
 
   /// Add Report
   addReport(String otherUid, String reportReason) {
-    firestore.collection("REPORT_USERS").doc().set({
-      "reportBy": otherUid,
-      "reportTo": user!.uid,
-      "reportReason": reportReason,
-    });
+    print(otherUid);
+    print("Report users ");
+    print(reportReason);
+    try {
+      firestore.collection("REPORT_USERS").doc().set({
+        "reportBy": user!.uid,
+        "reportTo": otherUid,
+        "reportReason": reportReason,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  ///Add Block user
+  addBlock(String otherUid) {
+    try {
+      firestore.collection("BLOCK_USERS").doc().set({
+        "blockBy": user!.uid,
+        "blockTo": otherUid,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  ///Add Block in chat
+  addBlockInChat(String chatRoomId) {
+    try {
+      firestore.collection("chatroom").doc(chatRoomId).update({
+        "hidden": true,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   removeExcludeUser(String otherUid) async {
@@ -211,8 +241,6 @@ class DataBaseMethods {
     String? myEmail;
     int bookayAvailable = 0;
     final globalController = Get.put(GlobalController());
-    
-
 
     try {
       await firestore.collection("users").doc(user!.uid).get().then((val) {
@@ -247,7 +275,8 @@ class DataBaseMethods {
       await firestore.collection("users").doc(otherUserId).get().then((val) {
         otherFriendList = val.data()!['friendRequest'];
       });
-      Get.find<GlobalController>().currentAppuser.value.bookayAvailable = remaningBookay;
+      Get.find<GlobalController>().currentAppuser.value.bookayAvailable =
+          remaningBookay;
       String? myUid = user!.uid;
 
       List<Map<String, dynamic>> myMap = [

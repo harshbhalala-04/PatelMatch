@@ -43,6 +43,7 @@ class ReqReceiveController extends GetxController {
       "secondUserImg": currentUser.imgUrl,
       "firstUserUid": Get.find<GlobalController>().currentAppuser.value.uid,
       "secondUserUid": currentUser.uid,
+      "hidden": false,
     };
 
     DataBaseMethods().createChatRoom(chatRoomId, chatRoomMap);
