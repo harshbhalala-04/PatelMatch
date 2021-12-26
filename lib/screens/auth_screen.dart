@@ -186,15 +186,17 @@ class AuthScreen extends GetWidget<AuthController> {
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   if (controller
-                                                      .isConfirm.value == false) {
-                                                           Get.snackbar(
+                                                          .isConfirm.value ==
+                                                      false) {
+                                                    Get.snackbar(
                                                         'Please Agree to terms of service and privacy policy',
                                                         '',
                                                         backgroundColor:
                                                             Colors.red,
                                                         colorText:
                                                             Colors.white);
-                                                      }
+                                                    return;
+                                                  }
                                                   if (phoneController
                                                       .text.isEmpty) {
                                                     Get.snackbar(

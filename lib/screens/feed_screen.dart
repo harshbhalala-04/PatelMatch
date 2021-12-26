@@ -21,11 +21,16 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   final feedScreenController = Get.put(FeedScreenController());
   final globalController = Get.put(GlobalController());
-  final showProfileController = Get.put(ShowProfileController());
-  final reportController = Get.put(ReportController());
+  
   final firestore = FirebaseFirestore.instance;
 
-  void choiceAction(String choice, String uid) {
+
+  // final showProfileController = Get.put(ShowProfileController());
+  final reportController = Get.put(ReportController());
+
+  
+
+  void choiceAction(String choice, String uid, String username) {
     if (choice == "Report") {
       print('Report');
       Get.dialog(
@@ -238,7 +243,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           fontFamily: 'Cabin'),
                     ),
                     TextSpan(
-                      text: showProfileController.currentUser.value.username,
+                      text: username,
                       style: TextStyle(
                           color: Color.fromRGBO(255, 85, 115, 1),
                           fontSize: 14,
@@ -373,7 +378,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                         choiceAction(
                                             val,
                                             feedScreenController
-                                                .usersList[index].uid!);
+                                                .usersList[index].uid!,
+                                                feedScreenController.usersList[index].username!);
                                       },
                                       itemBuilder: (BuildContext context) {
                                         return choices.map((String choice) {

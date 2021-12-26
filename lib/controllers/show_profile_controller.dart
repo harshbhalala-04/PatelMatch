@@ -12,10 +12,13 @@ class ShowProfileController extends GetxController {
   String? chatRoomId;
   String myUserName =
       Get.find<GlobalController>().currentAppuser.value.username!;
+      
   String myUserId = Get.find<GlobalController>().currentAppuser.value.uid!;
   String otherUserId = '';
 
   String? messageId = '';
+
+  
 
   fetchCurrentUser(String uid) async {
     isLoading.toggle();
