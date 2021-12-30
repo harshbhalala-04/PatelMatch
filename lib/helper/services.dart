@@ -60,7 +60,7 @@ Future<void> createDynamicLink() async {
     uriPrefix: "https://patelmatch.page.link",
     link: Uri.parse("https://patelmatch.page.link/$userId"),
     androidParameters:
-        AndroidParameters(packageName: "com.example.chat", minimumVersion: 0),
+        AndroidParameters(packageName: "com.patelMatch.chat", minimumVersion: 0),
     socialMetaTagParameters: SocialMetaTagParameters(
       title: userName,
       imageUrl: imageUri,
