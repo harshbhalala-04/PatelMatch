@@ -1220,4 +1220,11 @@ class DataBaseMethods {
       print(e.toString());
     }
   }
+
+  addAlternateNumber(String alterNumber) async {
+    await firestore
+        .collection("users")
+        .doc(user!.uid)
+        .update({"alterNumber": alterNumber});
+  }
 }

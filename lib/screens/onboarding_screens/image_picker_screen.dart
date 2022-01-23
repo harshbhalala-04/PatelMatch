@@ -6,8 +6,6 @@ import 'package:chat/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-
 class ImagePickerScreen extends StatelessWidget {
   final imagePickerController = Get.put(ImagePickerController());
 
@@ -21,8 +19,12 @@ class ImagePickerScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -102,12 +104,13 @@ class ImagePickerScreen extends StatelessWidget {
           child: Container(
             child: ElevatedButton(
               onPressed: () {
-                if (imagePickerController.tempImage.length < 1) {
+                if (imagePickerController.count.value == 0) {
                   imagePickerController.showCustomDialog();
                 } else {
                   Get.to(BirthDateScreen(fromProfile: false));
-                  DataBaseMethods()
-                      .uploadUserImages(imagePickerController.tempImage,);
+                  DataBaseMethods().uploadUserImages(
+                    imagePickerController.tempImage,
+                  );
                 }
               },
               child: Text(

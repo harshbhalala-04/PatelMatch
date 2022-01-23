@@ -56,17 +56,8 @@ class _MessageScreenState extends State<MessageScreen> {
           value.data()!['freeTrial'];
     });
 
-    print(
-        "This is free trial from build: ${Get.find<FeedScreenController>().freeTrial.value}");
-    print("This is message open tilll value: $messageOpenTill");
-    print(Get.find<FeedScreenController>().freeTrial.value);
-    print((Get.find<FeedScreenController>().messageOpenTill.value != null &&
-        Get.find<FeedScreenController>()
-                .messageOpenTill
-                .value
-                .compareTo(myTimeStamp) <
-            0));
-    // print("This is loading = $isLoading");
+    
+    
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,

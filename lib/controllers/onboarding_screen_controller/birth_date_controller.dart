@@ -54,9 +54,9 @@ class BirthDateController extends GetxController {
   void showDatePickerDailog(BuildContext context) {
     showDatePicker(
             context: context,
-            initialDate: DateTime(DateTime.now().year - 18),
+            initialDate: DateTime(DateTime.now().year - 21),
             firstDate: DateTime(1940),
-            lastDate: DateTime(DateTime.now().year - 18))
+            lastDate: DateTime(DateTime.now().year - 21))
         .then((pickedDate) {
       if (pickedDate == null) {
         return;

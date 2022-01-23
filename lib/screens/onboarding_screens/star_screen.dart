@@ -111,6 +111,7 @@ class _StarScreenState extends State<StarScreen> {
               child: DropdownSearch<String>(
                             mode: Mode.MENU,
                             showSelectedItems: true,
+                            showSearchBox: true,
                             items: stars,
                             // ignore: deprecated_member_use
                             label: "Select",

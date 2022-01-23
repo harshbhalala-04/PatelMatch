@@ -88,15 +88,15 @@ class _SignScreenState extends State<SignScreen> {
               child: DropdownSearch<String>(
                             mode: Mode.MENU,
                             showSelectedItems: true,
+                            showSearchBox: true,
                             items: zodiacSigns,
                             // ignore: deprecated_member_use
                             label: "Select",
-                            // popupItemDisabled: (String s) =>
-                            //     s.startsWith('I'),
+                           
                             onChanged: (val) {
                               reply = val!;
                             },
-                            // selectedItem: "Brazil"
+                           
                           ),),
           ],
         ),

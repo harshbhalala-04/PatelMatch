@@ -83,11 +83,13 @@ class FeedScreenController extends GetxController {
       query = firebaseFirestore
           .collection("users")
           .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          .where("isApproved", isEqualTo: true)
           .orderBy("createdAt", descending: true);
     } else {
       query = firebaseFirestore
           .collection("users")
           .where("gender", isEqualTo: gender == "Female" ? "Male" : "Female")
+          .where("isApproved", isEqualTo: true)
           .orderBy("createdAt", descending: true);
     }
 
@@ -148,9 +150,7 @@ class FeedScreenController extends GetxController {
   }
 
   final selectedBookayVal = 1.obs;
-  // changeVal() {
-
-  // }
+ 
 
   @override
   void onInit() {

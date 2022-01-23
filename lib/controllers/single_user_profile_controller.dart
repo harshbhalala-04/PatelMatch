@@ -11,6 +11,7 @@ class SingleUserProfileController extends GetxController {
   final buttonVisible = true.obs;
 
   buttonVisibility(String otherUid) async {
+    print("HEre button visible function called");
     isLoading.toggle();
     await FirebaseFirestore.instance
         .collection("users")
@@ -19,17 +20,24 @@ class SingleUserProfileController extends GetxController {
         .then((value) {
       user.value = UserModel.fromJson(value.data()!);
       print("Here fetch user happen");
+      print("***********************************");
     });
+
+    
+
     await FirebaseFirestore.instance
         .collection("users")
         .doc(globalController.currentAppuser.value.uid)
         .get()
         .then((val) {
+
+          print(val.data()!['gender']);
+          
       Map<String, dynamic> myMap = val.data()!;
       if (val.data()!['uid'] == otherUid) {
         buttonVisible.value = false;
         print("Here button is visible false from same uid");
-      } else if (val.data()!['gender'] ==
+      } else if (user.value.gender ==
           globalController.currentAppuser.value.gender) {
         buttonVisible.value = false;
         print("Button is visible false from same gender");

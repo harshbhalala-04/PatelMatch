@@ -63,7 +63,10 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
   void initState() {
     // TODO: implement initState
     // buttonVisibility();
-    singleUserProfileController.buttonVisibility(widget.uid);
+    print("_______________________________");
+    print("Inside dynamic link profile");
+    print("_____________________________________");
+    // singleUserProfileController.buttonVisibility(widget.uid);
     // singleUserProfileController.fetchUser(widget.uid);
 
     super.initState();
@@ -76,9 +79,7 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
     // if (globalController.currentAppuser.value.uid == widget.uid) {
     //   buttonVisible = false;
     // }
-    print(singleUserProfileController.user.value);
-    print(singleUserProfileController.user.value.username);
-    print(singleUserProfileController.isLoading.value);
+    singleUserProfileController.buttonVisibility(widget.uid);
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, userSnapshot) {

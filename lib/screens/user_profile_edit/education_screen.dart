@@ -151,6 +151,8 @@ class _EducationScreenState extends State<EducationScreen> {
     "Other",
   ];
 
+
+
   @override
   void initState() {
     if (widget.response != '') {
@@ -200,6 +202,7 @@ class _EducationScreenState extends State<EducationScreen> {
               width: double.infinity,
               child: DropdownSearch<String>(
                 mode: Mode.MENU,
+                showSearchBox: true,
                 showSelectedItems: true,
                 items: educations,
                 // ignore: deprecated_member_use

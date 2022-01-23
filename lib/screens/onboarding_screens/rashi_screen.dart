@@ -104,6 +104,7 @@ class _RashiScreenState extends State<RashiScreen> {
               child: DropdownSearch<String>(
                             mode: Mode.MENU,
                             showSelectedItems: true,
+                            showSearchBox: true,
                             items: rashis,
                             // ignore: deprecated_member_use
                             label: "Select",

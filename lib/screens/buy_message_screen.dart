@@ -31,18 +31,20 @@ class BuyMessageScreen extends StatelessWidget {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
 
-                    Get.find<SubscriptionController>().oneWeekSelected.value =
+                    Get.find<SubscriptionController>().firstDurationSelected.value =
                         true;
-                    Get.find<SubscriptionController>().oneMonthSelected.value =
+                    Get.find<SubscriptionController>().secondDurationSelected.value =
                         false;
-                    Get.find<SubscriptionController>().oneYearSelected.value =
+                    Get.find<SubscriptionController>().thirdDurationSelected.value =
                         false;
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
                         .value = {
-                      "messageDuration": "1 Week",
+                      "messageDuration": Get.find<SubscriptionController>()
+                          .firstDurationName
+                          .value,
                       "messagePrice": Get.find<SubscriptionController>()
-                          .weekDiscountedPrice
+                          .firstDurationDiscountedPrice
                           .value,
                     };
 
@@ -61,16 +63,18 @@ class BuyMessageScreen extends StatelessWidget {
                     Get.find<SubscriptionController>().messageUpload.value = {
                       "newTimestamp": newTimestamp,
                       "timestamp": DateTime.now(),
-                      "timePeriod": "1 Week",
+                      "timePeriod": Get.find<SubscriptionController>()
+                          .firstDurationName
+                          .value,
                       "messageCost": int.parse(
                           Get.find<SubscriptionController>()
-                              .weekDiscountedPrice
+                              .firstDurationDiscountedPrice
                               .value),
                     };
                   },
                   child: Container(
                     decoration: Get.find<SubscriptionController>()
-                            .oneWeekSelected
+                            .firstDurationSelected
                             .value
                         ? BoxDecoration(
                             border: Border.all(
@@ -80,17 +84,19 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: true,
+                      isPopular: Get.find<SubscriptionController>().isFirstDurationPopular.value,
                       currentPrice: Get.find<SubscriptionController>()
-                          .weekDiscountedPrice
+                          .firstDurationDiscountedPrice
                           .value,
                       originalPrice: Get.find<SubscriptionController>()
-                          .weekOriginalPrice
+                          .firstDurationOriginalPrice
                           .value,
                       discountPr: Get.find<SubscriptionController>()
-                          .weekDiscountPr
+                          .firstDurationDiscountPr
                           .value,
-                      timePeriod: "1 Week",
+                      timePeriod: Get.find<SubscriptionController>()
+                          .firstDurationName
+                          .value,
                       fromBouquets: false,
                     ),
                   ),
@@ -102,18 +108,20 @@ class BuyMessageScreen extends StatelessWidget {
                   onTap: () {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
-                    Get.find<SubscriptionController>().oneWeekSelected.value =
+                    Get.find<SubscriptionController>().firstDurationSelected.value =
                         false;
-                    Get.find<SubscriptionController>().oneMonthSelected.value =
+                    Get.find<SubscriptionController>().secondDurationSelected.value =
                         true;
-                    Get.find<SubscriptionController>().oneYearSelected.value =
+                    Get.find<SubscriptionController>().thirdDurationSelected.value =
                         false;
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
                         .value = {
-                      "messageDuration": "1 Month",
+                      "messageDuration": Get.find<SubscriptionController>()
+                          .secondDurationName
+                          .value,
                       "messagePrice": Get.find<SubscriptionController>()
-                          .monthDiscountedPrice
+                          .secondDurationDiscountedPrice
                           .value,
                     };
                     Timestamp messageOpenTill =
@@ -129,16 +137,18 @@ class BuyMessageScreen extends StatelessWidget {
                     Get.find<SubscriptionController>().messageUpload.value = {
                       "newTimestamp": newTimestamp,
                       "timestamp": Timestamp.now(),
-                      "timePeriod": "1 Month",
+                      "timePeriod": Get.find<SubscriptionController>()
+                          .secondDurationName
+                          .value,
                       "messageCost": int.parse(
                           Get.find<SubscriptionController>()
-                              .monthDiscountedPrice
+                              .secondDurationDiscountedPrice
                               .value),
                     };
                   },
                   child: Container(
                     decoration: Get.find<SubscriptionController>()
-                            .oneMonthSelected
+                            .secondDurationSelected
                             .value
                         ? BoxDecoration(
                             border: Border.all(
@@ -148,17 +158,19 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: false,
+                      isPopular: Get.find<SubscriptionController>().isSecondDurationPopular.value,
                       currentPrice: Get.find<SubscriptionController>()
-                          .monthDiscountedPrice
+                          .secondDurationDiscountedPrice
                           .value,
                       originalPrice: Get.find<SubscriptionController>()
-                          .monthOriginalPrice
+                          .secondDurationOriginalPrice
                           .value,
                       discountPr: Get.find<SubscriptionController>()
-                          .monthDiscountPr
+                          .secondDurationDiscountPr
                           .value,
-                      timePeriod: "1 Month",
+                      timePeriod:  Get.find<SubscriptionController>()
+                          .secondDurationName
+                          .value,
                       fromBouquets: false,
                     ),
                   ),
@@ -170,19 +182,21 @@ class BuyMessageScreen extends StatelessWidget {
                   onTap: () {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
-                    Get.find<SubscriptionController>().oneWeekSelected.value =
+                    Get.find<SubscriptionController>().firstDurationSelected.value =
                         false;
-                    Get.find<SubscriptionController>().oneMonthSelected.value =
+                    Get.find<SubscriptionController>().secondDurationSelected.value =
                         false;
-                    Get.find<SubscriptionController>().oneYearSelected.value =
+                    Get.find<SubscriptionController>().thirdDurationSelected.value =
                         true;
 
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
                         .value = {
-                      "messageDuration": "1 Year",
+                      "messageDuration": Get.find<SubscriptionController>()
+                          .thirdDurationDiscountedPrice
+                          .value,
                       "messagePrice": Get.find<SubscriptionController>()
-                          .yearDiscountedPrice
+                          .thirdDurationDiscountedPrice
                           .value,
                     };
                     Timestamp messageOpenTill =
@@ -198,16 +212,18 @@ class BuyMessageScreen extends StatelessWidget {
                     Get.find<SubscriptionController>().messageUpload.value = {
                       "newTimestamp": newTimestamp,
                       "timestamp": Timestamp.now(),
-                      "timePeriod": "1 Year",
+                      "timePeriod": Get.find<SubscriptionController>()
+                          .thirdDurationName
+                          .value,
                       "messageCost": int.parse(
                           Get.find<SubscriptionController>()
-                              .yearDiscountedPrice
+                              .thirdDurationDiscountedPrice
                               .value),
                     };
                   },
                   child: Container(
                     decoration: Get.find<SubscriptionController>()
-                            .oneYearSelected
+                            .thirdDurationSelected
                             .value
                         ? BoxDecoration(
                             border: Border.all(
@@ -217,17 +233,19 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: false,
+                      isPopular: Get.find<SubscriptionController>().isThirdDurationPopular.value,
                       currentPrice: Get.find<SubscriptionController>()
-                          .yearDiscountedPrice
+                          .thirdDurationDiscountedPrice
                           .value,
                       originalPrice: Get.find<SubscriptionController>()
-                          .yearOriginalPrice
+                          .thirdDurationOriginalPrice
                           .value,
                       discountPr: Get.find<SubscriptionController>()
-                          .yearDiscountPr
+                          .thirdDurationDiscountPr
                           .value,
-                      timePeriod: "1 Year",
+                      timePeriod:  Get.find<SubscriptionController>()
+                          .thirdDurationName
+                          .value,
                       fromBouquets: false,
                     ),
                   ),

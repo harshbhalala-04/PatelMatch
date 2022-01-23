@@ -223,6 +223,7 @@ class _HeightScreenState extends State<HeightScreen> {
               child: DropdownSearch<String>(
                 mode: Mode.MENU,
                 showSelectedItems: true,
+                showSearchBox: true,
                 items: heights,
                 // ignore: deprecated_member_use
                 label: "Select",

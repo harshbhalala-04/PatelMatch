@@ -141,8 +141,6 @@ class ImagePickerController extends GetxController {
         maxHeight: 1400,
       );
 
-      
-
       if (pickedImageFile == null) {
         isLoading.toggle();
       } else {
@@ -154,9 +152,11 @@ class ImagePickerController extends GetxController {
         newIndex.value = index;
         // tempImage.insert(index, file);
         tempImage[index] = file;
+        count.value = count.value + 1;
         for (int i = 0; i < tempImage.length; i++) {
           print(tempImage[i]);
         }
+
         isLoading.toggle();
         //tempImage.add(url);
       }

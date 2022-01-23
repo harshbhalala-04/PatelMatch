@@ -2,6 +2,8 @@ import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/controllers/screen_controller.dart';
 import 'package:chat/screens/chat_section/message_screen.dart';
 import 'package:chat/screens/filter_screen.dart';
+import 'package:chat/screens/pending_status_screen.dart';
+import 'package:chat/screens/reject_user_screen.dart';
 import 'package:chat/screens/profile_screen.dart';
 import 'package:chat/widgets/feed_button.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -27,11 +29,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
   PageController? pageController;
 
   void initState() {
-    // TODO: implement initState
-    // Get.find<GlobalController>().isMessage.value =
-    //     widget.fromNotification == "message" ? true : false;
-    // Get.find<GlobalController>().isRequest.value =
-    //     widget.fromNotification == "request" ? true : false;
     pageController = PageController();
 
     super.initState();
@@ -39,12 +36,8 @@ class _CustomTabBarState extends State<CustomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    screenController.checkInternetConnectivity();
     return GetBuilder<ScreenController>(
-      initState: (state) {
-        print("Here inside get builder");
-        // screenController.checkInternetConnectivity();
-      },
+      initState: (state) {},
       builder: (controller) => Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(80),
@@ -53,104 +46,124 @@ class _CustomTabBarState extends State<CustomTabBar> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.all(4),
-                        child: Obx(() => globalController.isLoading.value
-                            ? InkWell(
-                                onTap: () {
-                                  Get.to(ProfileScreen());
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.grey,
+                  Obx(() => screenController.isLoading.value
+                      ? Container()
+                      : screenController.approvedUser.value
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.all(4),
+                                  child:
+                                      Obx(() => globalController.isLoading.value
+                                          ? InkWell(
+                                              onTap: () {
+                                                Get.to(ProfileScreen());
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () {
+                                                Get.to(ProfileScreen());
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    globalController
+                                                        .currentAppuser
+                                                        .value
+                                                        .imgUrl!),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            )),
                                 ),
-                              )
-                            : InkWell(
-                                onTap: () {
-                                  Get.to(ProfileScreen());
-                                },
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(globalController
-                                      .currentAppuser.value.imgUrl!),
-                                  backgroundColor: Colors.grey,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Obx(
+                                      () => TabButton(
+                                        text: "  Feed  ",
+                                        // pending: false,
+                                        pageNumber: 0,
+                                        selectedPage:
+                                            screenController.selectedPage.value,
+                                        onPressed: () {
+                                          pageController!.animateToPage(0,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves
+                                                  .fastLinearToSlowEaseIn);
+                                        },
+                                      ),
+                                    ),
+                                    Obx(
+                                      () => TabButton(
+                                        text: "  Requests  ",
+                                        // pending: Get.find<GlobalController>().isRequest.value,
+                                        pageNumber: 1,
+                                        selectedPage:
+                                            screenController.selectedPage.value,
+                                        onPressed: () {
+                                          pageController!.animateToPage(1,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves
+                                                  .fastLinearToSlowEaseIn);
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Obx(
-                            () => TabButton(
-                              text: "  Feed  ",
-                              // pending: false,
-                              pageNumber: 0,
-                              selectedPage: screenController.selectedPage.value,
-                              onPressed: () {
-                                pageController!.animateToPage(0,
-                                    duration: Duration(milliseconds: 200),
-                                    curve: Curves.fastLinearToSlowEaseIn);
-                              },
-                            ),
-                          ),
-                          Obx(
-                            () => TabButton(
-                              text: "  Requests  ",
-                              // pending: Get.find<GlobalController>().isRequest.value,
-                              pageNumber: 1,
-                              selectedPage: screenController.selectedPage.value,
-                              onPressed: () {
-                                pageController!.animateToPage(1,
-                                    duration: Duration(milliseconds: 200),
-                                    curve: Curves.fastLinearToSlowEaseIn);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: 30,
-                        child: Container(
-                          // margin: EdgeInsets.only(top: 5),
-                          child: InkWell(
-                            key: Key("Filter"),
-                            onTap: () {
-                              Get.to(FilterScreen());
-                            },
-                            child: SvgPicture.asset('assets/Group.svg'),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        key: Key("Message"),
-                        onTap: () {
-                          Get.find<GlobalController>().isMessage.value = false;
-                          Get.to(MessageScreen());
-                        },
-                        child: Container(
-                          // margin: EdgeInsets.only(right: 3),
-                          child: Column(
-                            children: [
-                              // SizedBox(
-                              //   height: 10,
-                              // ),
-                              Stack(
-                                children: [
-                                  
-                                  SvgPicture.asset(
-                                    'assets/iPhone 11 Pro 2/Vector.svg',
-                                    // height: 31.04,
-                                    // width: 36.54,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                                Container(
+                                  width: 30,
+                                  child: Container(
+                                    // margin: EdgeInsets.only(top: 5),
+                                    child: InkWell(
+                                      key: Key("Filter"),
+                                      onTap: () {
+                                        Get.to(FilterScreen());
+                                      },
+                                      child:
+                                          SvgPicture.asset('assets/Group.svg'),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  key: Key("Message"),
+                                  onTap: () {
+                                    Get.find<GlobalController>()
+                                        .isMessage
+                                        .value = false;
+                                    Get.to(MessageScreen());
+                                  },
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/iPhone 11 Pro 2/Vector.svg',
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'PM',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(255, 85, 115, 1),
+                                      fontSize: 24),
+                                ),
+                              ],
+                            )),
                 ],
               ),
             ),
@@ -161,17 +174,21 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     child: CircularProgressIndicator(),
                   )
                 : screenController.isInternet.value
-                    ? PageView(
-                        physics: new NeverScrollableScrollPhysics(),
-                        onPageChanged: (int page) {
-                          screenController.selectedPage.value = page;
-                        },
-                        controller: pageController,
-                        children: [
-                          FeedScreen(),
-                          RequestTabScreen(),
-                        ],
-                      )
+                    ? screenController.approvedUser.value
+                        ? PageView(
+                            physics: new NeverScrollableScrollPhysics(),
+                            onPageChanged: (int page) {
+                              screenController.selectedPage.value = page;
+                            },
+                            controller: pageController,
+                            children: [
+                              FeedScreen(),
+                              RequestTabScreen(),
+                            ],
+                          )
+                        : (screenController.pendingUser.value
+                            ? PendingStatusScreen()
+                            : RejectUserScreen())
                     : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

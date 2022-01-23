@@ -27,7 +27,7 @@ class UserModel {
     this.zodiacSign,
     this.politics,
     this.movie,
-    this.imgCount,
+    this.imgCount,  
     this.notificationTokens,
     this.imgUrl,
     this.imgUrls,
@@ -59,6 +59,8 @@ class UserModel {
     this.phoneNo,
     this.nativeCity,
     this.birthDate,
+    this.isApproved,
+    this.isRejected
   });
 
   String? uid;
@@ -110,6 +112,8 @@ class UserModel {
   String? phoneNo;
   String? nativeCity;
   String? birthDate;
+  bool? isRejected;
+  bool? isApproved;
   factory UserModel.fromJson(Map<dynamic, dynamic> json) {
     return UserModel(
         uid: json["uid"] == null ? null : json["uid"],
@@ -137,6 +141,8 @@ class UserModel {
         manglik: json["manglik"] == null ? null : json["manglik"],
         gotra: json["gotra"] == null ? null : json["gotra"],
         siblings: json["siblings"] == null ? null : json["siblings"],
+        isRejected: json["isRejected"] == null ? null : json["isRejected"],
+        isApproved: json["isApproved"] == null ? null : json["isApproved"],
         fatherName: json["fatherName"] == null ? null : json["fatherName"],
         totalBrothers:
             json["totalBrothers"] == null ? null : json["totalBrothers"],
@@ -206,6 +212,8 @@ class UserModel {
         "manglik": manglik == null ? null : manglik,
         "gotra": gotra == null ? null : gotra,
         "siblings": siblings == null ? null : siblings,
+        "isRejected": isRejected == null ? null : isRejected,
+        "isApproved": isApproved == null ? null : isApproved,
         "fatherName": fatherName == null ? null : fatherName,
         "fatherNativePlace":
             fatherNativePlace == null ? null : fatherNativePlace,

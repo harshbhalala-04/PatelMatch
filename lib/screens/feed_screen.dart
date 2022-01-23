@@ -21,14 +21,11 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   final feedScreenController = Get.put(FeedScreenController());
   final globalController = Get.put(GlobalController());
-  
-  final firestore = FirebaseFirestore.instance;
 
+  final firestore = FirebaseFirestore.instance;
 
   // final showProfileController = Get.put(ShowProfileController());
   final reportController = Get.put(ReportController());
-
-  
 
   void choiceAction(String choice, String uid, String username) {
     if (choice == "Report") {
@@ -319,7 +316,10 @@ class _FeedScreenState extends State<FeedScreen> {
                 if (index == feedScreenController.usersList.length) {
                   return Center(child: CircularProgressIndicator());
                 }
-
+                print("Email: ${feedScreenController.usersList[index].email}");
+                print(
+                    "NAme: ${feedScreenController.usersList[index].username}");
+                print("Image: ${feedScreenController.usersList[index].imgUrl}");
                 return Column(
                   children: [
                     Padding(
@@ -349,7 +349,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                           .usersList[index].imgUrl!,
                                     ),
                                     height: 300,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.contain,
                                   ),
                                 ],
                               ),
@@ -359,14 +359,16 @@ class _FeedScreenState extends State<FeedScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      "${feedScreenController.usersList[index].username}, ${feedScreenController.usersList[index].age}",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 20,
-                                        fontFamily: 'Cabin',
-                                        letterSpacing: 1,
+                                    Expanded(
+                                      child: Text(
+                                        "${feedScreenController.usersList[index].username}, ${feedScreenController.usersList[index].age}",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 20,
+                                          fontFamily: 'Cabin',
+                                          letterSpacing: 1,
+                                        ),
                                       ),
                                     ),
                                     PopupMenuButton<String>(
@@ -379,7 +381,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                             val,
                                             feedScreenController
                                                 .usersList[index].uid!,
-                                                feedScreenController.usersList[index].username!);
+                                            feedScreenController
+                                                .usersList[index].username!);
                                       },
                                       itemBuilder: (BuildContext context) {
                                         return choices.map((String choice) {

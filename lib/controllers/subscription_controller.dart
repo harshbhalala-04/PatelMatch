@@ -16,15 +16,23 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class SubscriptionController extends GetxController {
   late Razorpay razorpay;
-  final monthDiscountPr = ''.obs;
-  final monthDiscountedPrice = ''.obs;
-  final monthOriginalPrice = ''.obs;
-  final weekDiscountPr = ''.obs;
-  final weekDiscountedPrice = ''.obs;
-  final weekOriginalPrice = ''.obs;
-  final yearDiscountPr = ''.obs;
-  final yearDiscountedPrice = ''.obs;
-  final yearOriginalPrice = ''.obs;
+
+  final firstDurationDiscountPr = ''.obs;
+  final firstDurationDiscountedPrice = ''.obs;
+  final firstDurationName = ''.obs;
+  final firstDurationOriginalPrice = ''.obs;
+  final secondDurationDiscountPr = ''.obs;
+  final secondDurationDiscountedPrice = ''.obs;
+  final secondDurationOriginalPrice = ''.obs;
+  final secondDurationName = ''.obs;
+  final thirdDurationDiscountPr = ''.obs;
+  final thirdDurationDiscountedPrice = ''.obs;
+  final thirdDurationName = ''.obs;
+  final thirdDurationOriginalPrice = ''.obs;
+
+  final isFirstDurationPopular = false.obs;
+  final isSecondDurationPopular = false.obs;
+  final isThirdDurationPopular = false.obs;
 
   final fiveBouqueDiscountPr = ''.obs;
   final fiveBouqueDiscountedPrice = ''.obs;
@@ -40,9 +48,13 @@ class SubscriptionController extends GetxController {
   final isBouqueSelected = false.obs;
   final isMessageSelected = false.obs;
 
-  final oneWeekSelected = false.obs;
-  final oneMonthSelected = false.obs;
-  final oneYearSelected = false.obs;
+  // final oneWeekSelected = false.obs;
+  // final oneMonthSelected = false.obs;
+  // final oneYearSelected = false.obs;
+
+  final firstDurationSelected = false.obs;
+  final secondDurationSelected = false.obs;
+  final thirdDurationSelected = false.obs;
 
   final oneBouquetSelected = false.obs;
   final fiveBouquetSelected = false.obs;
@@ -58,9 +70,6 @@ class SubscriptionController extends GetxController {
 
   final feedScreenController = Get.put(FeedScreenController());
 
-  // Live API = rzp_live_BsJlfNy4KTNyHA
-  // Secret Key = JjPK73y2HZGnKGhJCGgfI7gM
-
   fetchPrices() async {
     isLoading.toggle();
     await FirebaseFirestore.instance
@@ -69,16 +78,33 @@ class SubscriptionController extends GetxController {
         .get()
         .then((val) {
       Map<String, dynamic> messageMap = val.data()!;
-      monthDiscountPr.value = messageMap["monthDiscountPr"].toString();
-      monthDiscountedPrice.value =
-          messageMap["monthDiscountedPrice"].toString();
-      monthOriginalPrice.value = messageMap["monthOriginalPrice"].toString();
-      weekDiscountPr.value = messageMap["weekDiscountPr"].toString();
-      weekDiscountedPrice.value = messageMap["weekDiscountedPrice"].toString();
-      weekOriginalPrice.value = messageMap["weekOriginalPrice"].toString();
-      yearDiscountPr.value = messageMap["yearDiscountPr"].toString();
-      yearDiscountedPrice.value = messageMap["yearDiscountedPrice"].toString();
-      yearOriginalPrice.value = messageMap["yearOriginalPrice"].toString();
+
+      firstDurationName.value = messageMap["firstDurationName"];
+      secondDurationName.value = messageMap["secondDurationName"];
+      thirdDurationName.value = messageMap["thirdDurationName"];
+
+      isFirstDurationPopular.value = messageMap["isFirstDurationPopular"];
+      isSecondDurationPopular.value = messageMap["isSecondDurationPopular"];
+      isThirdDurationPopular.value = messageMap["isThirdDurationPopular"];
+
+      firstDurationDiscountedPrice.value =
+          messageMap["firstDurationDiscountedPrice"].toString();
+      firstDurationOriginalPrice.value =
+          messageMap["firstDurationOriginalPrice"].toString();
+      firstDurationDiscountPr.value =
+          messageMap["firstDurationDiscountPr"].toString();
+      secondDurationDiscountedPrice.value =
+          messageMap["secondDurationDiscountedPrice"].toString();
+      secondDurationOriginalPrice.value =
+          messageMap["secondDurationOriginalPrice"].toString();
+      secondDurationDiscountPr.value =
+          messageMap["secondDurationDiscountPr"].toString();
+      thirdDurationDiscountPr.value =
+          messageMap["thirdDurationDiscountPr"].toString();
+      thirdDurationDiscountedPrice.value =
+          messageMap["thirdDurationDiscountedPrice"].toString();
+      thirdDurationOriginalPrice.value =
+          messageMap["thirdDurationOriginalPrice"].toString();
     });
 
     await FirebaseFirestore.instance
@@ -246,9 +272,9 @@ class SubscriptionController extends GetxController {
     if (currentItemMessage.value) {
       messageUpload['payment_id'] = response.paymentId;
       print('uploading in progress');
-      oneWeekSelected.value = false;
-      oneMonthSelected.value = false;
-      oneYearSelected.value = false;
+      firstDurationSelected.value = false;
+      secondDurationSelected.value = false;
+      thirdDurationSelected.value = false;
       isMessageSelected.value = false;
       Get.find<FeedScreenController>().messageOpenTill.value =
           messageUpload['newTimestamp'];

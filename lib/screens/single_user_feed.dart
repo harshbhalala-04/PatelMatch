@@ -29,11 +29,13 @@ class SingleUserFeed extends StatelessWidget {
   final globalController = Get.put(GlobalController());
   @override
   Widget build(BuildContext context) {
+
+
     final screenSize = MediaQuery.of(context).size;
 
     String siblingMarriedString = '';
     String siblingTotalString = '';
-    if (currentUser.marriedBrothers != null) {
+    if (currentUser.marriedBrothers != null && currentUser.marriedBrothers != "") {
       if (int.parse(currentUser.marriedBrothers!) > 0) {
         if (int.parse(currentUser.marriedBrothers!) == 1) {
           siblingMarriedString = siblingMarriedString +
@@ -46,7 +48,7 @@ class SingleUserFeed extends StatelessWidget {
         }
       }
     }
-    if (currentUser.marriedSisters != null) {
+    if (currentUser.marriedSisters != null && currentUser.marriedSisters != "") {
       if (int.parse(currentUser.marriedSisters!) > 0) {
         if (int.parse(currentUser.marriedSisters!) == 1) {
           siblingMarriedString =
@@ -57,7 +59,7 @@ class SingleUserFeed extends StatelessWidget {
         }
       }
     }
-    if (currentUser.totalBrothers != null) {
+    if (currentUser.totalBrothers != null && currentUser.totalBrothers != "") {
       if (int.parse(currentUser.totalBrothers!) > 0) {
         if (int.parse(currentUser.totalBrothers!) == 1) {
           siblingTotalString =
@@ -68,7 +70,7 @@ class SingleUserFeed extends StatelessWidget {
         }
       }
     }
-    if (currentUser.totalSisters != null) {
+    if (currentUser.totalSisters != null && currentUser.totalSisters != "") {
       if (int.parse(currentUser.totalSisters!) > 0) {
         if (int.parse(currentUser.totalSisters!) == 1) {
           siblingTotalString =
@@ -500,9 +502,9 @@ class SingleUserFeed extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                (currentUser.fatherName == null ||
-                        currentUser.fatherAvgAnnualIncome == null ||
-                        currentUser.fatherNativePlace == null ||
+                (currentUser.fatherName == null &&
+                        currentUser.fatherAvgAnnualIncome == null &&
+                        currentUser.fatherNativePlace == null &&
                         currentUser.fatherOccupation == null)
                     ? Container()
                     : Padding(
@@ -628,9 +630,9 @@ class SingleUserFeed extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                (currentUser.motherName == null ||
-                        currentUser.motherAvgAnnualIncome == null ||
-                        currentUser.motherNativePlace == null ||
+                (currentUser.motherName == null &&
+                        currentUser.motherAvgAnnualIncome == null &&
+                        currentUser.motherNativePlace == null &&
                         currentUser.motherOccupation == null)
                     ? Container()
                     : Padding(
@@ -754,7 +756,7 @@ class SingleUserFeed extends StatelessWidget {
                         ),
                       ),
                 SizedBox(
-                  height: 20,
+                  height: 50,
                 ),
                 userImagesLength < 5
                     ? Container(

@@ -127,19 +127,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
                       child: BuyMessageScreen(),
-                      // footer: CustomFooter(
-                      //     builder: (BuildContext context, LoadStatus? mode) {
-                      //   Widget body;
-                      //   if (mode == LoadStatus.loading) {
-                      //     body = CupertinoActivityIndicator();
-                      //   } else {
-                      //     body = Container();
-                      //   }
-                      //   return Container(
-                      //     height: 55.0,
-                      //     child: Center(child: body),
-                      //   );
-                      // })
+                      
                       ),
                   SmartRefresher(
                       enablePullDown: true,

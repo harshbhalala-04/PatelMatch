@@ -97,6 +97,8 @@ class AuthController extends GetxController {
         'salary': '',
         'friendRequest': FieldValue.arrayUnion([]),
         'excludedUsers': FieldValue.arrayUnion([]),
+        'isRejected': false,
+        'isApproved': false,
         'filters': {
           'age': FieldValue.arrayUnion([]),
           'drink': FieldValue.arrayUnion([]),
