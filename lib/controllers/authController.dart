@@ -59,7 +59,11 @@ class AuthController extends GetxController {
     isConfirm.toggle();
   }
 
-  void createUser(String? email, String? password, String? phoneNo) async {
+  void createUser(
+    String? email,
+    String? password,
+    String? phoneNo,
+  ) async {
     print('This is create user function of getx');
     UserCredential userCredential;
     isLoading.toggle();
@@ -69,15 +73,19 @@ class AuthController extends GetxController {
       userCredential = await _auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
 
-      // final SharedPreferences sharedPreferences =
-      //     await SharedPreferences.getInstance();
-      // sharedPreferences.setString('email', email);
-
       final SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       sharedPreferences.setBool('answers', false);
-
-      DateTime time = DateTime.now().add(Duration(days: 1)); //DateTime
+      late final days;
+      await FirebaseFirestore.instance
+          .collection("messageFreeTrial")
+          .doc("7gQKNppDlLEEBEspspOc")
+          .get()
+          .then((val) {
+        days = val.data()!['days'];
+      });
+      print(days);
+      DateTime time = DateTime.now().add(Duration(days: days)); //DateTime
       Timestamp myTimeStamp = Timestamp.fromDate(time); //To TimeStamp
 
       await FirebaseFirestore.instance
@@ -113,9 +121,6 @@ class AuthController extends GetxController {
           'weight': FieldValue.arrayUnion([]),
         }
       });
-      // Get.off(ProfileCreatedByScreen(
-      //   fromProfile: false,
-      // ));
     } on FirebaseAuthException catch (error) {
       print(error);
       Get.snackbar("Error Creating account", error.message!,
@@ -137,20 +142,6 @@ class AuthController extends GetxController {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       sharedPreferences.setBool('answers', true);
-      // await FirebaseFirestore.instance
-      //     .collection("users")
-      //     .doc(Get.find<AuthController>().firebaseUser.value!.uid)
-      //     .get()
-      //     .then((val) {
-      //   userNri.value = val.data()!['userNRI'];
-      //   if (userNri.value != null) {
-      //     sharedPreferences.setBool('answer', true);
-      //   }
-      // });
-
-      // sharedPreferences.setBool('login', true);
-
-      // Get.off(CustomTabBar());
     } on FirebaseAuthException catch (error) {
       print(error);
       Get.snackbar("Error Logging in ", error.message!,

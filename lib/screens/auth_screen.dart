@@ -5,15 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreen extends GetWidget<AuthController> {
+ 
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController reEnterPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      
       appBar: AppBar(
+        
         title: Text(
           'PM',
           style: TextStyle(color: Colors.white, fontSize: 36),
@@ -21,6 +26,8 @@ class AuthScreen extends GetWidget<AuthController> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: Container(),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -239,7 +246,8 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       _passwordController.text
                                                           .trim(),
                                                       phoneController.text
-                                                          .trim());
+                                                          .trim(),
+                                                     );
                                                 },
                                                 child: Text(
                                                   'Sign Up',

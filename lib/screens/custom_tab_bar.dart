@@ -40,6 +40,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
       initState: (state) {},
       builder: (controller) => Scaffold(
           appBar: PreferredSize(
+            
             preferredSize: Size.fromHeight(80),
             child: Container(
               margin: EdgeInsets.only(top: 10, right: 15, left: 15),

@@ -95,6 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),

@@ -5,3 +5,5 @@ final firebaseFirestore = FirebaseFirestore.instance;
 bool fromLogout = false;
 bool isLoginVal = false;
 bool isSignup = false;
+bool fromRefer = false;
+String referUid = "";

@@ -1,22 +1,14 @@
-import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:chat/controllers/authController.dart';
 import 'package:chat/global.dart';
 import 'package:chat/screens/custom_tab_bar.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
-
 import 'package:chat/screens/onboarding_screens/profile_createdBy_screen.dart';
 import 'package:chat/screens/onboarding_screens/samaj_screen.dart';
-
 import 'package:chat/screens/single_user_profile.dart';
-
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './screens/auth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -130,9 +122,21 @@ class _MyAppState extends State<MyApp> {
     final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
-      uid = deepLink.path.substring(1);
-      if (FirebaseAuth.instance.currentUser != null) {
-        Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
+      if (deepLink.path.contains("refer")) {
+        uid = deepLink.path.substring(7);
+        print("This is referred by uid: ${uid}");
+
+        if (FirebaseAuth.instance.currentUser != null) {
+          Get.to(CustomTabBar());
+        } else {
+          Get.to(AuthScreen());
+        }
+      } else {
+        uid = deepLink.path.substring(1);
+
+        if (FirebaseAuth.instance.currentUser != null) {
+          Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
+        }
       }
     }
 
@@ -141,12 +145,28 @@ class _MyAppState extends State<MyApp> {
       final Uri? deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
-        uid = deepLink.path.substring(1);
-        if (FirebaseAuth.instance.currentUser != null) {
-          Get.to(SingleUserProfile(
-            uid: uid,
-            fromDynamic: true,
-          ));
+        if (deepLink.path.contains("refer")) {
+          uid = deepLink.path.substring(7);
+
+          if (FirebaseAuth.instance.currentUser != null) {
+            Get.to(CustomTabBar());
+          } else {
+            // Assign value to global variable
+            fromRefer = true;
+            referUid = uid;
+            Get.to(AuthScreen(
+              
+            ));
+          }
+        } else {
+          uid = deepLink.path.substring(1);
+
+          if (FirebaseAuth.instance.currentUser != null) {
+            Get.to(SingleUserProfile(
+              uid: uid,
+              fromDynamic: true,
+            ));
+          }
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -217,7 +237,9 @@ class _MyAppState extends State<MyApp> {
               return CustomTabBar();
             }
           } else {
-            return AuthScreen();
+            return AuthScreen(
+              
+            );
           }
         },
       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_statements
+
 import 'dart:io';
 
 import 'package:chat/controllers/bookay_controller.dart';
@@ -338,6 +340,7 @@ class DataBaseMethods {
     }
   }
 
+  ///Remove User from friendRequest
   removeUserFromFriendRequest(String otherUserUid, String myUid) {
     try {
       firestore.collection("users").doc(myUid).get().then((value) {
@@ -367,6 +370,7 @@ class DataBaseMethods {
     }
   }
 
+  ///Accept request and add to match
   addUserToMatch(String myUsername, String myImageUrl, String otherUsername,
       String otherUserImageUrl, String otherUserId) async {
     DateTime time = DateTime.now();
@@ -622,18 +626,18 @@ class DataBaseMethods {
 
   addUserNRI(String userNRI) async {
     try {
-      firestore.collection("users").doc(user!.uid).update({"userNRI": userNRI});
+      firestore
+          .collection("users")
+          .doc(user!.uid)
+          .update({"userNRI": userNRI, "isFieldAnswered": true});
     } catch (e) {
       print(e.toString());
     }
 
-    // final SharedPreferences sharedPreferences =
-    //     await SharedPreferences.getInstance();
-    // sharedPreferences.setString('NRI', userNRI);
-
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setBool('answers', true);
+
     print(sharedPreferences.getBool('answers'));
   }
 
@@ -1184,13 +1188,35 @@ class DataBaseMethods {
   addMessaging(Map<dynamic, dynamic> messagePurchase) async {
     List<Map<dynamic, dynamic>> messagePurchaseList = [];
     messagePurchaseList.add(messagePurchase);
-    // Get.find<FeedScreenController>().messageOpenTill.value =
-    //     messagePurchase['newTimestamp'];
-
+    var malePr;
+    var femalePr;
     try {
       await firestore.collection("users").doc(user!.uid).update({
         'message': FieldValue.arrayUnion(messagePurchaseList),
         'messageOpenTill': messagePurchase['newTimestamp']
+      });
+      await firestore.collection("commision").doc("genderPr").get().then((val) {
+        malePr = val.data()!['Male'] / 100;
+        femalePr = val.data()!['Female'] / 100;
+      });
+      await firestore.collection("users").doc(user!.uid).get().then((val) {
+        if (val.data()!.containsKey("referredBy")) {
+          Map<String, dynamic> earningMap = {};
+          earningMap["month"] = DateTime.now().month;
+          earningMap["year"] = DateTime.now().year;
+          if (Get.find<GlobalController>().currentAppuser.value.gender ==
+              "Male") {
+            earningMap["amount"] = messagePurchase["messageCost"] * malePr;
+          } else {
+            earningMap["amount"] = messagePurchase["messageCost"] * femalePr;
+          }
+          List<Map<String, dynamic>> myEarningList = [];
+          myEarningList.add(earningMap);
+          firestore
+              .collection("referral_users")
+              .doc(val.data()!["referredBy"])
+              .update({"earning": FieldValue.arrayUnion(myEarningList)});
+        }
       });
     } catch (e) {
       print(e.toString());
@@ -1202,7 +1228,9 @@ class DataBaseMethods {
     bouquePurchaseList.add(bouquePurchase);
     int bookayAvailable = 0;
     int newBookay = bouquePurchase['bookayCount'];
-    // print(bouquePurchase);
+    var malePr;
+    var femalePr;
+
     try {
       await firestore.collection("users").doc(user!.uid).get().then((value) {
         Map<String, dynamic> tmp = value.data()!;
@@ -1213,9 +1241,30 @@ class DataBaseMethods {
         'bookayAvailable': bookayAvailable,
         'bouquets': FieldValue.arrayUnion(bouquePurchaseList)
       });
-      // Get.find<GlobalController>().currentAppuser.value.bookayAvailable =
-      //     bookayAvailable;
-      // Get.find<BookayController>().bookayCount.value = bookayAvailable;
+
+      await firestore.collection("commision").doc("genderPr").get().then((val) {
+        malePr = val.data()!['Male'] / 100;
+        femalePr = val.data()!['Female'] / 100;
+      });
+      await firestore.collection("users").doc(user!.uid).get().then((val) {
+        if (val.data()!.containsKey("referredBy")) {
+          Map<String, dynamic> earningMap = {};
+          earningMap["month"] = DateTime.now().month;
+          earningMap["year"] = DateTime.now().year;
+          if (Get.find<GlobalController>().currentAppuser.value.gender ==
+              "Male") {
+            earningMap["amount"] = bouquePurchase["bookayCost"] * malePr;
+          } else {
+            earningMap["amount"] = bouquePurchase["bookayCost"] * femalePr;
+          }
+          List<Map<String, dynamic>> myEarningList = [];
+          myEarningList.add(earningMap);
+          firestore
+              .collection("referral_users")
+              .doc(val.data()!["referredBy"])
+              .update({"earning": FieldValue.arrayUnion(myEarningList)});
+        }
+      });
     } catch (e) {
       print(e.toString());
     }

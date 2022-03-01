@@ -2,8 +2,12 @@ import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/database/database.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/screens/onboarding_screens/city_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../global.dart';
 
 enum YesNo { Yes, No }
 
@@ -47,8 +51,12 @@ class _NRIScreenState extends State<NRIScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -133,14 +141,38 @@ class _NRIScreenState extends State<NRIScreen> {
                         "Yes";
                   }
                   DataBaseMethods().addUserNRI("Yes");
-                  
                 }
 
                 if (widget.fromProfile) {
-                //  Navigator.pop(context);
-                    Get.off(EditProfileScreen());
+                  //  Navigator.pop(context);
+                  Get.off(EditProfileScreen());
                 } else {
-                  Get.to(CityScreen(fromProfile: false,));
+                  if (fromRefer) {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({
+                      "referredBy": referUid,
+                    });
+
+                    Map<String, dynamic> conversionMap = {};
+                    conversionMap["month"] = DateTime.now().month;
+                    conversionMap["year"] = DateTime.now().year;
+                    conversionMap["uid"] =
+                        FirebaseAuth.instance.currentUser!.uid;
+                    List<Map<String, dynamic>> currentUserMap = [];
+                    currentUserMap.add(conversionMap);
+
+                    FirebaseFirestore.instance
+                        .collection("referral_users")
+                        .doc(referUid)
+                        .update({
+                      "conversions": FieldValue.arrayUnion(currentUserMap)
+                    });
+                  }
+                  Get.to(CityScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

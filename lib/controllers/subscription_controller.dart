@@ -70,6 +70,9 @@ class SubscriptionController extends GetxController {
 
   final feedScreenController = Get.put(FeedScreenController());
 
+  // Key Id = rzp_test_er32Zjib0yRHwa
+  // Key secret = 2783Ko3b8msxz5JRNYP2mfsv
+
   fetchPrices() async {
     isLoading.toggle();
     await FirebaseFirestore.instance
@@ -161,7 +164,10 @@ class SubscriptionController extends GetxController {
         .set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
     String basicAuth = 'Basic ' +
         base64Encode(
-            utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
+            utf8.encode('rzp_test_er32Zjib0yRHwa:2783Ko3b8msxz5JRNYP2mfsv'));
+    // String basicAuth = 'Basic ' +
+    //     base64Encode(
+    //         utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
     request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
     request.add(utf8.encode(json.encode({
       "amount": amountToPay,
@@ -177,7 +183,7 @@ class SubscriptionController extends GetxController {
       print("Here is the orderId: $orderId");
       // int amountToPay = 1 * 100;
       var options = {
-        "key": "rzp_live_BsJlfNy4KTNyHA",
+        "key": "rzp_test_er32Zjib0yRHwa",
         "amount": amountToPay,
         "currency": "INR",
         "name": "Messaging",
@@ -210,7 +216,7 @@ class SubscriptionController extends GetxController {
         .set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
     String basicAuth = 'Basic ' +
         base64Encode(
-            utf8.encode('rzp_live_BsJlfNy4KTNyHA:JjPK73y2HZGnKGhJCGgfI7gM'));
+            utf8.encode('rzp_test_er32Zjib0yRHwa:2783Ko3b8msxz5JRNYP2mfsv'));
     request.headers.set(HttpHeaders.authorizationHeader, basicAuth);
     request.add(utf8.encode(json.encode({
       "amount": amountToPay,
@@ -228,7 +234,7 @@ class SubscriptionController extends GetxController {
 
       // int amountToPay = 1 * 100;
       var options = {
-        "key": "rzp_live_BsJlfNy4KTNyHA",
+        "key": "rzp_test_er32Zjib0yRHwa",
         "amount": amountToPay,
         "name": purchaseItem["bookayCount"],
         "description": "",
@@ -258,14 +264,7 @@ class SubscriptionController extends GetxController {
         backgroundColor: Color.fromRGBO(255, 85, 115, 1),
         textColor: Color.fromRGBO(255, 255, 255, 1),
         fontSize: 16.0);
-    // Fluttertoast.showToast(
-    //     msg: "Pull to refresh the page",
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.BOTTOM,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: Color.fromRGBO(255, 85, 115, 1),
-    //     textColor: Color.fromRGBO(255, 255, 255, 1),
-    //     fontSize: 16.0);
+
     print("___________________________");
     print("Here is the order id: ${response.orderId}");
 
