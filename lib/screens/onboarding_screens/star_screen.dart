@@ -20,31 +20,32 @@ class StarScreen extends StatefulWidget {
 class _StarScreenState extends State<StarScreen> {
   String? starAns = '';
   List<String> stars = [
-   'Ashwini','Bharani',
+    'Ashwini',
+    'Bharani',
     'Krittika',
     'Rohini',
     'Mrigashīrsha',
     'Ārdrā',
     'Punarvasu',
-   'Pushya',
-   'Āshleshā',
-   'Magha',
+    'Pushya',
+    'Āshleshā',
+    'Magha',
     'Purva or Purva Phalguni',
     'Uttara or Uttara Phalguni',
-   'Hasta',
+    'Hasta',
     'Chitra',
     'Svati',
     'Visakha',
     'Anuradha',
     'Jyeshtha',
     'Mula',
-   'Purva Ashadha',
+    'Purva Ashadha',
     'Uttara Asadha',
     'Sravana',
     'Sravistha or Dhanishta',
     'Shatabhisha or Satataraka',
     'Purva Bhadrapada',
-   'Uttara Bhadrapada',
+    'Uttara Bhadrapada',
     'Revati',
   ];
 
@@ -68,8 +69,12 @@ class _StarScreenState extends State<StarScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         actions: [
           widget.fromProfile
               ? Container()
@@ -83,7 +88,9 @@ class _StarScreenState extends State<StarScreen> {
                   ),
                   onPressed: () {
                     DataBaseMethods().addUserStar('');
-                    Get.to(RashiScreen(fromProfile: false,));
+                    Get.to(RashiScreen(
+                      fromProfile: false,
+                    ));
                   },
                 )
         ],
@@ -109,19 +116,31 @@ class _StarScreenState extends State<StarScreen> {
             Container(
               width: double.infinity,
               child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItems: true,
-                            showSearchBox: true,
-                            items: stars,
-                            // ignore: deprecated_member_use
-                            label: "Select",
-                            // popupItemDisabled: (String s) =>
-                            //     s.startsWith('I'),
-                            onChanged: (val) {
-                              starAns = val!;
-                            },
-                            // selectedItem: "Brazil"
-                          ),
+                itemAsString: (item) {
+                  return item;
+                },
+                items: (_, __) {
+                  return stars;
+                },
+                selectedItem: starAns != null && starAns!.isNotEmpty ? starAns : null,
+                onChanged: (val) {
+                  setState(() {
+                    starAns = val ?? '';
+                  });
+                },
+                dropdownBuilder: (context, selectedItem) => Text(
+                  selectedItem ?? 'Select',
+                  style: TextStyle(
+                    color: selectedItem == null ? Colors.grey : Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  showSelectedItems: true,
+                ),
+                // selectedItem: "Brazil"
+              ),
             ),
           ],
         ),
@@ -158,7 +177,9 @@ class _StarScreenState extends State<StarScreen> {
                   }
                 } else {
                   DataBaseMethods().addUserStar(starAns!);
-                  Get.to(RashiScreen(fromProfile: false,));
+                  Get.to(RashiScreen(
+                    fromProfile: false,
+                  ));
                 }
               },
               child: widget.fromProfile

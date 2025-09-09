@@ -1,18 +1,15 @@
-import 'package:chat/controllers/feed_screen_controller.dart';
 import 'package:chat/controllers/global_controller.dart';
 import 'package:chat/global.dart';
 import 'package:chat/helper/services.dart';
-import 'package:chat/helper/user_modal.dart';
 import 'package:chat/screens/SubscriptionScreen.dart';
-import 'package:chat/screens/auth_screen.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -72,11 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //       : throw 'Could not launch $appUrl';
   // }
   void shareUrl() async {
-    await FlutterShare.share(
-      title: 'Patel Match',
-      linkUrl: appUrl,
-      text: "Download App",
-      chooserTitle: 'Where You Want to Share',
+    await Share.share(
+      appUrl ?? "",
+      subject: "Patel Match",
     );
   }
 
@@ -309,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SystemNavigator.pop();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                      primary: Color.fromRGBO(255, 85, 115, 1)),
+                                      backgroundColor: Color.fromRGBO(255, 85, 115, 1)),
                                   child: Text(
                                     'Yes',
                                     style: TextStyle(

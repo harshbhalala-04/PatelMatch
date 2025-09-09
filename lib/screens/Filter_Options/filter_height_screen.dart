@@ -66,18 +66,32 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                                   BorderRadius.all(Radius.circular(10))),
                           width: 150,
                           child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItems: true,
-                            showSearchBox: true,
-                            items: heights,
-                            // ignore: deprecated_member_use
-                            label: "Select",
-                            // popupItemDisabled: (String s) =>
-                            //     s.startsWith('I'),
-                            onChanged: (val) {
-                              minHeight = val!;
+                            itemAsString: (item) {
+                              return item;
                             },
-                            // selectedItem: "Brazil"
+                            items: (_, __) {
+                              return heights;
+                            },
+                            selectedItem:
+                                minHeight.isNotEmpty ? minHeight : null,
+                            onChanged: (val) {
+                              setState(() {
+                                minHeight = val ?? '';
+                              });
+                            },
+                            dropdownBuilder: (context, selectedItem) => Text(
+                              selectedItem ?? 'Select',
+                              style: TextStyle(
+                                color: selectedItem == null
+                                    ? Colors.grey
+                                    : Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            popupProps: PopupProps.menu(
+                              showSearchBox: true,
+                              showSelectedItems: true,
+                            ),
                           ),
                           // child: SearchableDropdown.single(
                           //   displayClearIcon: false,
@@ -130,17 +144,43 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
                                   BorderRadius.all(Radius.circular(10))),
                           width: 140,
                           child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItems: true,
-                            showSearchBox: true,
-                            items: heights,
-                            // ignore: deprecated_member_use
-                            label: "Select",
-                            // popupItemDisabled: (String s) =>
-                            //     s.startsWith('I'),
-                            onChanged: (val) {
-                              maxHeight = val!;
+                            itemAsString: (item) {
+                              return item;
                             },
+                            items: (_, __) {
+                              return heights;
+                            },
+                            selectedItem:
+                                minHeight.isNotEmpty ? minHeight : null,
+                            onChanged: (val) {
+                              setState(() {
+                                minHeight = val ?? '';
+                              });
+                            },
+                            dropdownBuilder: (context, selectedItem) => Text(
+                              selectedItem ?? 'Select',
+                              style: TextStyle(
+                                color: selectedItem == null
+                                    ? Colors.grey
+                                    : Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            popupProps: PopupProps.menu(
+                              showSearchBox: true,
+                              showSelectedItems: true,
+                            ),
+                            // mode: Mode.MENU,
+                            // showSelectedItems: true,
+                            // showSearchBox: true,
+                            // items: heights,
+                            // // ignore: deprecated_member_use
+                            // label: "Select",
+                            // // popupItemDisabled: (String s) =>
+                            // //     s.startsWith('I'),
+                            // onChanged: (val) {
+                            //   maxHeight = val!;
+                            // },
                             // selectedItem: "Brazil"
                           ),
                         ),
@@ -207,7 +247,7 @@ class _FilterHeightScreenState extends State<FilterHeightScreen> {
               style: TextStyle(fontSize: 20),
             ),
             style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(255, 85, 115, 0.89),
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)))),
           ),

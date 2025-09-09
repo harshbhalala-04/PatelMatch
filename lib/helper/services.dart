@@ -1,11 +1,7 @@
 // import 'dart:js';
 
 import 'package:chat/controllers/global_controller.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_share/flutter_share.dart';
-import 'package:share_plus/share_plus.dart';
 
 String mapKey = "AIzaSyCdAPr6-esjh1IezW2Bs5iqRXWTKT-Vrew";
 
@@ -54,24 +50,24 @@ String userName = Get.find<GlobalController>().currentAppuser.value.username!;
 String imageUrl = Get.find<GlobalController>().currentAppuser.value.imgUrl!;
 
 Future<void> createDynamicLink() async {
-  Uri imageUri = Uri.parse(imageUrl);
+  // Uri imageUri = Uri.parse(imageUrl);
 
-  final DynamicLinkParameters parameters = DynamicLinkParameters(
-    uriPrefix: "https://patelmatch.page.link",
-    link: Uri.parse("https://patelmatch.page.link/$userId"),
-    androidParameters:
-        AndroidParameters(packageName: "com.patelMatch.chat", minimumVersion: 0),
-    socialMetaTagParameters: SocialMetaTagParameters(
-      title: userName,
-      imageUrl: imageUri,
-    ),
-  );
+  // final DynamicLinkParameters parameters = DynamicLinkParameters(
+  //   uriPrefix: "https://patelmatch.page.link",
+  //   link: Uri.parse("https://patelmatch.page.link/$userId"),
+  //   androidParameters:
+  //       AndroidParameters(packageName: "com.patelMatch.chat", minimumVersion: 0),
+  //   socialMetaTagParameters: SocialMetaTagParameters(
+  //     title: userName,
+  //     imageUrl: imageUri,
+  //   ),
+  // );
 
-  final ShortDynamicLink shortLink = await parameters.buildShortLink();
-  print(shortLink.toString());
-  Uri url = shortLink.shortUrl;
-  print(url.toString());
-  await Share.share(url.toString(), subject: userName);
+  // final ShortDynamicLink shortLink = await parameters.buildShortLink();
+  // print(shortLink.toString());
+  // Uri url = shortLink.shortUrl;
+  // print(url.toString());
+  // await Share.share(url.toString(), subject: userName);
   //  await FlutterShare.share(
   //   title: 'Patel Match',
   //   linkUrl: url.toString(),

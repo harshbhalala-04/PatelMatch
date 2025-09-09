@@ -71,17 +71,31 @@ class _HeightScreenState extends State<HeightScreen> {
             Container(
               width: double.infinity,
               child: DropdownSearch<String>(
-                mode: Mode.MENU,
-                showSelectedItems: true,
-                showSearchBox: true,
-                items: heights,
-                // ignore: deprecated_member_use
-                label: "Select",
-                // popupItemDisabled: (String s) =>
-                //     s.startsWith('I'),
-                onChanged: (val) {
-                  heightAns = val!;
-                },
+                 itemAsString: (item) {
+                              return item;
+                            },
+                            items: (_, __) {
+                              return heights;
+                            },
+                            selectedItem: heightAns != null && heightAns!.isNotEmpty ? heightAns : null,
+                            onChanged: (val) {
+                              setState(() {
+                                heightAns = val ?? '';
+                              });
+                            },
+                            dropdownBuilder: (context, selectedItem) => Text(
+                              selectedItem ?? 'Select',
+                              style: TextStyle(
+                                color: selectedItem == null
+                                    ? Colors.grey
+                                    : Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            popupProps: PopupProps.menu(
+                              showSearchBox: true,
+                              showSelectedItems: true,
+                            ),
                 // selectedItem: "Brazil"
               ),
             )

@@ -1,7 +1,7 @@
 // ignore_for_file: unrelated_type_equality_checks
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -59,9 +59,9 @@ class ScreenController extends GetxController {
   }
 
   checkInternetConnectivity() async {
-    var result = await Connectivity().checkConnectivity();
+    var connectivityResult = await (Connectivity().checkConnectivity());
 
-    if (result == ConnectivityResult.none) {
+    if (connectivityResult == ConnectivityResult.none) {
       isInternet.value = false;
     } else {
       isInternet.value = true;

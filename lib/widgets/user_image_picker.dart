@@ -56,7 +56,7 @@
 //           backgroundImage: _pickedImage == null ? null : FileImage(_pickedImage!),
 //         ),
 //         TextButton.icon(
-//           style: TextButton.styleFrom(primary: Colors.pink),
+//           style: TextButton.styleFrom(backgroundColor: Colors.pink),
 //           onPressed: _pickImage,
 //           icon: Icon(Icons.image),
 //           label: Text('Add Image'),

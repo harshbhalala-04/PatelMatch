@@ -1,15 +1,1 @@
-{
-  "hosting": {
-    "appAssociation": "AUTO",
-  "rewrites": [
-    {
-      "source": "/refer/**",
-      "dynamicLinks": true
-    }]
-  },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  }
-}
+{"hosting":{"appAssociation":"AUTO","rewrites":[{"source":"/refer/**","dynamicLinks":true}]},"functions":{"predeploy":["npm --prefix \"$RESOURCE_DIR\" run lint"]},"flutter":{"platforms":{"android":{"default":{"projectId":"patelmatch-7642f","appId":"1:593566463577:android:6a15ed5b37c2592c6ae348","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"patelmatch-7642f","configurations":{"android":"1:593566463577:android:6a15ed5b37c2592c6ae348","ios":"1:593566463577:ios:386ec5b6bdfeadf06ae348"}}}}}}

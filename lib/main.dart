@@ -26,6 +26,7 @@ import 'notificationHandler.dart';
 import 'screens/onboarding_screens/weight_screen.dart';
 import 'screens/onboarding_screens/willing_to_marry_screen.dart';
 import 'screens/user_profile_edit/height_screen.dart';
+import 'firebase_options.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -34,7 +35,9 @@ void main() async {
   ));
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // App is terminated
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -82,8 +85,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     initDynamicLinks();
-    AwesomeNotifications().actionStream.listen((receivedNotification) async {
-      await handleNotificationRouting(message: receivedNotification.payload!);
+    AwesomeNotifications().setListeners(onActionReceivedMethod: (receivedAction) async {
+      await handleNotificationRouting(message: receivedAction.payload!);
     });
     getValidationData();
 
@@ -117,61 +120,59 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initDynamicLinks() async {
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri? deepLink = data?.link;
+    // final PendingDynamicLinkData? data =
+    //     await FirebaseDynamicLinks.instance.getInitialLink();
+    // final Uri? deepLink = data?.link;
 
-    if (deepLink != null) {
-      if (deepLink.path.contains("refer")) {
-        uid = deepLink.path.substring(7);
-        print("This is referred by uid: ${uid}");
+    // if (deepLink != null) {
+    //   if (deepLink.path.contains("refer")) {
+    //     uid = deepLink.path.substring(7);
+    //     print("This is referred by uid: ${uid}");
 
-        if (FirebaseAuth.instance.currentUser != null) {
-          Get.to(CustomTabBar());
-        } else {
-          Get.to(AuthScreen());
-        }
-      } else {
-        uid = deepLink.path.substring(1);
+    //     if (FirebaseAuth.instance.currentUser != null) {
+    //       Get.to(CustomTabBar());
+    //     } else {
+    //       Get.to(AuthScreen());
+    //     }
+    //   } else {
+    //     uid = deepLink.path.substring(1);
 
-        if (FirebaseAuth.instance.currentUser != null) {
-          Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
-        }
-      }
-    }
+    //     if (FirebaseAuth.instance.currentUser != null) {
+    //       Get.to(SingleUserProfile(uid: uid, fromDynamic: true));
+    //     }
+    //   }
+    // }
 
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-      final Uri? deepLink = dynamicLink?.link;
+    // FirebaseDynamicLinks.instance.onLink(
+    //     onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+    //   final Uri? deepLink = dynamicLink?.link;
 
-      if (deepLink != null) {
-        if (deepLink.path.contains("refer")) {
-          uid = deepLink.path.substring(7);
+    //   if (deepLink != null) {
+    //     if (deepLink.path.contains("refer")) {
+    //       uid = deepLink.path.substring(7);
 
-          if (FirebaseAuth.instance.currentUser != null) {
-            Get.to(CustomTabBar());
-          } else {
-            // Assign value to global variable
-            fromRefer = true;
-            referUid = uid;
-            Get.to(AuthScreen(
-              
-            ));
-          }
-        } else {
-          uid = deepLink.path.substring(1);
+    //       if (FirebaseAuth.instance.currentUser != null) {
+    //         Get.to(CustomTabBar());
+    //       } else {
+    //         // Assign value to global variable
+    //         fromRefer = true;
+    //         referUid = uid;
+    //         Get.to(AuthScreen());
+    //       }
+    //     } else {
+    //       uid = deepLink.path.substring(1);
 
-          if (FirebaseAuth.instance.currentUser != null) {
-            Get.to(SingleUserProfile(
-              uid: uid,
-              fromDynamic: true,
-            ));
-          }
-        }
-      }
-    }, onError: (OnLinkErrorException e) async {
-      print(e.message);
-    });
+    //       if (FirebaseAuth.instance.currentUser != null) {
+    //         Get.to(SingleUserProfile(
+    //           uid: uid,
+    //           fromDynamic: true,
+    //         ));
+    //       }
+    //     }
+    //   }
+    // }, onError: (OnLinkErrorException e) async {
+    //   print(e.message);
+    // });
   }
 
   @override
@@ -183,9 +184,12 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.pink,
         primaryColor: Colors.pink,
-        accentColor: Colors.purple,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink,
+          secondary: Colors.purple,
+          brightness: Brightness.light,
+        ),
         fontFamily: 'Cabin',
-        accentColorBrightness: Brightness.dark,
         buttonTheme: ButtonTheme.of(context).copyWith(
           buttonColor: Colors.pink,
           textTheme: ButtonTextTheme.primary,
@@ -237,9 +241,7 @@ class _MyAppState extends State<MyApp> {
               return CustomTabBar();
             }
           } else {
-            return AuthScreen(
-              
-            );
+            return AuthScreen();
           }
         },
       ),

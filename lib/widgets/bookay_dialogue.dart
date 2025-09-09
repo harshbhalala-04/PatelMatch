@@ -231,7 +231,7 @@ class BookayDialogue extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.pink.shade400,
+                            backgroundColor: Colors.pink.shade400,
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),

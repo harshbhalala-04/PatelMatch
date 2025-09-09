@@ -1,12 +1,10 @@
 import 'package:chat/controllers/global_controller.dart';
-import 'package:chat/screens/edit_profile_screen.dart';
 import 'package:chat/database/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:chat/screens/edit_profile_screen.dart';
 // import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 enum Education {
   PursuingBachelors,
@@ -151,8 +149,6 @@ class _EducationScreenState extends State<EducationScreen> {
     "Other",
   ];
 
-
-
   @override
   void initState() {
     if (widget.response != '') {
@@ -201,17 +197,29 @@ class _EducationScreenState extends State<EducationScreen> {
             Container(
               width: double.infinity,
               child: DropdownSearch<String>(
-                mode: Mode.MENU,
-                showSearchBox: true,
-                showSelectedItems: true,
-                items: educations,
-                // ignore: deprecated_member_use
-                label: "Select",
-                // popupItemDisabled: (String s) =>
-                //     s.startsWith('I'),
-                onChanged: (val) {
-                  educationAns = val!;
+                itemAsString: (item) {
+                  return item;
                 },
+                items: (_, __) {
+                  return educations;
+                },
+                selectedItem: educationAns != null && educationAns!.isNotEmpty ? educationAns : null,
+                onChanged: (val) {
+                  setState(() {
+                    educationAns = val ?? '';
+                  });
+                },
+                dropdownBuilder: (context, selectedItem) => Text(
+                  selectedItem ?? 'Select',
+                  style: TextStyle(
+                    color: selectedItem == null ? Colors.grey : Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  showSelectedItems: true,
+                ),
                 // selectedItem: "Brazil"
               ),
             ),

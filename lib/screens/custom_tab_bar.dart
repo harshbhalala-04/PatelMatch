@@ -242,7 +242,7 @@ class TabButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          primary: selectedPage == pageNumber
+          backgroundColor: selectedPage == pageNumber
               ? Color.fromRGBO(255, 85, 115, 1)
               : Colors.white,
           shape: RoundedRectangleBorder(

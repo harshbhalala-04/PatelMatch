@@ -248,7 +248,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                           color: Colors.white, fontSize: 18),
                                     ),
                                     style: ElevatedButton.styleFrom(
-                                        primary:
+                                        backgroundColor:
                                             Color.fromRGBO(255, 85, 115, 1),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
@@ -358,7 +358,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                                   fontSize: 18),
                                             ),
                                             style: ElevatedButton.styleFrom(
-                                                primary: Color.fromRGBO(
+                                                backgroundColor: Color.fromRGBO(
                                                     255, 85, 115, 1),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:

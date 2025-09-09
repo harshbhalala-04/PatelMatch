@@ -95,10 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: TextStyle(
                         color: sendByMe
                             ? Colors.black
-                            : Theme.of(context)
-                                .accentTextTheme
-                                .headline1
-                                ?.color,
+                            : Theme.of(context).colorScheme.secondary,
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,
@@ -335,7 +332,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(255, 85, 115, 1),
+                        backgroundColor: Color.fromRGBO(255, 85, 115, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         )),
@@ -418,7 +415,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(255, 85, 115, 1),
+                        backgroundColor: Color.fromRGBO(255, 85, 115, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         )),

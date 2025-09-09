@@ -229,7 +229,7 @@ class BuyBookayScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
-                          primary: Get.find<SubscriptionController>()
+                          backgroundColor: Get.find<SubscriptionController>()
                                   .isBouqueSelected
                                   .value
                               ? Color.fromRGBO(255, 85, 115, 0.89)

@@ -114,7 +114,7 @@ class AuthForm extends GetWidget<AuthController> {
                           child: Text(_isLogin
                               ? 'Create a new account'
                               : 'I already have an account'),
-                          style: TextButton.styleFrom(primary: Colors.pink),
+                          style: TextButton.styleFrom(backgroundColor: Colors.pink),
                           onPressed: () {
                             _isLogin = !_isLogin;
                             

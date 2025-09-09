@@ -71,7 +71,7 @@ class FeedScreenController extends GetxController {
       print(val.data());
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
-      messageOpenTill.value = tmpMap['messageOpenTill'];
+      messageOpenTill.value = tmpMap['messageOpenTill'] ?? Timestamp.now();
       freeTrial.value = tmpMap['freeTrial'];
       // globalController.currentAppuser.value.filters.samaj = tmpMap['filters'] 
     });

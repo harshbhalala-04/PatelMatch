@@ -202,7 +202,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(255, 85, 115, 1),
+                        backgroundColor: Color.fromRGBO(255, 85, 115, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         )),
@@ -282,7 +282,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(255, 85, 115, 1),
+                        backgroundColor: Color.fromRGBO(255, 85, 115, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         )),

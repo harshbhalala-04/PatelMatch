@@ -145,7 +145,7 @@ class SingleUserFeed extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50))),
-                            primary: Colors.white,
+                            backgroundColor: Colors.white,
                           ),
                           onPressed: () {},
                           child: Text(

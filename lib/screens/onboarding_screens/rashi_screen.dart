@@ -102,19 +102,32 @@ class _RashiScreenState extends State<RashiScreen> {
             Container(
               width: double.infinity,
               child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItems: true,
-                            showSearchBox: true,
-                            items: rashis,
-                            // ignore: deprecated_member_use
-                            label: "Select",
-                            // popupItemDisabled: (String s) =>
-                            //     s.startsWith('I'),
-                            onChanged: (val) {
-                              rashiAns = val!;
-                            },
-                            // selectedItem: "Brazil"
-                          ),
+                itemAsString: (item) {
+                  return item;
+                },
+                items: (_, __) {
+                  return rashis;
+                },
+                selectedItem:
+                    rashiAns != null && rashiAns!.isNotEmpty ? rashiAns : null,
+                onChanged: (val) {
+                  setState(() {
+                    rashiAns = val ?? '';
+                  });
+                },
+                dropdownBuilder: (context, selectedItem) => Text(
+                  selectedItem ?? 'Select',
+                  style: TextStyle(
+                    color: selectedItem == null ? Colors.grey : Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  showSelectedItems: true,
+                ),
+                // selectedItem: "Brazil"
+              ),
             ),
           ],
         ),

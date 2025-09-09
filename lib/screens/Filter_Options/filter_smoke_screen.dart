@@ -54,7 +54,7 @@ class _FilterSmokeScreenState extends State<FilterSmokeScreen> {
               style: TextStyle(fontSize: 20),
             ),
             style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(255, 85, 115, 0.89),
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)))),
           ),

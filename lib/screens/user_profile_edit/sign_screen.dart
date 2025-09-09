@@ -86,18 +86,31 @@ class _SignScreenState extends State<SignScreen> {
             Container(
               width: double.infinity,
               child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItems: true,
-                            showSearchBox: true,
-                            items: zodiacSigns,
-                            // ignore: deprecated_member_use
-                            label: "Select",
-                           
-                            onChanged: (val) {
-                              reply = val!;
-                            },
-                           
-                          ),),
+                itemAsString: (item) {
+                  return item;
+                },
+                items: (_, __) {
+                  return zodiacSigns;
+                },
+                selectedItem: reply != null && reply!.isNotEmpty ? reply : null,
+                onChanged: (val) {
+                  setState(() {
+                    reply = val ?? '';
+                  });
+                },
+                dropdownBuilder: (context, selectedItem) => Text(
+                  selectedItem ?? 'Select',
+                  style: TextStyle(
+                    color: selectedItem == null ? Colors.grey : Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  showSelectedItems: true,
+                ),
+              ),
+            ),
           ],
         ),
       ),

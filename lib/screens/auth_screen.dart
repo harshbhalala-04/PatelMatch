@@ -151,7 +151,7 @@ class AuthScreen extends GetWidget<AuthController> {
                                                   fontSize: 18),
                                             ),
                                             style: ElevatedButton.styleFrom(
-                                                primary: Color.fromRGBO(
+                                                backgroundColor: Color.fromRGBO(
                                                     255, 85, 115, 1),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
@@ -177,7 +177,7 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       fontSize: 18),
                                                 ),
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: Color.fromRGBO(
+                                                    backgroundColor: Color.fromRGBO(
                                                         255, 85, 115, 1),
                                                     shape:
                                                         RoundedRectangleBorder(
@@ -256,7 +256,7 @@ class AuthScreen extends GetWidget<AuthController> {
                                                       fontSize: 18),
                                                 ),
                                                 style: ElevatedButton.styleFrom(
-                                                    primary: Color.fromRGBO(
+                                                    backgroundColor: Color.fromRGBO(
                                                         255, 85, 115, 1),
                                                     shape:
                                                         RoundedRectangleBorder(
@@ -278,7 +278,7 @@ class AuthScreen extends GetWidget<AuthController> {
                                               ? 'Create a new account'
                                               : 'I already have an account'),
                                           style: TextButton.styleFrom(
-                                              primary: Colors.pink),
+                                              backgroundColor: Colors.transparent),
                                           onPressed: () {
                                             controller.toggleLoginStatus();
                                           },
