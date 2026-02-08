@@ -305,127 +305,193 @@ class _FeedScreenState extends State<FeedScreen> {
         feedScreenController.getUsers();
       },
       builder: (controller) {
-        return Obx(() => ListView.builder(
-              controller: feedScreenController.scrollController,
-              itemCount: feedScreenController.hasMoreData
-                  ? feedScreenController.usersList.length + 1
-                  : feedScreenController.usersList.length,
-              itemBuilder: (ctx, index) {
-                print(
-                    "Here userslist length: ${feedScreenController.usersList.length}");
-                if (index == feedScreenController.usersList.length) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                print("Email: ${feedScreenController.usersList[index].email}");
-                print(
-                    "NAme: ${feedScreenController.usersList[index].username}");
-                print("Image: ${feedScreenController.usersList[index].imgUrl}");
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(FeedProfile(
-                              user: feedScreenController.usersList[index],
-                              index: index,
-                            ));
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Stack(
-                                children: [
-                                  Ink.image(
-                                    image: CachedNetworkImageProvider(
-                                      feedScreenController
-                                          .usersList[index].imgUrl!,
-                                    ),
-                                    height: 300,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        "${feedScreenController.usersList[index].username}, ${feedScreenController.usersList[index].age}",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20,
-                                          fontFamily: 'Cabin',
-                                          letterSpacing: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuButton<String>(
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: Colors.black,
-                                      ),
-                                      onSelected: (val) {
-                                        choiceAction(
-                                            val,
-                                            feedScreenController
-                                                .usersList[index].uid!,
-                                            feedScreenController
-                                                .usersList[index].username!);
-                                      },
-                                      itemBuilder: (BuildContext context) {
-                                        return choices.map((String choice) {
-                                          return PopupMenuItem<String>(
-                                            value: choice,
-                                            child: Column(
-                                              children: [
-                                                Text(choice),
-                                                choice == "Report"
-                                                    ? SizedBox(
-                                                        height: 10,
-                                                      )
-                                                    : Container(),
-                                                choice == "Report"
-                                                    ? Divider(
-                                                        color: Color.fromRGBO(
-                                                            51, 51, 51, 1),
-                                                        thickness: 0.5,
-                                                      )
-                                                    : Container(),
-                                              ],
-                                            ),
-                                            textStyle: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    51, 51, 51, 1),
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w400),
-                                          );
-                                        }).toList();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+        return Obx(() => feedScreenController.isInitialLoading.value &&
+                feedScreenController.usersList.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : feedScreenController.usersList.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 225,
+                          child: Image.asset(
+                            'assets/no_profile.png',
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 24),
+
+                        // Primary Text
+                        const Text(
+                          "No more profiles nearby 💔",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Secondary Text
+                        const Text(
+                          "Don’t worry, new people join every day.\nTry updating your preferences or check back later.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Container(
+                            // width: MediaQuery.of(context).size.width,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50))),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Invite Friends',
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromRGBO(255, 85, 115, 1),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25)))),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
-            ));
+                  )
+                : ListView.builder(
+                    controller: feedScreenController.scrollController,
+                    itemCount: feedScreenController.hasMoreData
+                        ? feedScreenController.usersList.length + 1
+                        : feedScreenController.usersList.length,
+                    itemBuilder: (ctx, index) {
+                      if (index == feedScreenController.usersList.length) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  Get.to(FeedProfile(
+                                    user: feedScreenController.usersList[index],
+                                    index: index,
+                                  ));
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Ink.image(
+                                          image: CachedNetworkImageProvider(
+                                            feedScreenController
+                                                .usersList[index].imgUrl!,
+                                          ),
+                                          height: 300,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "${feedScreenController.usersList[index].username}, ${feedScreenController.usersList[index].age}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 20,
+                                                fontFamily: 'Cabin',
+                                                letterSpacing: 1,
+                                              ),
+                                            ),
+                                          ),
+                                          PopupMenuButton<String>(
+                                            icon: Icon(
+                                              Icons.more_vert,
+                                              color: Colors.black,
+                                            ),
+                                            onSelected: (val) {
+                                              choiceAction(
+                                                  val,
+                                                  feedScreenController
+                                                      .usersList[index].uid!,
+                                                  feedScreenController
+                                                      .usersList[index]
+                                                      .username!);
+                                            },
+                                            itemBuilder:
+                                                (BuildContext context) {
+                                              return choices
+                                                  .map((String choice) {
+                                                return PopupMenuItem<String>(
+                                                  value: choice,
+                                                  child: Column(
+                                                    children: [
+                                                      Text(choice),
+                                                      choice == "Report"
+                                                          ? SizedBox(
+                                                              height: 10,
+                                                            )
+                                                          : Container(),
+                                                      choice == "Report"
+                                                          ? Divider(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      51,
+                                                                      51,
+                                                                      51,
+                                                                      1),
+                                                              thickness: 0.5,
+                                                            )
+                                                          : Container(),
+                                                    ],
+                                                  ),
+                                                  textStyle: TextStyle(
+                                                      color: Color.fromRGBO(
+                                                          51, 51, 51, 1),
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                );
+                                              }).toList();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ));
       },
     );
   }

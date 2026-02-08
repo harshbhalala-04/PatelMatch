@@ -12,15 +12,13 @@ class BuyMessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? formattedDate;
-    if (Get.find<FeedScreenController>().messageOpenTill.value != null) {
-      DateTime reqDate = DateTime.fromMicrosecondsSinceEpoch(
-          Get.find<FeedScreenController>()
-              .messageOpenTill
-              .value
-              .microsecondsSinceEpoch);
-      formattedDate = DateFormat("dd MMMM yyyy").format(reqDate);
-      print(formattedDate);
-    }
+    DateTime reqDate = DateTime.fromMicrosecondsSinceEpoch(
+        Get.find<FeedScreenController>()
+            .messageOpenTill
+            .value
+            .microsecondsSinceEpoch);
+    formattedDate = DateFormat("dd MMMM yyyy").format(reqDate);
+    print(formattedDate);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,12 +29,15 @@ class BuyMessageScreen extends StatelessWidget {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
 
-                    Get.find<SubscriptionController>().firstDurationSelected.value =
-                        true;
-                    Get.find<SubscriptionController>().secondDurationSelected.value =
-                        false;
-                    Get.find<SubscriptionController>().thirdDurationSelected.value =
-                        false;
+                    Get.find<SubscriptionController>()
+                        .firstDurationSelected
+                        .value = true;
+                    Get.find<SubscriptionController>()
+                        .secondDurationSelected
+                        .value = false;
+                    Get.find<SubscriptionController>()
+                        .thirdDurationSelected
+                        .value = false;
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
                         .value = {
@@ -50,11 +51,11 @@ class BuyMessageScreen extends StatelessWidget {
 
                     Timestamp messageOpenTill =
                         Get.find<FeedScreenController>().messageOpenTill.value;
-
-                    if (messageOpenTill == null) {
-                      messageOpenTill = Timestamp.now();
-                    }
                     DateTime pastDate = messageOpenTill.toDate();
+
+                    if (pastDate.isBefore(DateTime.now())) {
+                      pastDate = DateTime.now();
+                    }
 
                     DateTime newDate = pastDate.add(Duration(days: 7));
 
@@ -73,6 +74,7 @@ class BuyMessageScreen extends StatelessWidget {
                     };
                   },
                   child: Container(
+                    clipBehavior: Clip.hardEdge,
                     decoration: Get.find<SubscriptionController>()
                             .firstDurationSelected
                             .value
@@ -84,7 +86,9 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: Get.find<SubscriptionController>().isFirstDurationPopular.value,
+                      isPopular: Get.find<SubscriptionController>()
+                          .isFirstDurationPopular
+                          .value,
                       currentPrice: Get.find<SubscriptionController>()
                           .firstDurationDiscountedPrice
                           .value,
@@ -108,12 +112,15 @@ class BuyMessageScreen extends StatelessWidget {
                   onTap: () {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
-                    Get.find<SubscriptionController>().firstDurationSelected.value =
-                        false;
-                    Get.find<SubscriptionController>().secondDurationSelected.value =
-                        true;
-                    Get.find<SubscriptionController>().thirdDurationSelected.value =
-                        false;
+                    Get.find<SubscriptionController>()
+                        .firstDurationSelected
+                        .value = false;
+                    Get.find<SubscriptionController>()
+                        .secondDurationSelected
+                        .value = true;
+                    Get.find<SubscriptionController>()
+                        .thirdDurationSelected
+                        .value = false;
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
                         .value = {
@@ -126,11 +133,10 @@ class BuyMessageScreen extends StatelessWidget {
                     };
                     Timestamp messageOpenTill =
                         Get.find<FeedScreenController>().messageOpenTill.value;
-                    if (messageOpenTill == null) {
-                      messageOpenTill = Timestamp.now();
-                    }
                     DateTime pastDate = messageOpenTill.toDate();
-
+                    if (pastDate.isBefore(DateTime.now())) {
+                      pastDate = DateTime.now();
+                    }
                     DateTime newDate = pastDate.add(Duration(days: 30));
 
                     Timestamp newTimestamp = Timestamp.fromDate(newDate);
@@ -158,7 +164,9 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: Get.find<SubscriptionController>().isSecondDurationPopular.value,
+                      isPopular: Get.find<SubscriptionController>()
+                          .isSecondDurationPopular
+                          .value,
                       currentPrice: Get.find<SubscriptionController>()
                           .secondDurationDiscountedPrice
                           .value,
@@ -168,7 +176,7 @@ class BuyMessageScreen extends StatelessWidget {
                       discountPr: Get.find<SubscriptionController>()
                           .secondDurationDiscountPr
                           .value,
-                      timePeriod:  Get.find<SubscriptionController>()
+                      timePeriod: Get.find<SubscriptionController>()
                           .secondDurationName
                           .value,
                       fromBouquets: false,
@@ -182,12 +190,15 @@ class BuyMessageScreen extends StatelessWidget {
                   onTap: () {
                     Get.find<SubscriptionController>().isMessageSelected.value =
                         true;
-                    Get.find<SubscriptionController>().firstDurationSelected.value =
-                        false;
-                    Get.find<SubscriptionController>().secondDurationSelected.value =
-                        false;
-                    Get.find<SubscriptionController>().thirdDurationSelected.value =
-                        true;
+                    Get.find<SubscriptionController>()
+                        .firstDurationSelected
+                        .value = false;
+                    Get.find<SubscriptionController>()
+                        .secondDurationSelected
+                        .value = false;
+                    Get.find<SubscriptionController>()
+                        .thirdDurationSelected
+                        .value = true;
 
                     Get.find<SubscriptionController>()
                         .selectedMessageMap
@@ -201,10 +212,11 @@ class BuyMessageScreen extends StatelessWidget {
                     };
                     Timestamp messageOpenTill =
                         Get.find<FeedScreenController>().messageOpenTill.value;
-                    if (messageOpenTill == null) {
-                      messageOpenTill = Timestamp.now();
-                    }
                     DateTime pastDate = messageOpenTill.toDate();
+
+                    if (pastDate.isBefore(DateTime.now())) {
+                      pastDate = DateTime.now();
+                    }
 
                     DateTime newDate = pastDate.add(Duration(days: 365));
 
@@ -233,7 +245,9 @@ class BuyMessageScreen extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(10)))
                         : BoxDecoration(),
                     child: PurchaseCard(
-                      isPopular: Get.find<SubscriptionController>().isThirdDurationPopular.value,
+                      isPopular: Get.find<SubscriptionController>()
+                          .isThirdDurationPopular
+                          .value,
                       currentPrice: Get.find<SubscriptionController>()
                           .thirdDurationDiscountedPrice
                           .value,
@@ -243,7 +257,7 @@ class BuyMessageScreen extends StatelessWidget {
                       discountPr: Get.find<SubscriptionController>()
                           .thirdDurationDiscountPr
                           .value,
-                      timePeriod:  Get.find<SubscriptionController>()
+                      timePeriod: Get.find<SubscriptionController>()
                           .thirdDurationName
                           .value,
                       fromBouquets: false,
@@ -277,7 +291,7 @@ class BuyMessageScreen extends StatelessWidget {
                                 color: Colors.white),
                           ),
                           Text(
-                           formattedDate!,
+                            formattedDate,
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -295,16 +309,17 @@ class BuyMessageScreen extends StatelessWidget {
                     height: 10,
                   )
                 : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text.rich(TextSpan(children: [
-              TextSpan(
-                    text: '*',
-                    style: TextStyle(color: Color.fromRGBO(255, 185, 115, 1))),
-              TextSpan(
-                    text:
-                        ' Any plans purchased during an active plan will get added onto'),
-            ])),
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text.rich(TextSpan(children: [
+                      TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                              color: Color.fromRGBO(255, 185, 115, 1))),
+                      TextSpan(
+                          text:
+                              ' Any plans purchased during an active plan will get added onto'),
+                    ])),
+                  ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
@@ -330,7 +345,7 @@ class BuyMessageScreen extends StatelessWidget {
                           : () {},
                       child: Text(
                         'Make Payment',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Get.find<SubscriptionController>()

@@ -189,7 +189,11 @@ class _MyAppState extends State<MyApp> {
           secondary: Colors.purple,
           brightness: Brightness.light,
         ),
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Cabin',
+        cardTheme: CardTheme(
+          color: Colors.white
+        ),
         buttonTheme: ButtonTheme.of(context).copyWith(
           buttonColor: Colors.pink,
           textTheme: ButtonTextTheme.primary,

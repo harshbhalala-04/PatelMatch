@@ -185,13 +185,15 @@ class _StarScreenState extends State<StarScreen> {
               child: widget.fromProfile
                   ? Text(
                       'Submit',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     )
                   : Text(
                       'Continue',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     ),
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),

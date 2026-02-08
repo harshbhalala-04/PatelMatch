@@ -3,7 +3,8 @@ import 'package:chat/screens/onboarding_screens/user_name_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum MarryToSamaj {SameSamaj, AnySamaj}
+enum MarryToSamaj { SameSamaj, AnySamaj }
+
 class WillingToMarryScreen extends StatefulWidget {
   const WillingToMarryScreen({Key? key}) : super(key: key);
 
@@ -14,7 +15,7 @@ class WillingToMarryScreen extends StatefulWidget {
 class _WillingToMarryScreenState extends State<WillingToMarryScreen> {
   MarryToSamaj? _reply;
 
-   @override
+  @override
   void initState() {
     // TODO: implement initState
     setState(() {
@@ -22,12 +23,17 @@ class _WillingToMarryScreenState extends State<WillingToMarryScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
@@ -112,9 +118,11 @@ class _WillingToMarryScreenState extends State<WillingToMarryScreen> {
               },
               child: Text(
                 'Continue',
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 17, color: Colors.white),
               ),
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),

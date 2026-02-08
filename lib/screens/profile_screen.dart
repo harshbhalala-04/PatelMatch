@@ -168,6 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       'Share My Biodata',
                                       style: TextStyle(
                                         fontSize: 20,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],

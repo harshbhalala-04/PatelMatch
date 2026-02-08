@@ -226,7 +226,7 @@ class BuyBookayScreen extends StatelessWidget {
                           : () {},
                       child: Text(
                         'Make Payment',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Get.find<SubscriptionController>()

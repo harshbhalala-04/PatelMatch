@@ -44,6 +44,8 @@ class FeedScreenController extends GetxController {
 
   final currentIndex = 0.obs;
 
+  final isInitialLoading = true.obs;
+
   void scrollListener() {
     if (scrollController.offset >=
             scrollController.position.maxScrollExtent - 100 &&
@@ -67,17 +69,17 @@ class FeedScreenController extends GetxController {
     final stopwatch = Stopwatch()..start();
     List<UserModel> tmpUsersList = <UserModel>[];
 
+    isInitialLoading.value = true;
+
     await firestore.collection("users").doc(user!.uid).get().then((val) {
       print(val.data());
       Map<String, dynamic> tmpMap = val.data()!;
       gender = tmpMap['gender'];
       messageOpenTill.value = tmpMap['messageOpenTill'] ?? Timestamp.now();
       freeTrial.value = tmpMap['freeTrial'];
-      // globalController.currentAppuser.value.filters.samaj = tmpMap['filters'] 
+      // globalController.currentAppuser.value.filters.samaj = tmpMap['filters']
     });
     Query<Map<String, dynamic>> query;
-
-
 
     if (globalController.currentAppuser.value.excludedUsers?.length == 0) {
       query = firebaseFirestore
@@ -145,12 +147,12 @@ class FeedScreenController extends GetxController {
     }
     isLoadingMoreData = false;
     fnTerminate = 1;
+    isInitialLoading.value = false;
     update();
     stopwatch.stop();
   }
 
   final selectedBookayVal = 1.obs;
- 
 
   @override
   void onInit() {

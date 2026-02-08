@@ -31,72 +31,114 @@ class _RequestTabScreenState extends State<RequestTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('SelectedPage: $requestTabController.selectedPage');
     return Scaffold(
       body: SafeArea(
-        child: BottomAppBar(
-          
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: PageView(
-                    onPageChanged: (int page) {
-                      requestTabController.selectedPage.value = page;
-                    },
-                    controller: _pageController,
-                    children: [
-                      RequestScreen(),
-                      SentScreen(),
-                    ],
+        child: Column(
+          children: [
+            SizedBox(height: 16),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(255, 238, 241, 1),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.0,
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Obx(() => GestureDetector(
+                          onTap: () {
+                            requestTabController.changePage(0);
+                            _pageController!.animateToPage(
+                              0,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.ease,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: requestTabController.selectedPage.value == 0
+                                  ? Color.fromRGBO(255, 85, 115, 1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Received",
+                                style: TextStyle(
+                                  color: requestTabController.selectedPage.value == 0
+                                      ? Colors.white
+                                      : Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Obx(() => TabButton(
-                              text: "Recieved",
-                              pageNumber: 0,
-                              selectedPage:
-                                  requestTabController.selectedPage.value,
-                              onPressed: () {
-                                requestTabController.changePage(0);
-                                _pageController!.animateToPage(
-                                  0,
-                                  duration: Duration(milliseconds: 100),
-                                  curve: Curves.fastLinearToSlowEaseIn,
-                                );
-                              },
-                            )),
-                        Obx(() => TabButton(
-                              text: "Sent",
-                              pageNumber: 1,
-                              selectedPage:
-                                  requestTabController.selectedPage.value,
-                              onPressed: () {
-                                requestTabController.changePage(1);
-                                _pageController!.animateToPage(
-                                  1,
-                                  duration: Duration(milliseconds: 100),
-                                  curve: Curves.fastLinearToSlowEaseIn,
-                                );
-                              },
-                            )),
-                      ],
-                    ),
+                  Expanded(
+                    child: Obx(() => GestureDetector(
+                          onTap: () {
+                            requestTabController.changePage(1);
+                            _pageController!.animateToPage(
+                              1,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.ease,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: requestTabController.selectedPage.value == 1
+                                  ? Color.fromRGBO(255, 85, 115, 1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Sent",
+                                style: TextStyle(
+                                  color: requestTabController.selectedPage.value == 1
+                                      ? Colors.white
+                                      : Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            SizedBox(height: 16),
+            Expanded(
+              child: PageView(
+                onPageChanged: (int page) {
+                  requestTabController.selectedPage.value = page;
+                },
+                controller: _pageController,
+                children: [
+                  RequestScreen(),
+                  SentScreen(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -113,7 +155,6 @@ class TabButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      
       onTap: onPressed,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 100),

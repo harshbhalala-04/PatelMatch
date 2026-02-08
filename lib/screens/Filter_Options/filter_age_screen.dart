@@ -81,7 +81,7 @@ class _FilterAgeScreenState extends State<FilterAgeScreen> {
             },
             child: Text(
               'Done',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),

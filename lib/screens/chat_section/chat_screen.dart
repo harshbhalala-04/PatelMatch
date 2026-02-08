@@ -93,9 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Text(
                       time,
                       style: TextStyle(
-                        color: sendByMe
-                            ? Colors.black
-                            : Theme.of(context).colorScheme.secondary,
+                        color: sendByMe ? Colors.black : Colors.white,
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,
@@ -473,37 +471,34 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ))
         ],
-        flexibleSpace: Container(
-          margin: EdgeInsets.only(top: 28),
-          child: Row(
-            children: [
-              InkWell(
-                  child: Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 22,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
-              SizedBox(width: 10),
-              CircleAvatar(
-                backgroundColor: Color.fromRGBO(196, 196, 196, 1),
-                backgroundImage: NetworkImage(widget.imageUrl),
-                radius: 25,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                widget.username,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
-              ),
-            ],
-          ),
+        leading: InkWell(
+            child: Icon(
+              Icons.arrow_back_ios_new,
+              size: 22,
+              color: Colors.black,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            }),
+        leadingWidth: 40,
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Color.fromRGBO(196, 196, 196, 1),
+              backgroundImage: NetworkImage(widget.imageUrl),
+              radius: 22,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              widget.username,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
+            ),
+          ],
         ),
         backgroundColor: Colors.white,
       ),

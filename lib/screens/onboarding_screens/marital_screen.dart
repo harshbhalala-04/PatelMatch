@@ -55,8 +55,12 @@ class _MaritalScreenState extends State<MaritalScreen> {
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('PM', style: TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),),
-          centerTitle: true,
+        title: Text(
+          'PM',
+          style:
+              TextStyle(color: Color.fromRGBO(255, 85, 115, 1), fontSize: 24),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -205,7 +209,7 @@ class _MaritalScreenState extends State<MaritalScreen> {
                 }
                 if (widget.fromProfile) {
                   // Navigator.pop(context);
-                    Get.off(EditProfileScreen());
+                  Get.off(EditProfileScreen());
                 } else {
                   Get.to(NRIScreen(
                     fromProfile: false,
@@ -215,13 +219,15 @@ class _MaritalScreenState extends State<MaritalScreen> {
               child: widget.fromProfile
                   ? Text(
                       'Submit',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     )
                   : Text(
                       'Continue',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     ),
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),

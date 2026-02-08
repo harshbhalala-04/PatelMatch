@@ -61,8 +61,8 @@ class _ManglicScreenState extends State<ManglicScreen> {
                       fontSize: 18,
                     ),
                   ),
-                  onPressed: () {
-                    DataBaseMethods().addUserManglik('');
+                  onPressed: () async {
+                    await DataBaseMethods().addUserManglik('');
                     Get.to(CustomTabBar());
                   },
                 )
@@ -136,21 +136,21 @@ class _ManglicScreenState extends State<ManglicScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Container(
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_reply == YesNo.No) {
                   if (widget.fromProfile) {
                     final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.manglik =
                         "No";
                   }
-                  DataBaseMethods().addUserManglik("No");
+                  await DataBaseMethods().addUserManglik("No");
                 } else {
                   if (widget.fromProfile) {
                     final globalController = Get.put(GlobalController());
                     Get.find<GlobalController>().currentAppuser.value.manglik =
                         "Yes";
                   }
-                  DataBaseMethods().addUserManglik("Yes");
+                  await DataBaseMethods().addUserManglik("Yes");
                 }
                 if (widget.fromProfile) {
                   // Navigator.pop(context);
@@ -162,13 +162,15 @@ class _ManglicScreenState extends State<ManglicScreen> {
               child: widget.fromProfile
                   ? Text(
                       'Submit',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     )
                   : Text(
                       'Continue',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                     ),
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),

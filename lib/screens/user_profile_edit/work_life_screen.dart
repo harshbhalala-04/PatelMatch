@@ -276,9 +276,11 @@ class _WorkLifeScreenState extends State<WorkLifeScreen> {
               },
               child: Text(
                 'Submit',
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 17, color: Colors.white),
               ),
-              style: ButtonStyle(),
+             style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),

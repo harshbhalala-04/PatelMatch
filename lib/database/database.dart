@@ -591,7 +591,7 @@ class DataBaseMethods {
 
   addUserManglik(String manglik) async {
     try {
-      firestore.collection("users").doc(user!.uid).update({"manglik": manglik});
+      await firestore.collection("users").doc(user!.uid).update({"manglik": manglik, "isApproved": true});
     } catch (e) {
       print(e.toString());
     }

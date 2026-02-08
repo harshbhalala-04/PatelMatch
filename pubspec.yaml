@@ -97,6 +97,9 @@ flutter:
       - assets/Biodata.svg
       - assets/pending.svg
       - assets/reject.svg
+      - assets/no_profile.png
+      - assets/request_received.png
+      - assets/request_sent.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

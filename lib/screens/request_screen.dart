@@ -28,12 +28,50 @@ class _RequestScreenState extends State<RequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-            body: Obx(() => requestScreenController.isLoading.value
+    return Scaffold(
+        body: Obx(() => requestScreenController.isLoading.value
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Obx(() => requestScreenController.profiles.isEmpty &&
+                    requestScreenController.specialProfiles.isEmpty
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 225,
+                          child: Image.asset(
+                            'assets/request_received.png',
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Primary Text
+                        const Text(
+                          "No new requests right now 👀",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Secondary Text
+                        const Text(
+                          "Keep engaging and you’ll start receiving requests. Someone special might be just around the corner!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
-                : Obx(() => SingleUserRequest(
+                : SingleUserRequest(
                     profiles: requestScreenController.profiles.value,
                     specialProfiles:
                         requestScreenController.specialProfiles.value))));

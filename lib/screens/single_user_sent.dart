@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'show_profile_screen.dart';
 
 class SingleUserSent extends StatelessWidget {
   List<dynamic> sentProfiles;
@@ -39,41 +42,40 @@ class SingleUserSent extends StatelessWidget {
           child: ListView.builder(
             itemCount: sentProfiles.length,
             itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {},
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        sentProfiles[index]['image']),
-                    backgroundColor: Colors.grey,
-                  ),
-                  title: Row(
-                    children: [
-                      Text("${sentProfiles[index]['sent']}  ", style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),),
-                      sentProfiles[index]['bookay'] > 0
-                          ? Text("${sentProfiles[index]['bookay'].toString()} ", style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1),),)
-                          : Container(),
-                      sentProfiles[index]['bookay'] > 0
-                          ? Transform.rotate(
-                              angle: 0.2,
-                              child: Image.asset(
-                                'assets/bokay.png',
-                                color: Colors.pink,
-                                width: 15,
-                                height: 20,
-                              ),
-                            )
-                          : Container(),
-                    ],
-                  ),
-                  trailing: TextButton(
-                      child: Text(
-                        'View',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(255, 85, 115, 1)),
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(
+                      sentProfiles[index]['image']),
+                  backgroundColor: Colors.grey,
+                ),
+                title: Row(
+                  children: [
+                    Text(
+                      "${sentProfiles[index]['sent']}  ",
+                      style: TextStyle(
+                        color: Color.fromRGBO(51, 51, 51, 1),
                       ),
-                      onPressed: () {}),
+                    ),
+                    sentProfiles[index]['bookay'] > 0
+                        ? Text(
+                            "${sentProfiles[index]['bookay'].toString()} ",
+                            style: TextStyle(
+                              color: Color.fromRGBO(51, 51, 51, 1),
+                            ),
+                          )
+                        : Container(),
+                    sentProfiles[index]['bookay'] > 0
+                        ? Transform.rotate(
+                            angle: 0.2,
+                            child: Image.asset(
+                              'assets/bokay.png',
+                              color: Colors.pink,
+                              width: 15,
+                              height: 20,
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               );
             },

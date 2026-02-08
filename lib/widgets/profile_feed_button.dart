@@ -107,6 +107,7 @@ class ProfileFeedButton extends StatelessWidget {
                       'Accept',
                       style: TextStyle(
                         fontSize: 18,
+                        color: Colors.white
                       ),
                     ),
                   ),

@@ -133,12 +133,14 @@ class _NativeScreenState extends State<NativeScreen> {
               },
               child: widget.fromProfile
                   ? Text('Submit',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                       textAlign: TextAlign.center)
                   : Text('Continue',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 17, color: Colors.white),
                       textAlign: TextAlign.center),
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(255, 85, 115, 0.89),
+              ),
             ),
           ),
         ),
